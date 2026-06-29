@@ -825,6 +825,17 @@ section:nth-of-type(even) {
   margin-bottom: 0.15rem;
 }
 
+#hero .authors-line sup {
+  font-size: 0.7em;
+}
+
+#hero .affiliation-line {
+  font-size: 0.98rem;
+  color: #888;
+  margin-top: 0.1rem;
+  margin-bottom: 0;
+}
+
 #hero .venue-line {
   font-size: 0.9rem;
   font-weight: 600;
