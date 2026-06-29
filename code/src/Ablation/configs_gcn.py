@@ -1,4 +1,4 @@
-"""Ablation experiment configurations for DS-GCN / InveRT (NeurIPS 2026).
+"""Ablation experiment configurations for DS-GCN / InveRT (2026).
 
 Same 4 ablation variants as ProtoGCN but with DS-GCN-specific hyperparameters:
   - base_channels=64  (vs 96 for ProtoGCN)

@@ -1,4 +1,4 @@
-"""Ablation experiment configurations for InveRT (NeurIPS 2026).
+"""Ablation experiment configurations for InveRT (2026).
 
 Aggressive ablations designed to produce clearly visible performance drops
 (~5–15%) to support the paper's ablation table.

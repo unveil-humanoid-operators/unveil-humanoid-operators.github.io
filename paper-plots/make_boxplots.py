@@ -5,7 +5,7 @@ Publication-grade boxplots of "feature of movement dynamics" distributions
 split by an attribute's bottom vs top decile, for each of the four (attribute,
 feature, activity) pairs that drive the project page's boxplot panels.
 
-Style choices follow NeurIPS / ICML / ICLR / CVPR conventions:
+Style choices follow ICML / ICLR / CVPR conventions:
   * serif typography (Computer Modern via matplotlib's `cm` mathtext font set)
   * 8-10 pt body labels, 7-9 pt ticks
   * vector PDF output sized for a two-column page (~3.4" wide each)

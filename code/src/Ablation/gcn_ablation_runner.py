@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-InveRT DS-GCN Ablation Experiment Runner (NeurIPS 2026)
+InveRT DS-GCN Ablation Experiment Runner (2026)
 =======================================================
 
 Runs 4 ablation variants × {gender, reid} tasks on a 100-actor subsample of
