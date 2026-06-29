@@ -1,0 +1,1657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Matrix panel</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+html, body {
+  width:100%; height:100%;
+  background:#f5f7fa; color:#1c232e;
+  font-family: 'Segoe UI', system-ui, sans-serif; overflow:hidden;
+}
+
+/* Per-panel layout: header + body-area. The body-area is a single canvas
+   covering both the SMPL row (top portion) and G1 row (bottom portion) with
+   the plot stack absolute-positioned over the middle strip. This drops
+   per-panel WebGL contexts to 1 (down from 4 originally, 2 in the previous
+   refactor) so 9 panels' contexts stay well below Chrome's ~16-context cap. */
+#root {
+  width: 100%; height: 100%;
+  display: grid;
+  grid-template-rows: 26px 1fr;
+}
+#root.has-smpl {
+  grid-template-rows: 26px 1fr;   /* same layout; just controls viewport split */
+}
+
+/* ── Header ─────────────────────────────────────────────── */
+#panel-head {
+  background: #e7ecf2;
+  color: #1c232e;
+  border-bottom: 1px solid #d6dde6;
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 26px;
+  text-align: center;
+  padding: 0 10px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+#panel-head .actor { color: #6a7585; font-weight: 400; margin-left: 6px; font-size: 11px; }
+
+/* ── Body area (one canvas + plots overlay) ───────────────── */
+#body-area {
+  position: relative;
+  overflow: hidden;
+  background: #eef2f7;
+}
+#body-canvas {
+  position: absolute; inset: 0;
+  width: 100% !important; height: 100% !important;
+  display: block;
+}
+
+/* Plot stack — absolute-positioned in the middle strip of #body-area so it
+   visually sits between the SMPL (top) and G1 (bottom) viewports. Opaque
+   background hides the canvas pixels behind it. */
+#plots {
+  position: absolute;
+  left: 0; right: 0;
+  top: 36%; bottom: 39%;        /* gap between SMPL row and G1 row */
+  display: grid;
+  grid-template-rows: 1.25fr 1fr 1fr;   /* strongest gets a bit more height */
+  background: #ffffff;
+  border-top: 1px solid #d6dde6;
+  border-bottom: 1px solid #d6dde6;
+  padding: 4px 4px 4px 0;
+  gap: 2px;
+  min-height: 0;
+  z-index: 2;
+}
+/* When the SMPL bins are not on disk yet, drop the top SMPL viewport and let
+   the plot strip sit at the top with the G1 robots taking the bottom 65%. */
+#root.no-smpl #plots { top: 0%; bottom: 65%; }
+.plot-row {
+  position: relative;
+  min-height: 0;
+}
+.plot-row canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+.plot-row .feat-label {
+  position: absolute;
+  top: 2px; left: 38px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  /* Keep the string's original casing — prettyFeatureName produces e.g.
+     "Waist Range of Motion" already; the previous uppercase transform was
+     forcing it to "WAIST RANGE OF MOTION". */
+  color: #4a5566;
+  background: rgba(255,255,255,0.85);
+  padding: 1px 6px;
+  border-radius: 4px;
+  pointer-events: none;
+  z-index: 2;
+}
+.plot-row.strongest .feat-label {
+  background: #fff3d6;
+  color: #8a5a14;
+  border: 1px solid #f1c47d;
+}
+
+.role {
+  position: absolute;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #fff;
+  padding: 2px 7px 1px 7px;
+  border-radius: 99px;
+  pointer-events: none;
+  z-index: 3;
+  font-variant-numeric: tabular-nums;
+}
+/* Only the SMPL row carries value chips now; the G1 row stays unlabelled
+   (heavy/light identity already flows down visually from the human above). */
+.role.smpl { top: 8px; z-index: 3; }
+.role.heavy { left: 8px;  background: #ff8c19; }
+.role.light { right: 8px; background: #1e90ff; }
+#root.has-smpl .role.smpl { display: block; }
+.role.smpl { display: none; }    /* hidden until SMPL data loads */
+/* Minimal-chrome panels (final-matrix.html) show only the attribute value
+   in the chip ("45 yr", "153 cm") — bump the font for legibility, and reposition
+   the chip to sit just above the human mesh (which now lives in the BOTTOM
+   region after the body-swap). */
+#root.minimal-chrome .role { font-size: 14px; padding: 4px 11px; }
+#root.minimal-chrome .role.smpl { top: calc(61% + 6px); bottom: auto; }
+
+/* Activity label centered above each panel (minimal chrome only). */
+#activity-label {
+  display: none;
+  position: absolute;
+  top: 8px; left: 0; right: 0;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1c232e;
+  letter-spacing: 0.01em;
+  z-index: 4;
+  pointer-events: none;
+  text-shadow: 0 1px 2px rgba(255,255,255,0.7);
+}
+#root.minimal-chrome #activity-label { display: block; }
+
+/* Playback scrubber + play/pause button (minimal chrome only).
+   Sits in a reserved strip at the bottom; SMPL viewport stops above it. */
+#scrubber {
+  display: none;
+  position: absolute;
+  bottom: 6px; left: 10px; right: 10px;
+  height: 22px;
+  align-items: center;
+  gap: 8px;
+  z-index: 5;
+}
+#root.minimal-chrome #scrubber { display: flex; }
+#scrub-bar {
+  flex: 1;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  background: linear-gradient(to bottom, #ffffff, #e8ebef);
+  border: 1px solid #d6dde6;
+  border-radius: 4px;
+  outline: none;
+  cursor: pointer;
+  box-shadow: inset 0 1px 2px rgba(20,30,50,0.05);
+}
+#scrub-bar::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px; height: 14px;
+  background: linear-gradient(to bottom, #ffffff, #eef2f7);
+  border: 1px solid #b8c1cd;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(20,30,50,0.18);
+}
+#scrub-bar::-moz-range-thumb {
+  width: 14px; height: 14px;
+  background: linear-gradient(to bottom, #ffffff, #eef2f7);
+  border: 1px solid #b8c1cd;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(20,30,50,0.18);
+}
+#play-pause {
+  width: 28px; height: 22px;
+  border: 1px solid #d6dde6;
+  background: linear-gradient(to bottom, #ffffff, #eef2f7);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  color: #1c232e;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 1px 3px rgba(20,30,50,0.12);
+  padding: 0;
+  line-height: 1;
+}
+#play-pause:hover { background: linear-gradient(to bottom, #f5f7fa, #e2e7ee); }
+#play-pause:active { background: #e2e7ee; }
+
+/* ── Loading overlay ───────────────────────────────────── */
+#loading {
+  position: fixed; inset: 0; background:#f5f7fa;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 10px; z-index: 20;
+}
+.spinner {
+  width: 22px; height: 22px;
+  border: 3px solid #d6dde6; border-top-color: #1e90ff;
+  border-radius: 50%; animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+#load-status { font-size: 10px; color: #4a5566; }
+#error-msg { color:#c0394b; font-size:11px; max-width:300px; text-align:center; padding:14px; }
+</style>
+</head>
+<body>
+
+<div id="root">
+  <div id="panel-head">— <span class="actor"></span></div>
+
+  <div id="body-area">
+    <canvas id="body-canvas"></canvas>
+
+    <div id="activity-label"></div>
+
+    <div class="role smpl heavy" id="role-smpl-high"></div>
+    <div class="role smpl light" id="role-smpl-low"></div>
+
+    <div id="scrubber">
+      <input type="range" id="scrub-bar" min="0" max="1000" value="0" step="1"/>
+      <button id="play-pause" title="play / pause" aria-label="play / pause">⏸</button>
+    </div>
+
+    <div id="plots">
+      <div class="plot-row strongest" data-idx="0"><div class="feat-label"></div><canvas></canvas></div>
+      <div class="plot-row"            data-idx="1"><div class="feat-label"></div><canvas></canvas></div>
+      <div class="plot-row"            data-idx="2"><div class="feat-label"></div><canvas></canvas></div>
+    </div>
+
+  </div>
+</div>
+
+<div id="loading"><div class="spinner"></div><div id="load-status">Loading…</div></div>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/STLLoader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+
+<script>
+'use strict';
+
+// ── URL params ────────────────────────────────────────────
+const URL_PARAMS = new URLSearchParams(location.search);
+const ROW_ID = URL_PARAMS.get('row');                    // new data-driven mode
+const ATTR    = URL_PARAMS.get('attr') || 'weight';      // legacy mode
+const CLIP_ID = URL_PARAMS.get('clip');                  // legacy mode
+const MODE = ROW_ID ? 'row' : 'legacy';
+if (MODE === 'legacy' && !CLIP_ID) {
+  showError('panel.html: missing ?row=<row_id> (new) or ?clip=<id> (legacy) URL param');
+  throw new Error('missing row/clip');
+}
+
+const G1_MODEL_URL  = '../g1_engine/model/g1_model.json';
+const G1_MESH_BASE  = '../g1_engine/meshes';
+// Cache-bust the config fetch so config edits land in every iframe on next
+// reload (matrix.html does the same for its own copy of the fetch).
+const MATRIX_CONFIG_URL = './data/matrix_config.json?v=' + Date.now();
+// Row-mode config; default is the "gap" pick. matrix-extreme.html overrides
+// via ?config=<rel_path> in the iframe URL.
+const FEATURE_CONFIG_REL = URL_PARAMS.get('config') || 'data/feature_matrix_config.json';
+const FEATURE_MATRIX_CONFIG_URL = './' + FEATURE_CONFIG_REL + '?v=' + Date.now();
+const MAX_FRAMES_G1 = 600;
+// Must match generate_smpl_matrix.py --max-input-frames (currently 600 @ 120fps
+// → 5 s slab). The G1 CSV loader slices to the SAME middle slab so the SMPL
+// human and G1 robot play the same source frames.
+const SMPL_INPUT_FRAMES = 600;
+
+const DEG2RAD = Math.PI / 180;
+const RAD2DEG = 180 / Math.PI;
+const COLOR_HEAVY_HEX = '#ff8c19';
+const COLOR_LIGHT_HEX = '#1e90ff';
+
+let g1Model, clip, attrCfg, rowCfg;
+let playing = true, lastTime = null, masterTime = 0, masterDuration = 1;
+let userScrubbing = false;      // true while the user holds the scrubber thumb
+let scrubBarEl = null, playPauseBtn = null;
+const VIEWERS = {};
+
+// Tracks the per-frame feature curves (row mode only) so drawPlots can grab them.
+let ROW_FEATURE = null;     // { name, unit, recipe, hi:{values,min,max}, lo:{values,min,max}, expected_hi, expected_lo }
+
+// CSV→joint mapping
+const CSV_TO_JOINT = {
+  left_hip_pitch_joint_dof: 'left_hip_pitch_joint', left_hip_roll_joint_dof: 'left_hip_roll_joint',
+  left_hip_yaw_joint_dof: 'left_hip_yaw_joint', left_knee_joint_dof: 'left_knee_joint',
+  left_ankle_pitch_joint_dof: 'left_ankle_pitch_joint', left_ankle_roll_joint_dof: 'left_ankle_roll_joint',
+  right_hip_pitch_joint_dof: 'right_hip_pitch_joint', right_hip_roll_joint_dof: 'right_hip_roll_joint',
+  right_hip_yaw_joint_dof: 'right_hip_yaw_joint', right_knee_joint_dof: 'right_knee_joint',
+  right_ankle_pitch_joint_dof: 'right_ankle_pitch_joint', right_ankle_roll_joint_dof: 'right_ankle_roll_joint',
+  waist_yaw_joint_dof: 'waist_yaw_joint', waist_roll_joint_dof: 'waist_roll_joint', waist_pitch_joint_dof: 'waist_pitch_joint',
+  left_shoulder_pitch_joint_dof: 'left_shoulder_pitch_joint', left_shoulder_roll_joint_dof: 'left_shoulder_roll_joint',
+  left_shoulder_yaw_joint_dof: 'left_shoulder_yaw_joint', left_elbow_joint_dof: 'left_elbow_joint',
+  left_wrist_roll_joint_dof: 'left_wrist_roll_joint', left_wrist_pitch_joint_dof: 'left_wrist_pitch_joint',
+  left_wrist_yaw_joint_dof: 'left_wrist_yaw_joint',
+  right_shoulder_pitch_joint_dof: 'right_shoulder_pitch_joint', right_shoulder_roll_joint_dof: 'right_shoulder_roll_joint',
+  right_shoulder_yaw_joint_dof: 'right_shoulder_yaw_joint', right_elbow_joint_dof: 'right_elbow_joint',
+  right_wrist_roll_joint_dof: 'right_wrist_roll_joint', right_wrist_pitch_joint_dof: 'right_wrist_pitch_joint',
+  right_wrist_yaw_joint_dof: 'right_wrist_yaw_joint',
+};
+
+// ── Boot dispatch ─────────────────────────────────────────
+async function boot() {
+  if (MODE === 'row') return bootRow();
+  return bootLegacy();
+}
+
+// ── Boot (row mode: data-driven, two real CSVs, no synthetic scaling) ──
+async function bootRow() {
+  setStatus('Loading feature matrix…');
+  const cfg = await fetchJSON(FEATURE_MATRIX_CONFIG_URL);
+  const row = (cfg.rows || []).find(r => r.row_id === ROW_ID);
+  if (!row) throw new Error(`No row "${ROW_ID}" in ${FEATURE_CONFIG_REL}`);
+  rowCfg = row;
+  // Stash the config-level SMPL dir on rowCfg so tryLoadSMPLRow picks the
+  // right bin folder (gap vs extreme matrix live in separate dirs).
+  rowCfg._smpl_dir = cfg.smpl_dir || './data/smpl_feature_matrix';
+  const minimalChrome = cfg.chrome === 'minimal';
+
+  // Header chip: task · feature · r · n (suppressed in minimal-chrome mode)
+  const head = document.querySelector('#panel-head');
+  if (minimalChrome) {
+    document.getElementById('root').classList.add('minimal-chrome');
+    head.style.display = 'none';
+    // Without the 26 px header, the body fills the whole panel.
+    document.getElementById('root').style.gridTemplateRows = '1fr';
+    // Activity label intentionally left blank — the parent page already names
+    // the activity in its surrounding caption, so showing "Jogging" again on
+    // top of the panel is redundant.
+    document.getElementById('activity-label').textContent = '';
+    setupScrubber();
+  } else {
+    const rstr = (row.r >= 0 ? '+' : '') + row.r.toFixed(2);
+    head.firstChild.textContent = `${row.task} · ${row.feature}  r=${rstr} (n=${row.n_actors}) `;
+    document.querySelector('#panel-head .actor').textContent =
+      `· ${row.high.actor_uid} ${row.high.label}  vs  ${row.low.actor_uid} ${row.low.label}`;
+  }
+
+  // Side chips: in minimal mode just the attribute value (e.g. "45 yr").
+  // Otherwise: biometric + per-clip feature value.
+  const f_hi = row.high.expected_F, f_lo = row.low.expected_F;
+  if (minimalChrome) {
+    document.getElementById('role-smpl-high').textContent = row.high.label;
+    document.getElementById('role-smpl-low').textContent  = row.low.label;
+  } else {
+    document.getElementById('role-smpl-high').textContent =
+      `${row.high.label} · ${row.feature} = ${f_hi.toFixed(1)} ${row.feature_unit}`;
+    document.getElementById('role-smpl-low').textContent =
+      `${row.low.label} · ${row.feature} = ${f_lo.toFixed(1)} ${row.feature_unit}`;
+  }
+
+  // Single feature plot — collapse the 3-row plot stack to one row.
+  document.querySelectorAll('.plot-row[data-idx="1"], .plot-row[data-idx="2"]').forEach(el => {
+    el.style.display = 'none';
+  });
+  const plots = document.getElementById('plots');
+  plots.style.gridTemplateRows = '1fr';
+  // Label beside the plot: pretty feature name, no unit. e.g.
+  //   waist_rom              -> "Waist Range of Motion"
+  //   hip_peak_vel           -> "Hip Velocity"
+  //   root_translate_rom     -> "Root Range of Motion"
+  //   root_translate_peak_vel-> "Root Velocity"
+  const lblEl = document.querySelector('.plot-row[data-idx="0"] .feat-label');
+  lblEl.textContent = prettyFeatureName(row.feature);
+
+  setStatus('Loading G1 model…');
+  g1Model = await fetchJSON(G1_MODEL_URL);
+
+  setStatus('Loading motions…');
+  const [heavyMotion, lightMotion] = await Promise.all([
+    loadG1CSV(row.high.g1_csv, MAX_FRAMES_G1),
+    loadG1CSV(row.low.g1_csv,  MAX_FRAMES_G1),
+  ]);
+  // Per-side head trim — drops the leading N seconds (used to skip a bad
+  // SMPL pose at the start of a clip without re-fitting).
+  if (row.high_trim_head_seconds) trimG1MotionHead(heavyMotion, row.high_trim_head_seconds);
+  if (row.low_trim_head_seconds)  trimG1MotionHead(lightMotion, row.low_trim_head_seconds);
+  computeMeanXY(heavyMotion); computeMeanXY(lightMotion);
+
+  // Compute the per-frame feature series for each side using the recipe.
+  // Validate that the reduction matches the Python-side expected_F to within 1%.
+  const hiSeries = computeRecipeFeature(heavyMotion, row.feature_recipe);
+  const loSeries = computeRecipeFeature(lightMotion, row.feature_recipe);
+  const hiReduced = reduceFeatureSeries(hiSeries.values, row.feature_recipe.stat, heavyMotion.effFps);
+  const loReduced = reduceFeatureSeries(loSeries.values, row.feature_recipe.stat, lightMotion.effFps);
+  warnIfDeviates(row.row_id, 'high', hiReduced, f_hi);
+  warnIfDeviates(row.row_id, 'low',  loReduced, f_lo);
+
+  ROW_FEATURE = {
+    name: row.feature, unit: row.feature_unit, recipe: row.feature_recipe,
+    hi: hiSeries, lo: loSeries,
+    expected_hi: f_hi, expected_lo: f_lo,
+    reduced_hi: hiReduced, reduced_lo: loReduced,
+  };
+
+  setStatus('Looking for SMPL fits…');
+  const smplData = await tryLoadSMPLRow(row.row_id);
+  if (smplData && row.high_trim_head_seconds) trimSMPLHead(smplData.high, row.high_trim_head_seconds);
+  if (smplData && row.low_trim_head_seconds)  trimSMPLHead(smplData.low,  row.low_trim_head_seconds);
+
+  masterDuration = Math.max(
+    heavyMotion.duration, lightMotion.duration,
+    smplData ? Math.max(smplData.high.duration, smplData.low.duration) : 0
+  );
+  // Optional per-row trim: skip the last N seconds of the body animation
+  // (final-matrix uses this on the lasso-dance pair). The feature plot still
+  // sees the full per-frame array so the printed expected_F stays reconcilable;
+  // only the playback loop is shortened.
+  if (typeof row.truncate_tail_seconds === 'number' && row.truncate_tail_seconds > 0) {
+    masterDuration = Math.max(0.5, masterDuration - row.truncate_tail_seconds);
+  }
+
+  setStatus('Building robots…');
+  setupSharedRenderer();
+  // Use a default highlight joint per joint group (the first joint in the recipe
+  // for joint_group; null for root_* features).
+  const highlightJoint = pickHighlightJoint(row.feature_recipe);
+  // Per-row camera overrides. The shared camera_zoom / camera_target_y
+  // applies to both viewer types unless overridden by viewer-specific fields
+  // (g1_camera_zoom / smpl_camera_zoom etc). Used by climbing-box rows that
+  // want a closer G1 framing but a wider SMPL framing.
+  const cameraG1   = { zoom: row.g1_camera_zoom   ?? row.camera_zoom,
+                       target_y: row.g1_camera_target_y   ?? row.camera_target_y };
+  const cameraSMPL = { zoom: row.smpl_camera_zoom ?? row.camera_zoom,
+                       target_y: row.smpl_camera_target_y ?? row.camera_target_y };
+  VIEWERS.g1_heavy = await buildG1SoloScene(heavyMotion, COLOR_HEAVY_HEX, highlightJoint, cameraG1);
+  VIEWERS.g1_light = await buildG1SoloScene(lightMotion, COLOR_LIGHT_HEX, highlightJoint, cameraG1);
+
+  if (smplData) {
+    document.getElementById('root').classList.add('has-smpl');
+    console.info(`[panel ${row.row_id}] SMPL high: ${smplData.high.numFrames}f, ${smplData.high.numVerts}v, `
+      + `meanX=${smplData.high.meanX?.toFixed(3)} meanZ=${smplData.high.meanZ?.toFixed(3)} dur=${smplData.high.duration?.toFixed(2)}s`);
+    console.info(`[panel ${row.row_id}] SMPL low:  ${smplData.low.numFrames}f, ${smplData.low.numVerts}v, `
+      + `meanX=${smplData.low.meanX?.toFixed(3)} meanZ=${smplData.low.meanZ?.toFixed(3)} dur=${smplData.low.duration?.toFixed(2)}s`);
+    try {
+      VIEWERS.smpl_high = buildSMPLSoloScene(smplData.high, smplData.faces, COLOR_HEAVY_HEX, cameraSMPL);
+      VIEWERS.smpl_low  = buildSMPLSoloScene(smplData.low,  smplData.faces, COLOR_LIGHT_HEX, cameraSMPL);
+      console.info(`[panel ${row.row_id}] viewers built: smpl_high=${!!VIEWERS.smpl_high}, smpl_low=${!!VIEWERS.smpl_low}`);
+    } catch (e) {
+      showSMPLLoadError(row.row_id,
+        `SMPL viewer build threw — ${e && e.message ? e.message : e} — `
+        + `SMPL row will stay black (G1 still renders below).`);
+    }
+  } else {
+    // No SMPL bins yet: collapse the SMPL viewport so the plot strip moves to
+    // the top and G1 takes the bottom 65%. Without this the renderer leaves
+    // the top 36% at WebGL's default black.
+    document.getElementById('root').classList.add('no-smpl');
+  }
+
+  setupPlots();
+  document.getElementById('loading').style.display = 'none';
+  requestAnimationFrame(loop);
+}
+
+// ── Recipe-based per-frame feature compute ────────────────
+// Mirrors compute_multi_axis_features / compute_single_axis_features /
+// merged_lr_features in bones-seed Correlation_V2/simple_interpretability.py
+// so the per-frame series here REDUCES to the same scalar Python wrote into
+// row.high.expected_F / row.low.expected_F.
+function computeRecipeFeature(motion, recipe) {
+  const n = motion.numFrames;
+  const fps = motion.effFps;
+  let values;
+  if (recipe.kind === 'root_translate') {
+    values = computeMultiAxisPerFrame(motion.rawRootTranslate, n, fps, recipe.stat);
+  } else if (recipe.kind === 'root_rotate') {
+    values = computeMultiAxisPerFrame(motion.rawRootRotate, n, fps, recipe.stat);
+  } else if (recipe.kind === 'joint_group') {
+    if (recipe.agg === 'multi_axis') {
+      const stacked = stackJointColumns(motion, recipe.joints);
+      values = computeMultiAxisPerFrame(stacked, n, fps, recipe.stat);
+    } else if (recipe.agg === 'single_axis') {
+      const col = motion.rawJointsDeg[recipe.joints[0]] || new Float32Array(n);
+      values = computeSingleAxisPerFrame(col, n, fps, recipe.stat);
+    } else if (recipe.agg === 'lr_merge') {
+      const leftStacked  = stackJointColumns(motion, recipe.left);
+      const rightStacked = stackJointColumns(motion, recipe.right);
+      const lVals = (recipe.left.length === 1)
+        ? computeSingleAxisPerFrame(motion.rawJointsDeg[recipe.left[0]],  n, fps, recipe.stat)
+        : computeMultiAxisPerFrame(leftStacked,  n, fps, recipe.stat);
+      const rVals = (recipe.right.length === 1)
+        ? computeSingleAxisPerFrame(motion.rawJointsDeg[recipe.right[0]], n, fps, recipe.stat)
+        : computeMultiAxisPerFrame(rightStacked, n, fps, recipe.stat);
+      values = new Float32Array(n);
+      for (let i = 0; i < n; i++) values[i] = (lVals[i] + rVals[i]) * 0.5;
+    } else throw new Error(`unknown recipe.agg: ${recipe.agg}`);
+  } else throw new Error(`unknown recipe.kind: ${recipe.kind}`);
+  // min/max for plot Y-axis
+  let mn = +Infinity, mx = -Infinity;
+  for (let i = 0; i < n; i++) {
+    if (values[i] < mn) mn = values[i];
+    if (values[i] > mx) mx = values[i];
+  }
+  return { values, min: mn, max: mx };
+}
+
+// Stack named raw-degree joint columns into one Float32Array shaped (T*k) where
+// k = joints.length, in row-major (frame, axis) order.
+function stackJointColumns(motion, jointCsvNames) {
+  const n = motion.numFrames, k = jointCsvNames.length;
+  const out = new Float32Array(n * k);
+  for (let a = 0; a < k; a++) {
+    const col = motion.rawJointsDeg[jointCsvNames[a]];
+    if (!col) continue;
+    for (let i = 0; i < n; i++) out[i*k + a] = col[i];
+  }
+  return out;
+}
+
+// For multi-axis features the per-frame scalar is the magnitude of the velocity
+// vector (for *vel stats) or the across-frames axis-vector norm (for ROM —
+// constant per frame, painted as a flat line). Mirrors np.linalg.norm conventions.
+function computeMultiAxisPerFrame(stacked, n, fps, stat) {
+  // Infer k from length / n
+  const k = Math.round(stacked.length / n);
+  const out = new Float32Array(n);
+  if (stat === 'rom') {
+    // ROM is a single scalar — flat line equal to ||max−min along each axis||.
+    const mins = new Float32Array(k).fill(+Infinity);
+    const maxs = new Float32Array(k).fill(-Infinity);
+    for (let i = 0; i < n; i++) {
+      for (let a = 0; a < k; a++) {
+        const v = stacked[i*k + a];
+        if (v < mins[a]) mins[a] = v;
+        if (v > maxs[a]) maxs[a] = v;
+      }
+    }
+    let romSq = 0;
+    for (let a = 0; a < k; a++) { const d = maxs[a] - mins[a]; romSq += d*d; }
+    const rom = Math.sqrt(romSq);
+    for (let i = 0; i < n; i++) out[i] = rom;
+    return out;
+  }
+  // mean_vel / peak_vel: per-frame velocity magnitude (frame i: ||x[i]-x[i-1]|| * fps).
+  // out[0] = 0 (no diff defined); subsequent frames carry the magnitude.
+  for (let i = 1; i < n; i++) {
+    let sq = 0;
+    for (let a = 0; a < k; a++) {
+      const d = stacked[i*k + a] - stacked[(i-1)*k + a];
+      sq += d*d;
+    }
+    out[i] = Math.sqrt(sq) * fps;
+  }
+  return out;
+}
+
+function computeSingleAxisPerFrame(col, n, fps, stat) {
+  const out = new Float32Array(n);
+  if (stat === 'rom') {
+    let mn = +Infinity, mx = -Infinity;
+    for (let i = 0; i < n; i++) {
+      const v = col[i]; if (v < mn) mn = v; if (v > mx) mx = v;
+    }
+    const rom = mx - mn;
+    for (let i = 0; i < n; i++) out[i] = rom;
+    return out;
+  }
+  for (let i = 1; i < n; i++) out[i] = Math.abs(col[i] - col[i-1]) * fps;
+  return out;
+}
+
+// Reduce a per-frame series to the scalar python wrote into expected_F.
+// (mean_vel → mean; peak_vel → max; rom → values are all equal, return any.)
+function reduceFeatureSeries(values, stat, fps) {
+  // values[0] is 0 for velocity series; skip it to match np.diff semantics.
+  if (stat === 'mean_vel') {
+    let s = 0, n = values.length - 1;
+    for (let i = 1; i < values.length; i++) s += values[i];
+    return n > 0 ? s / n : 0;
+  }
+  if (stat === 'peak_vel') {
+    let m = -Infinity;
+    for (let i = 1; i < values.length; i++) if (values[i] > m) m = values[i];
+    return m === -Infinity ? 0 : m;
+  }
+  if (stat === 'rom') return values[0];      // flat line
+  return NaN;
+}
+
+function warnIfDeviates(rowId, side, observed, expected, tol = 0.01) {
+  if (expected == null || !isFinite(expected) || expected === 0) return;
+  const rel = Math.abs(observed - expected) / Math.abs(expected);
+  if (rel > tol) {
+    console.warn(`[panel ${rowId}] ${side} feature reconciliation off by ${(rel*100).toFixed(2)}%: `
+      + `JS=${observed.toFixed(3)} vs Python expected=${expected.toFixed(3)}`);
+  }
+}
+
+// "waist_rom" -> "Waist Range of Motion", "hip_peak_vel" -> "Hip Velocity",
+// "root_translate_rom" -> "Root Range of Motion", etc. Drops the _mean/_peak
+// distinction (both render as "Velocity") and the joint-prefix slugification.
+function prettyFeatureName(featName) {
+  const STAT = { rom: 'Range of Motion', mean_vel: 'Velocity', peak_vel: 'Velocity' };
+  const GROUP = {
+    root_translate: 'Root', root_rotate: 'Root Rotation',
+    hip: 'Hip', knee: 'Knee', ankle: 'Ankle', waist: 'Waist',
+    shoulder: 'Shoulder', elbow: 'Elbow', wrist: 'Wrist',
+  };
+  for (const suffix of ['mean_vel', 'peak_vel', 'rom']) {
+    if (featName.endsWith('_' + suffix)) {
+      const group = featName.slice(0, -(suffix.length + 1));
+      const pretty = GROUP[group] || (group.charAt(0).toUpperCase() + group.slice(1));
+      return `${pretty} ${STAT[suffix]}`;
+    }
+  }
+  return featName;
+}
+
+// Wire up the per-panel scrubber + play/pause button (minimal-chrome only).
+// The scrub bar is 0..1000; we map to masterTime ∈ [0, masterDuration].
+// While the user is holding the thumb, playback pauses and the body frame
+// follows the slider; on release, playback resumes if it was playing.
+function setupScrubber() {
+  scrubBarEl   = document.getElementById('scrub-bar');
+  playPauseBtn = document.getElementById('play-pause');
+  if (!scrubBarEl || !playPauseBtn) return;
+  let wasPlayingBeforeScrub = true;
+  const onDown = () => { wasPlayingBeforeScrub = playing; playing = false; userScrubbing = true; };
+  const onUp   = () => { userScrubbing = false; if (wasPlayingBeforeScrub) { playing = true; playPauseBtn.textContent = '⏸'; } };
+  scrubBarEl.addEventListener('pointerdown', onDown);
+  scrubBarEl.addEventListener('pointerup',   onUp);
+  scrubBarEl.addEventListener('pointercancel', onUp);
+  scrubBarEl.addEventListener('input', () => {
+    masterTime = (Number(scrubBarEl.value) / 1000) * masterDuration;
+  });
+  playPauseBtn.addEventListener('click', () => {
+    playing = !playing;
+    playPauseBtn.textContent = playing ? '⏸' : '▶';
+  });
+}
+
+function pickHighlightJoint(recipe) {
+  if (recipe.kind !== 'joint_group') return null;
+  // Convert the first raw-csv joint name (foo_pitch_joint_dof) to the engine
+  // joint name (foo_pitch_joint) by stripping the trailing _dof.
+  const csvName = (recipe.agg === 'lr_merge') ? recipe.left[0] : recipe.joints[0];
+  return csvName ? csvName.replace(/_dof$/, '') : null;
+}
+
+// Try to load SMPL bins from <smpl_dir>/<row_id>_{high,low}.bin.
+// smpl_dir is read from the active feature_matrix config; defaults to the
+// "gap" matrix's dir for legacy callers. Cache-bust query param prevents the
+// browser from serving a stale 404 cached before the bin was generated.
+// SMPL load failures land in the console as warnings. (Earlier versions
+// also painted a visible chip on the panel; removed after the Retina
+// viewport bug was diagnosed.)
+function showSMPLLoadError(rowId, msg) {
+  console.warn(`[panel ${rowId}] ${msg}`);
+}
+async function tryLoadSMPLRow(rowId) {
+  const base = (rowCfg && rowCfg._smpl_dir) || './data/smpl_feature_matrix';
+  // No per-load cache-buster on the .bin URLs — they're ~8 MB each and
+  // change rarely. Date.now() defeats both browser cache AND CDN edge
+  // cache, forcing every visitor to re-download ~131 MB from origin.
+  // If a bin is ever regenerated, bump SMPL_BIN_VERSION below (or rely on
+  // GitHub Pages' ETag).
+  const SMPL_BIN_VERSION = '2026-05-22';
+  const bust = '?v=' + SMPL_BIN_VERSION;
+  const urls = {
+    faces: `${base}/faces.bin${bust}`,
+    high:  `${base}/${rowId}_high.bin${bust}`,
+    low:   `${base}/${rowId}_low.bin${bust}`,
+  };
+  try {
+    const [facesR, highR, lowR] = await Promise.all([
+      fetch(urls.faces), fetch(urls.high), fetch(urls.low),
+    ]);
+    if (!facesR.ok || !highR.ok || !lowR.ok) {
+      showSMPLLoadError(rowId,
+        `SMPL bins missing — faces=${facesR.status} (${urls.faces}), `
+        + `high=${highR.status} (${urls.high}), `
+        + `low=${lowR.status} (${urls.low}) — falling back to G1-only mode`);
+      return null;
+    }
+    const [facesBuf, highBuf, lowBuf] = await Promise.all([
+      facesR.arrayBuffer(), highR.arrayBuffer(), lowR.arrayBuffer()
+    ]);
+    const faces = parseFacesBin(facesBuf);
+    const high  = parseVertsBin(highBuf);
+    const low   = parseVertsBin(lowBuf);
+    computeSMPLCentroid(high); computeSMPLCentroid(low);
+    return { faces, high, low };
+  } catch (e) {
+    showSMPLLoadError(rowId,
+      `SMPL load threw — ${e && e.message ? e.message : e} — `
+      + `base=${base} — falling back to G1-only mode`);
+    return null;
+  }
+}
+
+// ── Legacy boot (back-compat with matrix_config.json / synthetic scaling) ──
+async function bootLegacy() {
+  setStatus('Loading config…');
+  const matrixCfg = await fetchJSON(MATRIX_CONFIG_URL);
+  attrCfg = matrixCfg[ATTR];
+  if (!attrCfg) throw new Error(`No attr "${ATTR}" in config`);
+  clip = attrCfg.clips.find(c => c.id === CLIP_ID);
+  if (!clip) throw new Error(`No clip "${CLIP_ID}" in attr "${ATTR}"`);
+
+  document.querySelector('#panel-head').firstChild.textContent = clip.label + ' ';
+  document.querySelector('#panel-head .actor').textContent = `· ${clip.actor}`;
+  // Per-clip values (random within each attribute's range); units + side label
+  // come from the attribute. Fall back to attr-level if a legacy config still
+  // has the value at the top.
+  const highV = clip.high_value ?? attrCfg.high_value;
+  const lowV  = clip.low_value  ?? attrCfg.low_value;
+  // Just the numeric value + unit on the SMPL row; the G1 row is unlabelled
+  // (the heavy/light side is already conveyed by the red/blue chip border
+  // above each human, and the robots themselves are identical regardless).
+  document.getElementById('role-smpl-high').textContent = `${highV} ${attrCfg.high_unit}`;
+  document.getElementById('role-smpl-low' ).textContent = `${lowV} ${attrCfg.low_unit}`;
+  clip.features.forEach((f, i) => {
+    const lbl = document.querySelector(`.plot-row[data-idx="${i}"] .feat-label`);
+    lbl.textContent = `${f.label}  (${f.unit})`;
+  });
+
+  setStatus('Loading G1 model…');
+  g1Model = await fetchJSON(G1_MODEL_URL);
+
+  setStatus('Loading motion…');
+  const baseMotion = await loadG1CSV(clip.g1_csv, MAX_FRAMES_G1);
+  const lightMotion = baseMotion;
+  const heavyMotion = applyScale(baseMotion, clip.scale);
+
+  computeAllFeatures(lightMotion, clip.features);
+  computeAllFeatures(heavyMotion, clip.features);
+  computeMeanXY(lightMotion); computeMeanXY(heavyMotion);
+
+  setStatus('Looking for SMPL fits…');
+  const smplData = await tryLoadSMPL(ATTR, clip.id);
+
+  masterDuration = Math.max(
+    heavyMotion.duration, lightMotion.duration,
+    smplData ? Math.max(smplData.high.duration, smplData.low.duration) : 0
+  );
+
+  setStatus('Building robots…');
+  setupSharedRenderer();
+  // Four separate scenes, one per body — each gets its own quadrant viewport
+  // in the loop. Sharing one WebGL context keeps total contexts per panel = 1.
+  VIEWERS.g1_heavy = await buildG1SoloScene(heavyMotion, COLOR_HEAVY_HEX, clip.highlight_joint);
+  VIEWERS.g1_light = await buildG1SoloScene(lightMotion, COLOR_LIGHT_HEX, clip.highlight_joint);
+
+  if (smplData) {
+    document.getElementById('root').classList.add('has-smpl');
+    VIEWERS.smpl_high = buildSMPLSoloScene(smplData.high, smplData.faces, COLOR_HEAVY_HEX);
+    VIEWERS.smpl_low  = buildSMPLSoloScene(smplData.low,  smplData.faces, COLOR_LIGHT_HEX);
+  }
+
+  setupPlots();
+  document.getElementById('loading').style.display = 'none';
+  requestAnimationFrame(loop);
+}
+
+// ── Shared renderer + viewport plumbing ─────────────────────
+// One WebGLRenderer per panel, attached to #body-canvas. We render two
+// viewports per frame: SMPL on the top portion of the canvas, G1 on the
+// bottom. The middle strip is hidden by the #plots HTML overlay.
+let SHARED_RENDERER = null;
+function setupSharedRenderer() {
+  const cnv = document.getElementById('body-canvas');
+  SHARED_RENDERER = new THREE.WebGLRenderer({ canvas: cnv, antialias: true, powerPreference: 'low-power' });
+  SHARED_RENDERER.setPixelRatio(window.devicePixelRatio);
+  SHARED_RENDERER.autoClear = false;     // we clear per viewport manually
+  // WebGL context-loss recovery — Chrome can silently drop the oldest WebGL
+  // context when too many are active (this panel + bar-plot pills + popup
+  // can easily exceed the per-page budget). Without this the canvas goes
+  // blank but the SVG overlay keeps drawing. Reloading the iframe is the
+  // cheapest way to get a fresh context.
+  cnv.addEventListener('webglcontextlost', (e) => {
+    e.preventDefault();
+    console.warn('[panel] WebGL context lost — reloading iframe');
+    setTimeout(() => { try { location.reload(); } catch {} }, 150);
+  });
+  const area = document.getElementById('body-area');
+  function size() {
+    const w = area.clientWidth, h = area.clientHeight;
+    if (w && h) SHARED_RENDERER.setSize(w, h, false);
+  }
+  size();
+  new ResizeObserver(size).observe(area);
+}
+
+// Viewport split — must match the CSS `top: 36%; bottom: 39%` on #plots.
+// Four quadrants: SMPL row (top half) split into high (left) / low (right),
+// G1 row (bottom half) split into heavy (left) / light (right). Per-body
+// viewports let each camera frame ONE body tightly, ~doubling on-screen size
+// vs the previous per-row layout.
+function panelViewports() {
+  // W/H must be CSS pixels, NOT canvas drawing-buffer pixels (= cnv.width/
+  // cnv.height). Three.js' setViewport / setScissor multiply their args by
+  // the renderer's pixelRatio internally, so passing device pixels here
+  // double-scales on Retina (dpr=2) and pushes the right-half viewports
+  // off-canvas + the SMPL row above visible pixels — making the SMPL
+  // viewport stay solid black on every Mac display.
+  const area = document.getElementById('body-area');
+  const W = area.clientWidth, H = area.clientHeight;
+  const root = document.getElementById('root');
+  const noSmpl  = root.classList.contains('no-smpl');
+  const minimal = root.classList.contains('minimal-chrome');
+  const halfW = Math.round(W / 2);
+  if (minimal && !noSmpl) {
+    // Minimal-chrome layout: SWAP — G1 robots on TOP, SMPL humans on BOTTOM.
+    // Reserve a ~30 px strip at the very bottom for the scrubber/play button.
+    // (WebGL setViewport y is bottom-origin, so the TOP region is at high y.)
+    const scrubH = 30;
+    const g1H   = Math.round(H * 0.36);    // matches CSS #plots { top:36% }
+    const g1Y   = H - g1H;                 // anchor at top of canvas (visually)
+    const smplH = Math.max(1, Math.round(H * 0.39) - scrubH);
+    const smplY = scrubH;                  // anchor at bottom (above scrubber strip)
+    return {
+      g1Heavy:  { x: 0,     y: g1Y,   w: halfW,     h: g1H   },
+      g1Light:  { x: halfW, y: g1Y,   w: W - halfW, h: g1H   },
+      smplHigh: { x: 0,     y: smplY, w: halfW,     h: smplH },
+      smplLow:  { x: halfW, y: smplY, w: W - halfW, h: smplH },
+    };
+  }
+  if (noSmpl) {
+    // No SMPL: plot strip is at the top (CSS #plots { top: 0%; bottom: 65% })
+    // → G1 occupies the bottom 65% of the canvas. Mirror that here so the
+    // viewport draws under the plot strip and there is no black gap above.
+    const g1H = Math.round(H * 0.65);
+    return {
+      smplHigh: null,
+      smplLow:  null,
+      g1Heavy:  { x: 0,     y: 0, w: halfW,     h: g1H },
+      g1Light:  { x: halfW, y: 0, w: W - halfW, h: g1H },
+    };
+  }
+  const SMPL_BOT_FRAC = 0.36;   // bottom of SMPL row
+  const G1_TOP_FRAC   = 0.61;   // top of G1 row
+  const smplY = Math.round(H * (1 - SMPL_BOT_FRAC));
+  const smplH = Math.round(H * SMPL_BOT_FRAC);
+  const g1Y   = 0;
+  const g1H   = Math.round(H * (1 - G1_TOP_FRAC));
+  return {
+    smplHigh: { x: 0,     y: smplY, w: halfW,     h: smplH },
+    smplLow:  { x: halfW, y: smplY, w: W - halfW, h: smplH },
+    g1Heavy:  { x: 0,     y: g1Y,   w: halfW,     h: g1H   },
+    g1Light:  { x: halfW, y: g1Y,   w: W - halfW, h: g1H   },
+  };
+}
+
+async function fetchJSON(url) { const r = await fetch(url); if (!r.ok) throw new Error(`${r.status} ${url}`); return r.json(); }
+function setStatus(msg) { const el = document.getElementById('load-status'); if (el) el.textContent = msg; }
+function showError(m) {
+  const ld = document.getElementById('loading');
+  if (ld) ld.innerHTML = `<div id="error-msg">${m}</div>`;
+}
+
+// ── CSV → motion ──────────────────────────────────────────
+async function loadG1CSV(url, maxFrames) {
+  const text = await fetch(url).then(r => { if (!r.ok) throw new Error(url); return r.text(); });
+  const parsed = Papa.parse(text, { header: true, skipEmptyLines: true, dynamicTyping: true });
+  let rows = parsed.data;
+  // Slice to the same middle slab the SMPL fitter used (so the human and the
+  // robot play matching source frames). Skip slicing if the clip is already
+  // shorter than the slab.
+  if (rows.length > SMPL_INPUT_FRAMES) {
+    const start = Math.floor((rows.length - SMPL_INPUT_FRAMES) / 2);
+    rows = rows.slice(start, start + SMPL_INPUT_FRAMES);
+  }
+  let frames = rows;
+  const ratio = rows.length / maxFrames;
+  if (rows.length > maxFrames) frames = Array.from({length: maxFrames}, (_, i) => rows[Math.round(i * ratio)]);
+  const effFps = 120 / (rows.length > maxFrames ? ratio : 1);
+  const md = {
+    numFrames: frames.length, frameTime: 1/effFps, duration: frames.length/effFps,
+    effFps: effFps,
+    rootPos: new Float32Array(frames.length*3), rootQuat: new Float32Array(frames.length*4),
+    joints: {},
+    // Raw degrees/cm arrays — used by the row-mode feature recipe to compute
+    // values reconcilable with simple_interpretability.py's compute_clip_features
+    // (which operates on the un-converted CSV columns).
+    rawRootTranslate: new Float32Array(frames.length*3),  // cm
+    rawRootRotate:    new Float32Array(frames.length*3),  // degrees
+    rawJointsDeg: {},                                      // joint_dof name → Float32Array (degrees)
+  };
+  Object.values(CSV_TO_JOINT).forEach(n => { md.joints[n] = new Float32Array(frames.length); });
+  Object.keys(CSV_TO_JOINT).forEach(c => { md.rawJointsDeg[c] = new Float32Array(frames.length); });
+  const te = new THREE.Euler(0,0,0,'ZYX'); const tq = new THREE.Quaternion();
+  for (let i = 0; i < frames.length; i++) {
+    const r = frames[i];
+    const rtx = r['root_translateX']||0, rty = r['root_translateY']||0, rtz = r['root_translateZ']||0;
+    md.rootPos[i*3]   = rtx*0.01;
+    md.rootPos[i*3+1] = rty*0.01;
+    md.rootPos[i*3+2] = rtz*0.01;
+    md.rawRootTranslate[i*3]   = rtx;
+    md.rawRootTranslate[i*3+1] = rty;
+    md.rawRootTranslate[i*3+2] = rtz;
+    const rrx = r['root_rotateX']||0, rry = r['root_rotateY']||0, rrz = r['root_rotateZ']||0;
+    te.set(rrx*DEG2RAD, rry*DEG2RAD, rrz*DEG2RAD, 'ZYX');
+    tq.setFromEuler(te);
+    md.rootQuat[i*4]=tq.w; md.rootQuat[i*4+1]=tq.x; md.rootQuat[i*4+2]=tq.y; md.rootQuat[i*4+3]=tq.z;
+    md.rawRootRotate[i*3]   = rrx;
+    md.rawRootRotate[i*3+1] = rry;
+    md.rawRootRotate[i*3+2] = rrz;
+    for (const [c, j] of Object.entries(CSV_TO_JOINT)) if (r[c] !== undefined) {
+      const v = r[c];
+      md.joints[j][i] = v*DEG2RAD;
+      md.rawJointsDeg[c][i] = v;
+    }
+  }
+  return md;
+}
+
+// ── Synthetic heavy-operator scaling ──────────────────────
+// `spec.type` controls what gets dampened: 'root' shrinks root excursions
+// around the mean, 'joints' shrinks each listed joint's angle around its
+// per-clip mean. Mean centring keeps the trajectory in place; only the
+// excursions get attenuated. `spec` can also be an ARRAY of spec objects,
+// applied in order — that's how each panel exaggerates its primary feature
+// most and secondary/tertiary features progressively less, so all three
+// plots show a heavy/light gap.
+function applyScale(src, spec) {
+  if (!spec) return src;
+  if (Array.isArray(spec)) {
+    let m = src;
+    for (const s of spec) m = applyOneScale(m, s);
+    return m;
+  }
+  return applyOneScale(src, spec);
+}
+
+function applyOneScale(src, spec) {
+  if (!spec || spec.factor === 1.0) return src;
+  if (spec.type === 'root') {
+    const n = src.numFrames;
+    let mX = 0, mY = 0, mZ = 0;
+    for (let i = 0; i < n; i++) {
+      mX += src.rootPos[i*3]; mY += src.rootPos[i*3+1]; mZ += src.rootPos[i*3+2];
+    }
+    mX /= n; mY /= n; mZ /= n;
+    const r = new Float32Array(n * 3);
+    for (let i = 0; i < n; i++) {
+      r[i*3]   = mX + (src.rootPos[i*3]   - mX) * spec.factor;
+      r[i*3+1] = mY + (src.rootPos[i*3+1] - mY) * spec.factor;
+      r[i*3+2] = mZ + (src.rootPos[i*3+2] - mZ) * spec.factor;
+    }
+    return { ...src, rootPos: r };
+  }
+  if (spec.type === 'joints') {
+    const newJoints = Object.assign({}, src.joints);
+    for (const name of spec.joints) {
+      const arr = src.joints[name]; if (!arr) continue;
+      let m = 0;
+      for (let i = 0; i < arr.length; i++) m += arr[i]; m /= arr.length;
+      const scaled = new Float32Array(arr.length);
+      for (let i = 0; i < arr.length; i++) scaled[i] = m + (arr[i] - m) * spec.factor;
+      newJoints[name] = scaled;
+    }
+    return { ...src, joints: newJoints };
+  }
+  return src;
+}
+
+// In-place: drop the first `seconds` of motion data. Keeps the same shape
+// fields populated (just shorter). Used to skip a bad SMPL pose at the start
+// of a clip without re-fitting.
+function trimG1MotionHead(m, seconds) {
+  const startFrame = Math.min(m.numFrames - 1, Math.max(0, Math.round(seconds / m.frameTime)));
+  if (startFrame <= 0) return;
+  const newN = m.numFrames - startFrame;
+  m.rootPos  = m.rootPos.slice(startFrame * 3, m.numFrames * 3);
+  m.rootQuat = m.rootQuat.slice(startFrame * 4, m.numFrames * 4);
+  for (const k of Object.keys(m.joints))       m.joints[k]       = m.joints[k].slice(startFrame);
+  for (const k of Object.keys(m.rawJointsDeg)) m.rawJointsDeg[k] = m.rawJointsDeg[k].slice(startFrame);
+  m.rawRootTranslate = m.rawRootTranslate.slice(startFrame * 3);
+  m.rawRootRotate    = m.rawRootRotate.slice(startFrame * 3);
+  m.numFrames = newN;
+  m.duration  = newN * m.frameTime;
+  console.info(`[trim] G1: dropped first ${seconds}s -> ${newN} frames (${m.duration.toFixed(2)}s)`);
+}
+
+function trimSMPLHead(data, seconds) {
+  const startFrame = Math.min(data.numFrames - 1, Math.max(0, Math.round(seconds * data.fps)));
+  if (startFrame <= 0) return;
+  const newN = data.numFrames - startFrame;
+  const stride = data.numVerts * 3;
+  data.verts = data.verts.slice(startFrame * stride, data.numFrames * stride);
+  data.numFrames = newN;
+  data.duration  = newN / data.fps;
+  // recompute centroid for the trimmed range
+  computeSMPLCentroid(data);
+  console.info(`[trim] SMPL: dropped first ${seconds}s -> ${newN} frames (${data.duration.toFixed(2)}s)`);
+}
+
+function computeMeanXY(m) {
+  let sx = 0, sy = 0;
+  for (let i = 0; i < m.numFrames; i++) { sx += m.rootPos[i*3]; sy += m.rootPos[i*3+1]; }
+  m.meanX = sx / m.numFrames; m.meanY = sy / m.numFrames;
+}
+
+// ── Features ──────────────────────────────────────────────
+// Each feature spec → a Float32Array of per-frame scalar values, attached
+// to motion.features[idx]. Plot rendering picks them up by index.
+function computeAllFeatures(motion, specs) {
+  motion.features = specs.map(s => computeFeature(motion, s));
+}
+function computeFeature(motion, spec) {
+  const n = motion.numFrames;
+  const out = new Float32Array(n);
+  if (spec.type === 'root_vel') {
+    for (let i = 1; i < n; i++) {
+      const dx = motion.rootPos[i*3]   - motion.rootPos[(i-1)*3];
+      const dy = motion.rootPos[i*3+1] - motion.rootPos[(i-1)*3+1];
+      const dz = motion.rootPos[i*3+2] - motion.rootPos[(i-1)*3+2];
+      out[i] = Math.sqrt(dx*dx + dy*dy + dz*dz) / motion.frameTime;
+    }
+  } else if (spec.type === 'joint_vel') {
+    const arr = motion.joints[spec.joint];
+    if (arr) {
+      for (let i = 1; i < n; i++) {
+        out[i] = Math.abs(arr[i] - arr[i-1]) * RAD2DEG / motion.frameTime;
+      }
+    }
+  } else if (spec.type === 'joint_angle') {
+    const arr = motion.joints[spec.joint];
+    if (arr) for (let i = 0; i < n; i++) out[i] = arr[i] * RAD2DEG;
+  }
+  // Stash range for symmetric Y-axis (used by joint_angle plots).
+  let mn = +Infinity, mx = -Infinity;
+  for (let i = (spec.type === 'joint_angle' ? 0 : 1); i < n; i++) {
+    if (out[i] < mn) mn = out[i];
+    if (out[i] > mx) mx = out[i];
+  }
+  return { values: out, min: mn, max: mx, spec };
+}
+
+// ── G1 viewer ─────────────────────────────────────────────
+const stlCache = {};
+async function loadSTL(name) {
+  if (stlCache[name]) return stlCache[name];
+  return new Promise(resolve => {
+    new THREE.STLLoader().load(`${G1_MESH_BASE}/${name}.STL`,
+      g => { g.computeVertexNormals(); stlCache[name] = g; resolve(g); },
+      undefined, () => { stlCache[name] = null; resolve(null); });
+  });
+}
+
+// Find the G1 body whose joint.name matches `jointName`, or null if not found.
+// 'root' is treated specially → returns the synthetic key 'ROOT'.
+function findBodyForJoint(jointName) {
+  if (!jointName || jointName === 'root') return 'ROOT';
+  for (const b of g1Model.bodies) if (b.joint && b.joint.name === jointName) return b.name;
+  return null;
+}
+
+// Build ONE robot inside `parentGroup` (which provides the world-X offset,
+// Z-up→Y-up rotation, and any future scaling). Returns the per-robot apply
+// function plus the body lookup map.
+async function buildG1Robot(parentGroup, accentHex, highlightJoint) {
+  const groupMap = {}, bodyGroups = {};
+  let rootGroup = null;
+  for (const body of g1Model.bodies) {
+    const outer = new THREE.Group();
+    outer.position.set(...body.pos);
+    outer.quaternion.set(body.quat[1], body.quat[2], body.quat[3], body.quat[0]);
+    const inner = new THREE.Group();
+    outer.add(inner);
+    groupMap[body.name] = { outer, inner }; bodyGroups[body.name] = inner;
+  }
+  for (const body of g1Model.bodies) {
+    const { outer } = groupMap[body.name];
+    if (body.parent && groupMap[body.parent]) groupMap[body.parent].inner.add(outer);
+    else { parentGroup.add(outer); rootGroup = outer; }
+  }
+  const accentCol = new THREE.Color(accentHex);
+  const matCache = {};
+  function getMat(rgba) {
+    const isDark = rgba[0] < 0.4;
+    const key = isDark ? 'dark' : 'light';
+    if (!matCache[key]) {
+      // Lavender body to match the teaser figure under the abstract
+      // (and the bar-plot panel's G1 viewer). Deeper than the bar-plot
+      // version because panel.html's lighting washes out subtle tints.
+      // Dark mesh group stays near-black like the head.
+      const base = isDark ? new THREE.Color(0x1a1d24) : new THREE.Color(0x8e8eba);
+      const col = base.clone().lerp(accentCol, isDark ? 0.05 : 0.02);
+      matCache[key] = new THREE.MeshStandardMaterial({
+        color: col, metalness: isDark ? 0.55 : 0.18, roughness: isDark ? 0.40 : 0.55,
+      });
+    }
+    return matCache[key];
+  }
+  const loadPromises = [];
+  for (const body of g1Model.bodies) {
+    for (const mesh of body.meshes) {
+      loadPromises.push(loadSTL(mesh.name).then(geo => {
+        if (!geo) return;
+        const m = new THREE.Mesh(geo, getMat(mesh.rgba));
+        m.position.set(...mesh.pos);
+        m.quaternion.set(mesh.quat[1], mesh.quat[2], mesh.quat[3], mesh.quat[0]);
+        groupMap[body.name].inner.add(m);
+      }));
+    }
+  }
+  await Promise.all(loadPromises);
+
+  // Highlight sphere on the joint corresponding to the strongest feature.
+  const highlightBody = findBodyForJoint(highlightJoint);
+  let highlightParent = rootGroup;
+  if (highlightBody && highlightBody !== 'ROOT' && bodyGroups[highlightBody]) {
+    highlightParent = bodyGroups[highlightBody];
+  }
+  const sphere = new THREE.Mesh(
+    new THREE.SphereGeometry(0.07, 20, 14),
+    new THREE.MeshBasicMaterial({ color: accentHex, transparent: true, opacity: 0.85 }),
+  );
+  highlightParent.add(sphere);
+  const glow = new THREE.Mesh(
+    new THREE.SphereGeometry(0.14, 20, 14),
+    new THREE.MeshBasicMaterial({ color: accentHex, transparent: true, opacity: 0.28, side: THREE.BackSide }),
+  );
+  highlightParent.add(glow);
+
+  return { rootGroup, bodyGroups, glow };
+}
+
+// One scene with one G1 robot at world origin. Camera framed tightly on it.
+// We build TWO of these per panel (one for heavy, one for light) so each
+// body fills its own viewport instead of sharing a wide row with the other.
+async function buildG1SoloScene(motion, accentHex, highlightJoint, cameraOpts) {
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color('#a8aeb6');
+
+  // Aspect set per-frame by the renderer (depends on viewport size).
+  // FOV 35° at d=3.0 m → 1.89 m vertical visible, body ~1.8 m → ~95% fill.
+  // Per-row overrides: cameraOpts.zoom (multiplier on Z) and target_y (where
+  // the camera looks). Used by climbing-box rows so the head stays in frame.
+  const zoom = (cameraOpts && cameraOpts.zoom) || 1.0;
+  const tgtY = (cameraOpts && cameraOpts.target_y != null) ? cameraOpts.target_y : 0.85;
+  const camera = new THREE.PerspectiveCamera(35, 1, 0.05, 30);
+  camera.position.set(0, 1.05, 3.0 * zoom);
+  camera.lookAt(0, tgtY, 0);
+
+  scene.add(new THREE.HemisphereLight(0xffffff, 0xc0c8d4, 1.05));
+  const sun = new THREE.DirectionalLight(0xfff4e0, 1.0);
+  sun.position.set(3, 7, 4); scene.add(sun);
+
+  const floor = new THREE.Mesh(new THREE.PlaneGeometry(8, 8),
+                               new THREE.MeshBasicMaterial({ color: 0x888d96 }));
+  floor.rotation.x = -Math.PI/2; scene.add(floor);
+
+  const robotWorld = new THREE.Group();
+  robotWorld.rotation.x = -Math.PI/2;
+  scene.add(robotWorld);
+
+  const robot = await buildG1Robot(robotWorld, accentHex, highlightJoint);
+
+  function applyFrameAtTime(t) {
+    const fi = Math.min(motion.numFrames - 1,
+                        Math.floor((t % motion.duration) / motion.frameTime));
+    robot.rootGroup.position.set(
+      motion.rootPos[fi*3]   - motion.meanX,
+      motion.rootPos[fi*3+1] - motion.meanY,
+      motion.rootPos[fi*3+2],
+    );
+    robot.rootGroup.quaternion.set(motion.rootQuat[fi*4+1], motion.rootQuat[fi*4+2],
+                                   motion.rootQuat[fi*4+3], motion.rootQuat[fi*4]);
+    for (const body of g1Model.bodies) {
+      if (!body.joint || body.joint.type !== 'hinge') continue;
+      const jArr = motion.joints[body.joint.name]; if (!jArr) continue;
+      const axis = new THREE.Vector3(...body.joint.axis);
+      const q = new THREE.Quaternion().setFromAxisAngle(axis, jArr[fi]);
+      robot.bodyGroups[body.name].quaternion.copy(q);
+    }
+    const phase = (performance.now() * 0.003) % (Math.PI * 2);
+    robot.glow.scale.setScalar(1 + 0.20 * Math.sin(phase));
+  }
+  return { scene, camera, applyFrameAtTime, motion };
+}
+
+// ── SMPL (optional, loaded if matching .bin files exist) ─────
+function parseVertsBin(buf) {
+  const v = new DataView(buf);
+  const nf = v.getUint32(0, true), nv = v.getUint32(4, true), fps = v.getFloat32(8, true);
+  return { numFrames: nf, numVerts: nv, fps, verts: new Float32Array(buf, 12), duration: nf / fps };
+}
+function parseFacesBin(buf) {
+  const v = new DataView(buf); const nf = v.getUint32(0, true);
+  // The bin stores 32-bit face indices. SMPL has 6890 verts → indices fit in
+  // 16-bit (max 65535), so we downcast to Uint16Array here. This avoids
+  // requiring the OES_element_index_uint WebGL extension, which is missing on
+  // some older / mobile GPUs and causes the mesh to silently fail to render
+  // (the symptom: SMPL viewport stays at WebGL's default black even though
+  // bins loaded fine and `.has-smpl` is applied).
+  const src = new Uint32Array(buf, 4, nf * 3);
+  const dst = new Uint16Array(src.length);
+  for (let i = 0; i < src.length; i++) dst[i] = src[i];
+  return dst;
+}
+async function tryLoadSMPL(attr, clipId) {
+  // GET-with-status-check is more reliable than HEAD here: python http.server
+  // does support HEAD but the responses occasionally lag behind the body
+  // server when many iframes hit it simultaneously, causing false negatives.
+  const base = `./data/smpl_matrix/${attr}`;
+  try {
+    const [facesR, highR, lowR] = await Promise.all([
+      fetch(`${base}/faces.bin`),
+      fetch(`${base}/${clipId}_high.bin`),
+      fetch(`${base}/${clipId}_low.bin`),
+    ]);
+    if (!facesR.ok || !highR.ok || !lowR.ok) {
+      console.warn(`[panel ${clipId}] SMPL bins missing (faces=${facesR.status}, high=${highR.status}, low=${lowR.status})`);
+      return null;
+    }
+    const [facesBuf, highBuf, lowBuf] = await Promise.all([
+      facesR.arrayBuffer(), highR.arrayBuffer(), lowR.arrayBuffer()
+    ]);
+    const faces = parseFacesBin(facesBuf);
+    const high  = parseVertsBin(highBuf);
+    const low   = parseVertsBin(lowBuf);
+    computeSMPLCentroid(high); computeSMPLCentroid(low);
+    return { faces, high, low };
+  } catch (e) {
+    console.warn(`[panel ${clipId}] SMPL load failed:`, e);
+    return null;
+  }
+}
+function computeSMPLCentroid(data) {
+  let sx = 0, sz = 0, n = 0;
+  for (let fi = 0; fi < data.numFrames; fi++) {
+    const base = fi * data.numVerts * 3;
+    for (let j = 0; j < data.numVerts; j++) {
+      sx += data.verts[base + j*3];
+      sz += data.verts[base + j*3 + 2];
+      n++;
+    }
+  }
+  data.meanX = sx / n; data.meanZ = sz / n;
+}
+
+// One SMPL mesh inside `parentGroup`. Returns its applyFrame function.
+function buildSMPLMesh(parentGroup, data, faces, accentHex) {
+  const baseSkin = new THREE.Color(0.94, 0.76, 0.58);
+  const tint = new THREE.Color(accentHex);
+  const skin = baseSkin.clone().lerp(tint, 0.06);
+
+  const geo = new THREE.BufferGeometry();
+  const posAttr = new THREE.BufferAttribute(new Float32Array(data.numVerts * 3), 3);
+  geo.setAttribute('position', posAttr);
+  geo.setIndex(new THREE.BufferAttribute(faces, 1));
+  const mat = new THREE.MeshPhongMaterial({
+    color: skin, specular: 0x111111, shininess: 25, side: THREE.DoubleSide,
+  });
+  const mesh = new THREE.Mesh(geo, mat);
+  parentGroup.add(mesh);
+
+  // Floor alignment via 10th percentile of per-frame min-Y.
+  const frameMin = new Float32Array(data.numFrames);
+  for (let fi = 0; fi < data.numFrames; fi++) {
+    const base = fi * data.numVerts * 3;
+    let mn = Infinity;
+    for (let j = 0; j < data.numVerts; j++) {
+      const y = data.verts[base + j*3 + 1];
+      if (y < mn) mn = y;
+    }
+    frameMin[fi] = mn;
+  }
+  const sorted = [...frameMin].sort((a,b) => a - b);
+  const yOff = sorted[Math.floor(sorted.length * 0.10)];
+
+  const arr = posAttr.array;
+  function applyFrame(fi) {
+    const base = fi * data.numVerts * 3;
+    // Per-frame centroid subtraction so the body stays at the origin during
+    // forward locomotion (jogging, climbing, etc). Subtracting the GLOBAL
+    // mean made fast-traveling clips (e.g. A029's jog) start far behind the
+    // camera at frame 0 and end past the lookAt point — body was only briefly
+    // in view. Per-frame subtraction freezes the translation while preserving
+    // the joint/pose motion that matters for the visualization.
+    let fX = 0, fZ = 0;
+    for (let j = 0; j < data.numVerts; j++) {
+      fX += data.verts[base + j*3];
+      fZ += data.verts[base + j*3 + 2];
+    }
+    fX /= data.numVerts; fZ /= data.numVerts;
+    for (let j = 0; j < data.numVerts; j++) {
+      arr[j*3]   = data.verts[base + j*3]     - fX;
+      arr[j*3+1] = data.verts[base + j*3 + 1] - yOff;
+      arr[j*3+2] = data.verts[base + j*3 + 2] - fZ;
+    }
+    posAttr.needsUpdate = true;
+    geo.computeVertexNormals();
+  }
+  return { applyFrame, duration: data.duration, frameTime: 1/data.fps,
+           numFrames: data.numFrames };
+}
+
+// One SMPL body in its own scene, framed tightly. Same per-body pattern as
+// buildG1SoloScene.
+function buildSMPLSoloScene(data, faces, accentHex, cameraOpts) {
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color('#a8aeb6');
+
+  // Per-row camera tweaks mirror buildG1SoloScene so both viewers stay aligned.
+  const zoom = (cameraOpts && cameraOpts.zoom) || 1.0;
+  const tgtY = (cameraOpts && cameraOpts.target_y != null) ? cameraOpts.target_y : 0.95;
+  const camera = new THREE.PerspectiveCamera(33, 1, 0.05, 30);
+  camera.position.set(0, 1.05, 3.0 * zoom);
+  camera.lookAt(0, tgtY, 0);
+
+  scene.add(new THREE.HemisphereLight(0xffffff, 0xc0c8d4, 1.05));
+  const sun = new THREE.DirectionalLight(0xfff4e0, 0.95);
+  sun.position.set(3, 7, 4); scene.add(sun);
+
+  const floor = new THREE.Mesh(
+    new THREE.PlaneGeometry(8, 8),
+    new THREE.MeshBasicMaterial({ color: 0x888d96 })
+  );
+  floor.rotation.x = -Math.PI/2; scene.add(floor);
+
+  const meshHolder = new THREE.Group();
+  scene.add(meshHolder);
+  const mesh = buildSMPLMesh(meshHolder, data, faces, accentHex);
+
+  function applyFrameAtTime(t) {
+    const fi = Math.min(mesh.numFrames - 1,
+                        Math.floor((t % mesh.duration) / mesh.frameTime));
+    mesh.applyFrame(fi);
+  }
+  return { scene, camera, applyFrameAtTime };
+}
+
+// ── Plot stack ────────────────────────────────────────────
+const PLOT_CTXS = [];
+function setupPlots() {
+  document.querySelectorAll('.plot-row').forEach((row, i) => {
+    const cnv = row.querySelector('canvas');
+    const ctx = cnv.getContext('2d');
+    PLOT_CTXS[i] = { row, cnv, ctx };
+    function size() {
+      const w = row.clientWidth, h = row.clientHeight;
+      if (w <= 0 || h <= 0) return;
+      const dpr = window.devicePixelRatio;
+      cnv.width  = Math.round(w * dpr);
+      cnv.height = Math.round(h * dpr);
+      cnv.style.width = w + 'px'; cnv.style.height = h + 'px';
+    }
+    size();
+    new ResizeObserver(size).observe(row);
+  });
+}
+
+// Each plot row is a side-by-side split: heavy curve in left half, light in
+// right half, sharing the same Y axis. A small gap separates them. Curves
+// only draw up to the current playhead, so the strip grows with time and
+// resets when the clip loops.
+function drawPlots() {
+  if (MODE === 'row') return drawPlotsRow();
+  return drawPlotsLegacy();
+}
+
+function drawPlotsRow() {
+  if (!ROW_FEATURE) return;
+  // ROM is a single scalar per clip — a "flat line" time series carries no
+  // information. Use a side-by-side bar chart instead. mean_vel / peak_vel
+  // remain as the per-frame line plot that animates with the playhead.
+  if (ROW_FEATURE.recipe.stat === 'rom') return drawRomBars();
+  return drawTimeSeries();
+}
+
+function drawTimeSeries() {
+  const dpr = window.devicePixelRatio;
+  const frac = (masterTime / masterDuration) % 1;
+  const { cnv, ctx } = PLOT_CTXS[0];
+  if (!cnv) return;
+  const W = cnv.width, H = cnv.height;
+  ctx.clearRect(0, 0, W, H);
+  const padL = 36*dpr, padR = 6*dpr, padT = 14*dpr, padB = 6*dpr;
+  const gap = 12*dpr;
+  const subW = (W - padL - padR - gap) / 2;
+  const plotH = H - padT - padB;
+  const hF = ROW_FEATURE.hi, lF = ROW_FEATURE.lo;
+  const mn = 0;
+  const mx = Math.max(hF.max, lF.max, 0.05) * 1.08;
+  const Yof = (v) => padT + plotH - ((v - mn) / (mx - mn)) * plotH;
+
+  ctx.fillStyle = '#6a7585';
+  ctx.font = `${9*dpr}px Segoe UI`;
+  ctx.textBaseline = 'middle'; ctx.textAlign = 'right';
+  for (const v of [mn, mx]) {
+    const y = Yof(v);
+    ctx.fillText(v.toFixed(mx < 10 ? 1 : 0), padL - 3*dpr, y);
+    ctx.strokeStyle = 'rgba(20,30,50,0.06)';
+    ctx.lineWidth = 1*dpr;
+    ctx.beginPath();
+    ctx.moveTo(padL, y); ctx.lineTo(padL + subW, y);
+    ctx.moveTo(padL + subW + gap, y); ctx.lineTo(padL + subW + gap + subW, y);
+    ctx.stroke();
+  }
+
+  function plotSide(arr, color, subX, expected) {
+    const n = arr.length;
+    const upToFrame = Math.max(1, Math.min(n - 1, Math.floor(frac * (n - 1)) + 1));
+    ctx.strokeStyle = '#c6cfdb'; ctx.lineWidth = 1*dpr;
+    ctx.beginPath();
+    ctx.moveTo(subX, padT); ctx.lineTo(subX, padT + plotH);
+    ctx.lineTo(subX + subW, padT + plotH); ctx.stroke();
+    ctx.fillStyle = color + '24';
+    ctx.beginPath();
+    ctx.moveTo(subX, padT + plotH);
+    for (let k = 0; k <= upToFrame; k++) {
+      const x = subX + (k / (n - 1)) * subW;
+      ctx.lineTo(x, Yof(arr[k]));
+    }
+    const xEnd = subX + (upToFrame / (n - 1)) * subW;
+    ctx.lineTo(xEnd, padT + plotH); ctx.closePath(); ctx.fill();
+    ctx.strokeStyle = color; ctx.lineWidth = 1.8 * dpr;
+    ctx.beginPath();
+    for (let k = 0; k <= upToFrame; k++) {
+      const x = subX + (k / (n - 1)) * subW;
+      const y = Yof(arr[k]);
+      if (k === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+    const cx = subX + frac * subW;
+    ctx.strokeStyle = 'rgba(20,30,50,0.5)'; ctx.lineWidth = 1.2*dpr;
+    ctx.beginPath(); ctx.moveTo(cx, padT); ctx.lineTo(cx, padT + plotH); ctx.stroke();
+  }
+  plotSide(hF.values, COLOR_HEAVY_HEX, padL,                ROW_FEATURE.expected_hi);
+  plotSide(lF.values, COLOR_LIGHT_HEX, padL + subW + gap,   ROW_FEATURE.expected_lo);
+}
+
+function drawRomBars() {
+  const dpr = window.devicePixelRatio;
+  const { cnv, ctx } = PLOT_CTXS[0];
+  if (!cnv) return;
+  const W = cnv.width, H = cnv.height;
+  ctx.clearRect(0, 0, W, H);
+  const padL = 36*dpr, padR = 10*dpr, padT = 18*dpr, padB = 18*dpr;
+  const plotW = W - padL - padR;
+  const plotH = H - padT - padB;
+  const hi = ROW_FEATURE.expected_hi ?? ROW_FEATURE.reduced_hi;
+  const lo = ROW_FEATURE.expected_lo ?? ROW_FEATURE.reduced_lo;
+  const mn = 0;
+  const mx = Math.max(hi, lo, 0.05) * 1.18;
+  const Yof = (v) => padT + plotH - ((v - mn) / (mx - mn)) * plotH;
+
+  // Y ticks
+  ctx.fillStyle = '#6a7585';
+  ctx.font = `${9*dpr}px Segoe UI`;
+  ctx.textBaseline = 'middle'; ctx.textAlign = 'right';
+  for (const v of [mn, mx]) {
+    const y = Yof(v);
+    ctx.fillText(v.toFixed(mx < 10 ? 1 : 0), padL - 3*dpr, y);
+    ctx.strokeStyle = 'rgba(20,30,50,0.06)';
+    ctx.lineWidth = 1*dpr;
+    ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(padL + plotW, y); ctx.stroke();
+  }
+
+  // baseline
+  ctx.strokeStyle = '#c6cfdb'; ctx.lineWidth = 1*dpr;
+  ctx.beginPath();
+  ctx.moveTo(padL, padT + plotH); ctx.lineTo(padL + plotW, padT + plotH);
+  ctx.stroke();
+
+  // Bars: side-by-side, centered in the plot region, with a gap.
+  // Width per bar is ~ 22% of the plot width; the rest is whitespace either
+  // side and between, so the chart reads cleanly at any panel size.
+  const barW = plotW * 0.22;
+  const gap  = plotW * 0.10;
+  const groupW = barW * 2 + gap;
+  const startX = padL + (plotW - groupW) / 2;
+  function bar(value, color, x) {
+    const y = Yof(value);
+    const h = (padT + plotH) - y;
+    // body
+    ctx.fillStyle = color;
+    ctx.fillRect(x, y, barW, h);
+    // value label above
+    ctx.fillStyle = '#1c232e';
+    ctx.font = `bold ${11*dpr}px Segoe UI`;
+    ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+    ctx.fillText(value.toFixed(1), x + barW/2, y - 3*dpr);
+  }
+  bar(hi, COLOR_HEAVY_HEX, startX);
+  bar(lo, COLOR_LIGHT_HEX, startX + barW + gap);
+
+  // x-axis labels (attribute value per side, e.g. "45 yr" / "65 yr").
+  const hiLbl = (rowCfg && rowCfg.high && rowCfg.high.label) || 'high';
+  const loLbl = (rowCfg && rowCfg.low  && rowCfg.low.label)  || 'low';
+  ctx.fillStyle = '#1c232e';
+  ctx.font = `${10*dpr}px Segoe UI`;
+  ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+  ctx.fillText(hiLbl, startX + barW/2,             padT + plotH + 4*dpr);
+  ctx.fillText(loLbl, startX + barW + gap + barW/2, padT + plotH + 4*dpr);
+}
+
+function drawPlotsLegacy() {
+  const dpr = window.devicePixelRatio;
+  const frac = (masterTime / masterDuration) % 1;
+  for (let i = 0; i < clip.features.length; i++) {
+    const spec = clip.features[i];
+    const { cnv, ctx } = PLOT_CTXS[i];
+    const W = cnv.width, H = cnv.height;
+    ctx.clearRect(0, 0, W, H);
+    const padL = 36*dpr, padR = 6*dpr, padT = 12*dpr, padB = 4*dpr;
+    const gap = 12*dpr;
+    const subW = (W - padL - padR - gap) / 2;
+    const plotH = H - padT - padB;
+
+    // Y range shared across heavy/light for this feature.
+    const hF = VIEWERS.g1_heavy.motion.features[i];
+    const lF = VIEWERS.g1_light.motion.features[i];
+    let mn, mx;
+    if (spec.type === 'joint_angle') {
+      const m = Math.max(Math.abs(hF.min), Math.abs(hF.max), Math.abs(lF.min), Math.abs(lF.max), 5);
+      mn = -m * 1.08; mx = +m * 1.08;
+    } else {
+      mn = 0;
+      mx = Math.max(hF.max, lF.max, 0.05) * 1.08;
+    }
+    const Yof = (v) => padT + plotH - ((v - mn) / (mx - mn)) * plotH;
+
+    // Y-axis labels (left side of left sub-plot only).
+    ctx.fillStyle = '#6a7585';
+    ctx.font = `${9*dpr}px Segoe UI`;
+    ctx.textBaseline = 'middle'; ctx.textAlign = 'right';
+    const ticks = (spec.type === 'joint_angle') ? [mn, 0, mx] : [mn, mx];
+    for (const v of ticks) {
+      const y = Yof(v);
+      const txt = (spec.type === 'joint_angle')
+        ? (v === 0 ? '0' : v.toFixed(0))
+        : v.toFixed(spec.type === 'root_vel' ? 1 : 0);
+      ctx.fillText(txt, padL - 3*dpr, y);
+      ctx.strokeStyle = (Math.abs(v) < 1e-6) ? 'rgba(20,30,50,0.18)' : 'rgba(20,30,50,0.06)';
+      ctx.lineWidth = 1*dpr;
+      ctx.beginPath();
+      ctx.moveTo(padL, y); ctx.lineTo(padL + subW, y);
+      ctx.moveTo(padL + subW + gap, y); ctx.lineTo(padL + subW + gap + subW, y);
+      ctx.stroke();
+    }
+
+    function plotSide(arr, color, subX) {
+      const n = arr.length;
+      const upToFrame = Math.max(1, Math.min(n - 1, Math.floor(frac * (n - 1)) + 1));
+
+      // axis frame
+      ctx.strokeStyle = '#c6cfdb'; ctx.lineWidth = 1*dpr;
+      ctx.beginPath();
+      ctx.moveTo(subX, padT); ctx.lineTo(subX, padT + plotH);
+      ctx.lineTo(subX + subW, padT + plotH); ctx.stroke();
+
+      // filled area
+      ctx.fillStyle = color + '24';
+      ctx.beginPath();
+      const baseY = (spec.type === 'joint_angle') ? Yof(0) : (padT + plotH);
+      ctx.moveTo(subX, baseY);
+      for (let k = 0; k <= upToFrame; k++) {
+        const x = subX + (k / (n - 1)) * subW;
+        ctx.lineTo(x, Yof(arr[k]));
+      }
+      const xEnd = subX + (upToFrame / (n - 1)) * subW;
+      ctx.lineTo(xEnd, baseY); ctx.closePath(); ctx.fill();
+
+      // line
+      ctx.strokeStyle = color; ctx.lineWidth = 1.8 * dpr;
+      ctx.beginPath();
+      for (let k = 0; k <= upToFrame; k++) {
+        const x = subX + (k / (n - 1)) * subW;
+        const y = Yof(arr[k]);
+        if (k === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+
+      // Running ROM band for joint_angle features.
+      if (spec.show_rom) {
+        let bmn = +Infinity, bmx = -Infinity;
+        for (let k = 0; k <= upToFrame; k++) {
+          if (arr[k] < bmn) bmn = arr[k];
+          if (arr[k] > bmx) bmx = arr[k];
+        }
+        if (isFinite(bmn) && isFinite(bmx) && bmx > bmn + 0.5) {
+          ctx.strokeStyle = color; ctx.lineWidth = 1*dpr;
+          ctx.setLineDash([4*dpr, 4*dpr]);
+          for (const v of [bmn, bmx]) {
+            const y = Yof(v);
+            ctx.beginPath();
+            ctx.moveTo(subX, y); ctx.lineTo(subX + subW, y); ctx.stroke();
+          }
+          ctx.setLineDash([]);
+        }
+      }
+
+      // time cursor
+      const cx = subX + frac * subW;
+      ctx.strokeStyle = 'rgba(20,30,50,0.5)'; ctx.lineWidth = 1.2*dpr;
+      ctx.beginPath(); ctx.moveTo(cx, padT); ctx.lineTo(cx, padT + plotH); ctx.stroke();
+    }
+    plotSide(hF.values, COLOR_HEAVY_HEX, padL);
+    plotSide(lF.values, COLOR_LIGHT_HEX, padL + subW + gap);
+  }
+}
+
+// ── Animation loop ───────────────────────────────────────
+function loop(ts) {
+  requestAnimationFrame(loop);
+  if (playing) {
+    if (lastTime === null) lastTime = ts;
+    const dt = (ts - lastTime) * 0.001; lastTime = ts;
+    masterTime = (masterTime + dt) % masterDuration;
+  } else { lastTime = null; }
+
+  // Keep the scrubber thumb in sync (unless the user is dragging it).
+  if (scrubBarEl && !userScrubbing) {
+    scrubBarEl.value = Math.round((masterTime / masterDuration) * 1000);
+  }
+
+  for (const v of Object.values(VIEWERS)) v.applyFrameAtTime(masterTime);
+
+  if (SHARED_RENDERER) {
+    const vp = panelViewports();
+    SHARED_RENDERER.setScissorTest(true);
+    renderViewport(VIEWERS.smpl_high, vp.smplHigh);
+    renderViewport(VIEWERS.smpl_low,  vp.smplLow);
+    renderViewport(VIEWERS.g1_heavy,  vp.g1Heavy);
+    renderViewport(VIEWERS.g1_light,  vp.g1Light);
+    SHARED_RENDERER.setScissorTest(false);
+  }
+  drawPlots();
+}
+
+function renderViewport(viewer, vp) {
+  if (!viewer || !vp) return;
+  const c = viewer.camera;
+  c.aspect = vp.w / Math.max(1, vp.h);
+  c.updateProjectionMatrix();
+  SHARED_RENDERER.setViewport(vp.x, vp.y, vp.w, vp.h);
+  SHARED_RENDERER.setScissor (vp.x, vp.y, vp.w, vp.h);
+  SHARED_RENDERER.clear();
+  SHARED_RENDERER.render(viewer.scene, c);
+}
+
+boot().catch(err => { showError(err.message); console.error(err); });
+</script>
+</body>
+</html>

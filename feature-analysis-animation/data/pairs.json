@@ -1,0 +1,1274 @@
+{
+  "action": {
+    "heavy": {
+      "uid": "A260",
+      "weight": 95.0,
+      "age": 66.0,
+      "height": 182.0,
+      "gender": "M",
+      "root_avg_speed": 7.140493559125908,
+      "csv": "data/trajectories/action_heavy.csv",
+      "source_csv": "g1/csv/230309/eating_apple_R_002__A260.csv",
+      "n_frames": 2256
+    },
+    "light": {
+      "uid": "A301",
+      "weight": 56.0,
+      "age": 30.0,
+      "height": 167.0,
+      "gender": "F",
+      "root_avg_speed": 10.996861798341278,
+      "csv": "data/trajectories/action_light.csv",
+      "source_csv": "g1/csv/230323/chainsaw_cutting_tree_horizontal_R_001__A301.csv",
+      "n_frames": 3076
+    }
+  },
+  "climbing_box": {
+    "heavy": {
+      "uid": "A300",
+      "weight": 88.0,
+      "age": 33.0,
+      "height": 177.0,
+      "gender": "M",
+      "root_avg_speed": 26.515943610098294,
+      "csv": "data/trajectories/climbing_box_heavy.csv",
+      "source_csv": "g1/csv/230323/come_down_50cm_box_R_002__A300.csv",
+      "n_frames": 590
+    },
+    "light": {
+      "uid": "A248",
+      "weight": 52.0,
+      "age": 29.0,
+      "height": 166.0,
+      "gender": "F",
+      "root_avg_speed": 27.21664971133331,
+      "csv": "data/trajectories/climbing_box_light.csv",
+      "source_csv": "g1/csv/230306/come_up_50cm_box_R_003__A248.csv",
+      "n_frames": 685
+    }
+  },
+  "communication": {
+    "heavy": {
+      "uid": "A431",
+      "weight": 132.0,
+      "age": 29.0,
+      "height": 193.0,
+      "gender": "M",
+      "root_avg_speed": 20.27153108847508,
+      "csv": "data/trajectories/communication_heavy.csv",
+      "source_csv": "g1/csv/230713/street_passing_out_flyers_move_R_003__A431.csv",
+      "n_frames": 4159
+    },
+    "light": {
+      "uid": "A432",
+      "weight": 55.0,
+      "age": 28.0,
+      "height": 167.0,
+      "gender": "F",
+      "root_avg_speed": 23.25815551113642,
+      "csv": "data/trajectories/communication_light.csv",
+      "source_csv": "g1/csv/230713/street_passing_out_flyers_move_R_003__A432.csv",
+      "n_frames": 4364
+    }
+  },
+  "crawling": {
+    "heavy": {
+      "uid": "A231",
+      "weight": 88.0,
+      "age": 33.0,
+      "height": 177.0,
+      "gender": "M",
+      "root_avg_speed": 32.15771565571225,
+      "csv": "data/trajectories/crawling_heavy.csv",
+      "source_csv": "g1/csv/230301/crawl_ff_stop_180_R_001__A231.csv",
+      "n_frames": 1687
+    },
+    "light": {
+      "uid": "A215",
+      "weight": 63.0,
+      "age": 25.0,
+      "height": 169.0,
+      "gender": "F",
+      "root_avg_speed": 22.50448013769945,
+      "csv": "data/trajectories/crawling_light.csv",
+      "source_csv": "g1/csv/230223/idle_crawl_loop_002__A215.csv",
+      "n_frames": 2095
+    }
+  },
+  "crouching": {
+    "heavy": {
+      "uid": "A304",
+      "weight": 88.0,
+      "age": 33.0,
+      "height": 177.0,
+      "gender": "M",
+      "root_avg_speed": 26.7379458449363,
+      "csv": "data/trajectories/crouching_heavy.csv",
+      "source_csv": "g1/csv/230324/h_b_w_crouch_270_loop_01__A304.csv",
+      "n_frames": 1320
+    },
+    "light": {
+      "uid": "A305",
+      "weight": 56.0,
+      "age": 30.0,
+      "height": 167.0,
+      "gender": "F",
+      "root_avg_speed": 29.502780224461056,
+      "csv": "data/trajectories/crouching_light.csv",
+      "source_csv": "g1/csv/230324/h_b_w_crouch_270_loop_03__A305.csv",
+      "n_frames": 1130
+    }
+  },
+  "crouching_action": {
+    "heavy": {
+      "uid": "A353",
+      "weight": 132.0,
+      "age": 29.0,
+      "height": 193.0,
+      "gender": "M",
+      "root_avg_speed": 5.74429109919915,
+      "csv": "data/trajectories/crouching_action_heavy.csv",
+      "source_csv": "g1/csv/230425/item_pick_up_crouch_idle_R_003__A353.csv",
+      "n_frames": 550
+    },
+    "light": {
+      "uid": "A351",
+      "weight": 56.0,
+      "age": 26.0,
+      "height": 173.0,
+      "gender": "F",
+      "root_avg_speed": 7.863661416206132,
+      "csv": "data/trajectories/crouching_action_light.csv",
+      "source_csv": "g1/csv/230425/item_pick_up_crouch_idle_R_003__A351.csv",
+      "n_frames": 550
+    }
+  },
+  "crouching_idle": {
+    "heavy": {
+      "uid": "A194",
+      "weight": 90.0,
+      "age": 25.0,
+      "height": 178.0,
+      "gender": "M",
+      "root_avg_speed": 0.9807804650881492,
+      "csv": "data/trajectories/crouching_idle_heavy.csv",
+      "source_csv": "g1/csv/230215/idle_crouch_right_loop_R_002__A194.csv",
+      "n_frames": 1905
+    },
+    "light": {
+      "uid": "A247",
+      "weight": 49.0,
+      "age": 25.0,
+      "height": 173.0,
+      "gender": "F",
+      "root_avg_speed": 1.3883248692363388,
+      "csv": "data/trajectories/crouching_idle_light.csv",
+      "source_csv": "g1/csv/230306/crouch_idle_right_R_002__A247.csv",
+      "n_frames": 1325
+    }
+  },
+  "crouching_walking_action": {
+    "heavy": {
+      "uid": "A353",
+      "weight": 132.0,
+      "age": 29.0,
+      "height": 193.0,
+      "gender": "M",
+      "root_avg_speed": 89.21377741900669,
+      "csv": "data/trajectories/crouching_walking_action_heavy.csv",
+      "source_csv": "g1/csv/230425/item_pick_up_crouch_walk_R_001__A353.csv",
+      "n_frames": 533
+    },
+    "light": {
+      "uid": "A410",
+      "weight": 56.0,
+      "age": 31.0,
+      "height": 169.0,
+      "gender": "F",
+      "root_avg_speed": 138.52194360886344,
+      "csv": "data/trajectories/crouching_walking_action_light.csv",
+      "source_csv": "g1/csv/230530/item_pick_up_crouch_walk_R_001__A410.csv",
+      "n_frames": 598
+    }
+  },
+  "dancing": {
+    "heavy": {
+      "uid": "A271",
+      "weight": 126.0,
+      "age": 39.0,
+      "height": 183.0,
+      "gender": "M",
+      "root_avg_speed": 15.529102177996087,
+      "csv": "data/trajectories/dancing_heavy.csv",
+      "source_csv": "g1/csv/230314/dancing_routine_V002_004__A271.csv",
+      "n_frames": 1572
+    },
+    "light": {
+      "uid": "A174",
+      "weight": 56.0,
+      "age": 31.0,
+      "height": 169.0,
+      "gender": "F",
+      "root_avg_speed": 19.486347677945567,
+      "csv": "data/trajectories/dancing_light.csv",
+      "source_csv": "g1/csv/230209/dancing_routine_V001_002__A174.csv",
+      "n_frames": 2022
+    }
+  },
+  "dancing_kicking": {
+    "heavy": {
+      "uid": "A313",
+      "weight": 76.0,
+      "age": 22.0,
+      "height": 175.0,
+      "gender": "M",
+      "root_avg_speed": 40.08802543658278,
+      "csv": "data/trajectories/dancing_kicking_heavy.csv",
+      "source_csv": "g1/csv/230412/dance_latino_latino_sequence_R_002__A313.csv",
+      "n_frames": 1982
+    },
+    "light": {
+      "uid": "A315",
+      "weight": 52.0,
+      "age": 28.0,
+      "height": 163.0,
+      "gender": "F",
+      "root_avg_speed": 42.14957003300912,
+      "csv": "data/trajectories/dancing_kicking_light.csv",
+      "source_csv": "g1/csv/230412/dance_latino_latino_sequence_R_002__A315.csv",
+      "n_frames": 2250
+    }
+  },
+  "dancing_pointing": {
+    "heavy": {
+      "uid": "A314",
+      "weight": 90.0,
+      "age": 29.0,
+      "height": 187.0,
+      "gender": "M",
+      "root_avg_speed": 47.25174560546875,
+      "csv": "data/trajectories/dancing_pointing_heavy.csv",
+      "source_csv": "g1/csv/230412/dance_hiphop_shamrock_R_002__A314.csv",
+      "n_frames": 800
+    },
+    "light": {
+      "uid": "A315",
+      "weight": 52.0,
+      "age": 28.0,
+      "height": 163.0,
+      "gender": "F",
+      "root_avg_speed": 41.858521466246245,
+      "csv": "data/trajectories/dancing_pointing_light.csv",
+      "source_csv": "g1/csv/230412/dance_hiphop_shamrock_R_002__A315.csv",
+      "n_frames": 965
+    }
+  },
+  "dancing_rolling": {
+    "heavy": {
+      "uid": "A314",
+      "weight": 90.0,
+      "age": 29.0,
+      "height": 187.0,
+      "gender": "M",
+      "root_avg_speed": 40.61846426918351,
+      "csv": "data/trajectories/dancing_rolling_heavy.csv",
+      "source_csv": "g1/csv/230412/dance_hiphop_guess_R_001__A314.csv",
+      "n_frames": 802
+    },
+    "light": {
+      "uid": "A320",
+      "weight": 52.0,
+      "age": 28.0,
+      "height": 163.0,
+      "gender": "F",
+      "root_avg_speed": 20.32872068468936,
+      "csv": "data/trajectories/dancing_rolling_light.csv",
+      "source_csv": "g1/csv/230413/dance_hiphop_prep_R_fast_002__A320.csv",
+      "n_frames": 1029
+    }
+  },
+  "exercising": {
+    "heavy": {
+      "uid": "A255",
+      "weight": 120.0,
+      "age": 60.0,
+      "height": 174.0,
+      "gender": "M",
+      "root_avg_speed": 0.5107162230590991,
+      "csv": "data/trajectories/exercising_heavy.csv",
+      "source_csv": "g1/csv/230308/idle_loop_001__A255.csv",
+      "n_frames": 1805
+    },
+    "light": {
+      "uid": "A021",
+      "weight": 41.0,
+      "age": 29.0,
+      "height": 155.0,
+      "gender": "F",
+      "root_avg_speed": 0.9274024258549916,
+      "csv": "data/trajectories/exercising_light.csv",
+      "source_csv": "g1/csv/220713/idle_loop_002__A021.csv",
+      "n_frames": 2615
+    }
+  },
+  "exercising_jumping": {
+    "heavy": {
+      "uid": "A260",
+      "weight": 95.0,
+      "age": 66.0,
+      "height": 182.0,
+      "gender": "M",
+      "root_avg_speed": 45.18335259101007,
+      "csv": "data/trajectories/exercising_jumping_heavy.csv",
+      "source_csv": "g1/csv/230309/jumping_rope_001__A260.csv",
+      "n_frames": 494
+    },
+    "light": {
+      "uid": "A187",
+      "weight": 56.0,
+      "age": 31.0,
+      "height": 169.0,
+      "gender": "F",
+      "root_avg_speed": 38.33502509952373,
+      "csv": "data/trajectories/exercising_jumping_light.csv",
+      "source_csv": "g1/csv/230213/jumping_rope_001__A187.csv",
+      "n_frames": 430
+    }
+  },
+  "flipping": {
+    "heavy": {
+      "uid": "A152",
+      "weight": 89.0,
+      "age": 24.0,
+      "height": 188.0,
+      "gender": "M",
+      "root_avg_speed": 53.23076789274096,
+      "csv": "data/trajectories/flipping_heavy.csv",
+      "source_csv": "g1/csv/230126/cartwheel_R_005__A152.csv",
+      "n_frames": 616
+    },
+    "light": {
+      "uid": "A139",
+      "weight": 56.0,
+      "age": 31.0,
+      "height": 169.0,
+      "gender": "F",
+      "root_avg_speed": 50.374475088813135,
+      "csv": "data/trajectories/flipping_light.csv",
+      "source_csv": "g1/csv/230123/cartwheel_R_001__A139.csv",
+      "n_frames": 613
+    }
+  },
+  "gesture": {
+    "heavy": {
+      "uid": "A259",
+      "weight": 120.0,
+      "age": 60.0,
+      "height": 174.0,
+      "gender": "M",
+      "root_avg_speed": 3.7653617497022553,
+      "csv": "data/trajectories/gesture_heavy.csv",
+      "source_csv": "g1/csv/230309/looking_around_horizontally_001__A259.csv",
+      "n_frames": 2285
+    },
+    "light": {
+      "uid": "A473",
+      "weight": 55.0,
+      "age": 26.0,
+      "height": 166.0,
+      "gender": "F",
+      "root_avg_speed": 9.292001442831072,
+      "csv": "data/trajectories/gesture_light.csv",
+      "source_csv": "g1/csv/231010/bye_bye_salute_R_002__A473.csv",
+      "n_frames": 305
+    }
+  },
+  "gesture_dancing": {
+    "heavy": {
+      "uid": "A275",
+      "weight": 126.0,
+      "age": 39.0,
+      "height": 183.0,
+      "gender": "M",
+      "root_avg_speed": 16.387270676172765,
+      "csv": "data/trajectories/gesture_dancing_heavy.csv",
+      "source_csv": "g1/csv/230315/lasso_dance_R_003__A275.csv",
+      "n_frames": 660
+    },
+    "light": {
+      "uid": "A438",
+      "weight": 56.0,
+      "age": 31.0,
+      "height": 169.0,
+      "gender": "F",
+      "root_avg_speed": 28.393987487298357,
+      "csv": "data/trajectories/gesture_dancing_light.csv",
+      "source_csv": "g1/csv/230112/tarzan_003__A438.csv",
+      "n_frames": 595
+    }
+  },
+  "gesture_running": {
+    "heavy": {
+      "uid": "A431",
+      "weight": 132.0,
+      "age": 29.0,
+      "height": 193.0,
+      "gender": "M",
+      "root_avg_speed": 96.6016625606751,
+      "csv": "data/trajectories/gesture_running_heavy.csv",
+      "source_csv": "g1/csv/230713/panic_run_away_180_R_001__A431.csv",
+      "n_frames": 787
+    },
+    "light": {
+      "uid": "A432",
+      "weight": 55.0,
+      "age": 28.0,
+      "height": 167.0,
+      "gender": "F",
+      "root_avg_speed": 122.32126108653922,
+      "csv": "data/trajectories/gesture_running_light.csv",
+      "source_csv": "g1/csv/230713/panic_run_away_180_R_001__A432.csv",
+      "n_frames": 843
+    }
+  },
+  "jogging": {
+    "heavy": {
+      "uid": "A161",
+      "weight": 89.0,
+      "age": 24.0,
+      "height": 188.0,
+      "gender": "M",
+      "root_avg_speed": 112.20098948867366,
+      "csv": "data/trajectories/jogging_heavy.csv",
+      "source_csv": "g1/csv/230131/jog_ff_loop_180_R_006__A161.csv",
+      "n_frames": 523
+    },
+    "light": {
+      "uid": "A187",
+      "weight": 56.0,
+      "age": 31.0,
+      "height": 169.0,
+      "gender": "F",
+      "root_avg_speed": 126.83103698415344,
+      "csv": "data/trajectories/jogging_light.csv",
+      "source_csv": "g1/csv/230213/jog_avoid_bump_270_R_003__A187.csv",
+      "n_frames": 825
+    }
+  },
+  "jogging_action": {
+    "heavy": {
+      "uid": "A353",
+      "weight": 132.0,
+      "age": 29.0,
+      "height": 193.0,
+      "gender": "M",
+      "root_avg_speed": 131.45362129812588,
+      "csv": "data/trajectories/jogging_action_heavy.csv",
+      "source_csv": "g1/csv/230425/item_pick_up_jog_R_002__A353.csv",
+      "n_frames": 498
+    },
+    "light": {
+      "uid": "A351",
+      "weight": 56.0,
+      "age": 26.0,
+      "height": 173.0,
+      "gender": "F",
+      "root_avg_speed": 139.31788275262056,
+      "csv": "data/trajectories/jogging_action_light.csv",
+      "source_csv": "g1/csv/230425/item_pick_up_jog_R_002__A351.csv",
+      "n_frames": 498
+    }
+  },
+  "jogging_turning": {
+    "heavy": {
+      "uid": "A256",
+      "weight": 95.0,
+      "age": 66.0,
+      "height": 182.0,
+      "gender": "M",
+      "root_avg_speed": 118.4281446358022,
+      "csv": "data/trajectories/jogging_turning_heavy.csv",
+      "source_csv": "g1/csv/230308/turn_jog_270_R_004__A256.csv",
+      "n_frames": 574
+    },
+    "light": {
+      "uid": "A053",
+      "weight": 38.0,
+      "age": 60.0,
+      "height": 151.0,
+      "gender": "F",
+      "root_avg_speed": 140.26670917639277,
+      "csv": "data/trajectories/jogging_turning_light.csv",
+      "source_csv": "g1/csv/221012/turn_jog_360_001__A053.csv",
+      "n_frames": 713
+    }
+  },
+  "jumping": {
+    "heavy": {
+      "uid": "A035",
+      "weight": 145.0,
+      "height": 198.0,
+      "age": 43.0,
+      "gender": "M",
+      "root_avg_speed": 20.150718354585628,
+      "csv": "data/trajectories/jumping_heavy.csv",
+      "source_csv": "g1/csv/220721/jump_001__A035.csv",
+      "n_frames": 570
+    },
+    "light": {
+      "uid": "A535",
+      "weight": 56.0,
+      "height": 167.0,
+      "age": 26.0,
+      "gender": "F",
+      "root_avg_speed": 42.51704403541009,
+      "csv": "data/trajectories/jumping_light.csv",
+      "source_csv": "g1/csv/240527/neutral_dancecard_jump_002__A535.csv",
+      "n_frames": 2211
+    }
+  },
+  "jumping_dancing": {
+    "heavy": {
+      "uid": "A309",
+      "weight": 90.0,
+      "age": 29.0,
+      "height": 187.0,
+      "gender": "M",
+      "root_avg_speed": 38.05971758224428,
+      "csv": "data/trajectories/jumping_dancing_heavy.csv",
+      "source_csv": "g1/csv/230411/dance_western_cowboy_jumps_R_003__A309.csv",
+      "n_frames": 786
+    },
+    "light": {
+      "uid": "A310",
+      "weight": 52.0,
+      "age": 28.0,
+      "height": 163.0,
+      "gender": "F",
+      "root_avg_speed": 36.44226806568361,
+      "csv": "data/trajectories/jumping_dancing_light.csv",
+      "source_csv": "g1/csv/230411/victory_dance_orange_justice_180_R_fast_001__A310.csv",
+      "n_frames": 1181
+    }
+  },
+  "jumping_turning": {
+    "heavy": {
+      "uid": "A025",
+      "weight": 102.0,
+      "age": 19.0,
+      "height": 199.0,
+      "gender": "M",
+      "root_avg_speed": 26.324721266016915,
+      "csv": "data/trajectories/jumping_turning_heavy.csv",
+      "source_csv": "g1/csv/220714/turn_jump_0135_002__A025.csv",
+      "n_frames": 855
+    },
+    "light": {
+      "uid": "A061",
+      "weight": 47.0,
+      "age": 21.0,
+      "height": 157.0,
+      "gender": "M",
+      "root_avg_speed": 30.62421911356138,
+      "csv": "data/trajectories/jumping_turning_light.csv",
+      "source_csv": "g1/csv/221115/turn_jump_270_001__A061.csv",
+      "n_frames": 530
+    }
+  },
+  "kicking_walking": {
+    "heavy": {
+      "uid": "A057",
+      "weight": 87.0,
+      "age": 42.0,
+      "height": 185.0,
+      "gender": "M",
+      "root_avg_speed": 41.37063858433972,
+      "csv": "data/trajectories/kicking_walking_heavy.csv",
+      "source_csv": "g1/csv/211117/injured_trail_leg_kick_trash_003__A057.csv",
+      "n_frames": 1928
+    },
+    "light": {
+      "uid": "A438",
+      "weight": 56.0,
+      "age": 31.0,
+      "height": 169.0,
+      "gender": "F",
+      "root_avg_speed": 32.97784564771677,
+      "csv": "data/trajectories/kicking_walking_light.csv",
+      "source_csv": "g1/csv/230112/neutral_kick_trash_R_004__A438.csv",
+      "n_frames": 813
+    }
+  },
+  "kneeling": {
+    "heavy": {
+      "uid": "A023",
+      "weight": 90.0,
+      "age": 46.0,
+      "height": 190.0,
+      "gender": "M",
+      "root_avg_speed": 11.005558073370052,
+      "csv": "data/trajectories/kneeling_heavy.csv",
+      "source_csv": "g1/csv/220713/kneeling_loop_001__A023.csv",
+      "n_frames": 2255
+    },
+    "light": {
+      "uid": "A049",
+      "weight": 50.0,
+      "age": 25.0,
+      "height": 156.0,
+      "gender": "F",
+      "root_avg_speed": 12.617185950026212,
+      "csv": "data/trajectories/kneeling_light.csv",
+      "source_csv": "g1/csv/221011/kneeling_loop_002__A049.csv",
+      "n_frames": 1035
+    }
+  },
+  "looking": {
+    "heavy": {
+      "uid": "A429",
+      "weight": 90.0,
+      "age": 25.0,
+      "height": 178.0,
+      "gender": "M",
+      "root_avg_speed": 2.5687145938101965,
+      "csv": "data/trajectories/looking_heavy.csv",
+      "source_csv": "g1/csv/230713/look_180_R_001__A429.csv",
+      "n_frames": 1179
+    },
+    "light": {
+      "uid": "A432",
+      "weight": 55.0,
+      "age": 28.0,
+      "height": 167.0,
+      "gender": "F",
+      "root_avg_speed": 2.1912338537738467,
+      "csv": "data/trajectories/looking_light.csv",
+      "source_csv": "g1/csv/230713/look_180_R_001__A432.csv",
+      "n_frames": 1179
+    }
+  },
+  "object_manipulation": {
+    "heavy": {
+      "uid": "A511",
+      "weight": 83.0,
+      "age": 26.0,
+      "height": 180.0,
+      "gender": "M",
+      "root_avg_speed": 27.981141511103644,
+      "csv": "data/trajectories/object_manipulation_heavy.csv",
+      "source_csv": "g1/csv/231114/big_light_two_hands_hold_long_R_001__A511.csv",
+      "n_frames": 3984
+    },
+    "light": {
+      "uid": "A500",
+      "weight": 61.0,
+      "age": 28.0,
+      "height": 171.0,
+      "gender": "F",
+      "root_avg_speed": 15.737222010395914,
+      "csv": "data/trajectories/object_manipulation_light.csv",
+      "source_csv": "g1/csv/231110/watering_plants_high_walk_ff_stop_360_R_002__A500.csv",
+      "n_frames": 1757
+    }
+  },
+  "on_hands_and_knees": {
+    "heavy": {
+      "uid": "A034",
+      "weight": 96.0,
+      "age": 27.0,
+      "height": 183.0,
+      "gender": "F",
+      "root_avg_speed": 25.926179390506697,
+      "csv": "data/trajectories/on_hands_and_knees_heavy.csv",
+      "source_csv": "g1/csv/220721/mohak_loop_002__A034.csv",
+      "n_frames": 1450
+    },
+    "light": {
+      "uid": "A036",
+      "weight": 50.0,
+      "age": 27.0,
+      "height": 150.0,
+      "gender": "F",
+      "root_avg_speed": 27.871187408826,
+      "csv": "data/trajectories/on_hands_and_knees_light.csv",
+      "source_csv": "g1/csv/220721/mohak_backward_loop_003__A036.csv",
+      "n_frames": 1288
+    }
+  },
+  "on_hands_and_knees_turning": {
+    "heavy": {
+      "uid": "A034",
+      "weight": 96.0,
+      "age": 27.0,
+      "height": 183.0,
+      "gender": "F",
+      "root_avg_speed": 15.13042013309828,
+      "csv": "data/trajectories/on_hands_and_knees_turning_heavy.csv",
+      "source_csv": "g1/csv/220721/mohak_turn_045_004__A034.csv",
+      "n_frames": 817
+    },
+    "light": {
+      "uid": "A036",
+      "weight": 50.0,
+      "age": 27.0,
+      "height": 150.0,
+      "gender": "F",
+      "root_avg_speed": 12.343474595491386,
+      "csv": "data/trajectories/on_hands_and_knees_turning_light.csv",
+      "source_csv": "g1/csv/220721/mohak_turn_000_004__A036.csv",
+      "n_frames": 786
+    }
+  },
+  "playing_instrument": {
+    "heavy": {
+      "uid": "A358",
+      "weight": 79.0,
+      "age": 26.0,
+      "height": 194.0,
+      "gender": "M",
+      "root_avg_speed": 8.46039693155439,
+      "csv": "data/trajectories/playing_instrument_heavy.csv",
+      "source_csv": "g1/csv/230427/playing_guitar_R_002__A358.csv",
+      "n_frames": 1917
+    },
+    "light": {
+      "uid": "A284",
+      "weight": 61.0,
+      "age": 27.0,
+      "height": 168.0,
+      "gender": "F",
+      "root_avg_speed": 6.387484951384206,
+      "csv": "data/trajectories/playing_instrument_light.csv",
+      "source_csv": "g1/csv/230317/playing_transverse_flute_R_002__A284.csv",
+      "n_frames": 2960
+    }
+  },
+  "pointing": {
+    "heavy": {
+      "uid": "A431",
+      "weight": 132.0,
+      "age": 29.0,
+      "height": 193.0,
+      "gender": "M",
+      "root_avg_speed": 7.826433879041114,
+      "csv": "data/trajectories/pointing_heavy.csv",
+      "source_csv": "g1/csv/230713/point_downwards_R_001__A431.csv",
+      "n_frames": 933
+    },
+    "light": {
+      "uid": "A432",
+      "weight": 55.0,
+      "age": 28.0,
+      "height": 167.0,
+      "gender": "F",
+      "root_avg_speed": 15.306409512759318,
+      "csv": "data/trajectories/pointing_light.csv",
+      "source_csv": "g1/csv/230713/point_downwards_R_001__A432.csv",
+      "n_frames": 760
+    }
+  },
+  "running": {
+    "heavy": {
+      "uid": "A329",
+      "weight": 89.0,
+      "age": 30.0,
+      "height": 176.0,
+      "gender": "M",
+      "root_avg_speed": 175.98273863189863,
+      "csv": "data/trajectories/running_heavy.csv",
+      "source_csv": "g1/csv/230417/run_stop_180_R_001__A329.csv",
+      "n_frames": 599
+    },
+    "light": {
+      "uid": "A330",
+      "weight": 61.0,
+      "age": 27.0,
+      "height": 169.0,
+      "gender": "F",
+      "root_avg_speed": 174.6376656266558,
+      "csv": "data/trajectories/running_light.csv",
+      "source_csv": "g1/csv/230417/run_stop_180_R_002__A330.csv",
+      "n_frames": 588
+    }
+  },
+  "running_dancing": {
+    "heavy": {
+      "uid": "A314",
+      "weight": 90.0,
+      "age": 29.0,
+      "height": 187.0,
+      "gender": "M",
+      "root_avg_speed": 34.61999706767738,
+      "csv": "data/trajectories/running_dancing_heavy.csv",
+      "source_csv": "g1/csv/230412/dance_hiphop_2_step_360_R_001__A314.csv",
+      "n_frames": 786
+    },
+    "light": {
+      "uid": "A315",
+      "weight": 52.0,
+      "age": 28.0,
+      "height": 163.0,
+      "gender": "F",
+      "root_avg_speed": 45.79010359664235,
+      "csv": "data/trajectories/running_dancing_light.csv",
+      "source_csv": "g1/csv/230412/dance_hiphop_2_step_360_R_002__A315.csv",
+      "n_frames": 748
+    }
+  },
+  "running_turning": {
+    "heavy": {
+      "uid": "A348",
+      "weight": 132.0,
+      "age": 29.0,
+      "height": 193.0,
+      "gender": "M",
+      "root_avg_speed": 198.0124112545935,
+      "csv": "data/trajectories/running_turning_heavy.csv",
+      "source_csv": "g1/csv/230424/turn_run_270_R_003__A348.csv",
+      "n_frames": 478
+    },
+    "light": {
+      "uid": "A346",
+      "weight": 56.0,
+      "age": 26.0,
+      "height": 173.0,
+      "gender": "F",
+      "root_avg_speed": 181.8668642470305,
+      "csv": "data/trajectories/running_turning_light.csv",
+      "source_csv": "g1/csv/230424/turn_run_270_R_003__A346.csv",
+      "n_frames": 466
+    }
+  },
+  "sitting": {
+    "heavy": {
+      "uid": "A047",
+      "weight": 100.0,
+      "age": 33.0,
+      "height": 189.0,
+      "gender": "M",
+      "root_avg_speed": 14.871007997304265,
+      "csv": "data/trajectories/sitting_heavy.csv",
+      "source_csv": "g1/csv/221010/sit_cross_legged_loop_001__A047.csv",
+      "n_frames": 1865
+    },
+    "light": {
+      "uid": "A021",
+      "weight": 41.0,
+      "age": 29.0,
+      "height": 155.0,
+      "gender": "F",
+      "root_avg_speed": 15.70438814910085,
+      "csv": "data/trajectories/sitting_light.csv",
+      "source_csv": "g1/csv/220713/sit_croos_legged_loop_002__A021.csv",
+      "n_frames": 1960
+    }
+  },
+  "standing": {
+    "heavy": {
+      "uid": "A511",
+      "weight": 83.0,
+      "age": 26.0,
+      "height": 180.0,
+      "gender": "M",
+      "root_avg_speed": 8.905824566572962,
+      "csv": "data/trajectories/standing_heavy.csv",
+      "source_csv": "g1/csv/231114/body_check_001__A511.csv",
+      "n_frames": 6105
+    },
+    "light": {
+      "uid": "A480",
+      "weight": 52.0,
+      "age": 27.0,
+      "height": 163.0,
+      "gender": "F",
+      "root_avg_speed": 9.575109706578298,
+      "csv": "data/trajectories/standing_light.csv",
+      "source_csv": "g1/csv/231018/body_check_001__A480.csv",
+      "n_frames": 5908
+    }
+  },
+  "standing_idle": {
+    "heavy": {
+      "uid": "A034",
+      "weight": 96.0,
+      "age": 27.0,
+      "height": 183.0,
+      "gender": "F",
+      "root_avg_speed": 1.8805324868474576,
+      "csv": "data/trajectories/standing_idle_heavy.csv",
+      "source_csv": "g1/csv/220721/idle_one_foot_left_002__A034.csv",
+      "n_frames": 2640
+    },
+    "light": {
+      "uid": "A418",
+      "weight": 56.0,
+      "age": 26.0,
+      "height": 168.0,
+      "gender": "F",
+      "root_avg_speed": 1.9976229116067,
+      "csv": "data/trajectories/standing_idle_light.csv",
+      "source_csv": "g1/csv/230710/idle_right_R_001__A418.csv",
+      "n_frames": 1740
+    }
+  },
+  "standing_lying_down": {
+    "heavy": {
+      "uid": "A494",
+      "weight": 83.0,
+      "age": 26.0,
+      "height": 180.0,
+      "gender": "M",
+      "root_avg_speed": 26.41120268605657,
+      "csv": "data/trajectories/standing_lying_down_heavy.csv",
+      "source_csv": "g1/csv/231024/faint_stand_up_lying_side_R_001__A494.csv",
+      "n_frames": 1404
+    },
+    "light": {
+      "uid": "A472",
+      "weight": 49.0,
+      "age": 30.0,
+      "height": 167.0,
+      "gender": "F",
+      "root_avg_speed": 20.69197908572315,
+      "csv": "data/trajectories/standing_lying_down_light.csv",
+      "source_csv": "g1/csv/231010/stand_up_lying_stomach_R_002__A472.csv",
+      "n_frames": 933
+    }
+  },
+  "standing_sitting": {
+    "heavy": {
+      "uid": "A487",
+      "weight": 83.0,
+      "age": 26.0,
+      "height": 180.0,
+      "gender": "M",
+      "root_avg_speed": 16.101992507865525,
+      "csv": "data/trajectories/standing_sitting_heavy.csv",
+      "source_csv": "g1/csv/231019/cartwheelin_003__A487.csv",
+      "n_frames": 1326
+    },
+    "light": {
+      "uid": "A484",
+      "weight": 52.0,
+      "age": 29.0,
+      "height": 167.0,
+      "gender": "F",
+      "root_avg_speed": 13.031960842162764,
+      "csv": "data/trajectories/standing_sitting_light.csv",
+      "source_csv": "g1/csv/231019/cartwheelin_003__A484.csv",
+      "n_frames": 1137
+    }
+  },
+  "throwing": {
+    "heavy": {
+      "uid": "A008",
+      "weight": 107.0,
+      "age": 32.0,
+      "height": 163.0,
+      "gender": "M",
+      "root_avg_speed": 10.373096313476562,
+      "csv": "data/trajectories/throwing_heavy.csv",
+      "source_csv": "g1/csv/210707/throw_ball_002__A008.csv",
+      "n_frames": 3530
+    },
+    "light": {
+      "uid": "A438",
+      "weight": 56.0,
+      "age": 31.0,
+      "height": 169.0,
+      "gender": "F",
+      "root_avg_speed": 10.833772225884838,
+      "csv": "data/trajectories/throwing_light.csv",
+      "source_csv": "g1/csv/230112/neutral_throw_ball_R_001__A438.csv",
+      "n_frames": 361
+    }
+  },
+  "transition": {
+    "heavy": {
+      "uid": "A265",
+      "weight": 92.0,
+      "age": 26.0,
+      "height": 169.0,
+      "gender": "F",
+      "root_avg_speed": 4.547299462894145,
+      "csv": "data/trajectories/transition_heavy.csv",
+      "source_csv": "g1/csv/230313/idle_right_to_idle_R_002__A265.csv",
+      "n_frames": 605
+    },
+    "light": {
+      "uid": "A418",
+      "weight": 56.0,
+      "age": 26.0,
+      "height": 168.0,
+      "gender": "F",
+      "root_avg_speed": 4.958666378750006,
+      "csv": "data/trajectories/transition_light.csv",
+      "source_csv": "g1/csv/230710/idle_right_to_idle_R_001__A418.csv",
+      "n_frames": 695
+    }
+  },
+  "turning": {
+    "heavy": {
+      "uid": "A035",
+      "weight": 145.0,
+      "age": 43.0,
+      "height": 198.0,
+      "gender": "M",
+      "root_avg_speed": 8.453963365934788,
+      "csv": "data/trajectories/turning_heavy.csv",
+      "source_csv": "g1/csv/220721/step_rotate_idle_135_001__A035.csv",
+      "n_frames": 1010
+    },
+    "light": {
+      "uid": "A053",
+      "weight": 38.0,
+      "age": 60.0,
+      "height": 151.0,
+      "gender": "F",
+      "root_avg_speed": 9.479297884800472,
+      "csv": "data/trajectories/turning_light.csv",
+      "source_csv": "g1/csv/221012/idle_turn_360_002__A053.csv",
+      "n_frames": 1080
+    }
+  },
+  "turning_crawling": {
+    "heavy": {
+      "uid": "A230",
+      "weight": 90.0,
+      "age": 25.0,
+      "height": 178.0,
+      "gender": "M",
+      "root_avg_speed": 17.241809982357186,
+      "csv": "data/trajectories/turning_crawling_heavy.csv",
+      "source_csv": "g1/csv/230301/turn_crawl_360_R_001__A230.csv",
+      "n_frames": 1171
+    },
+    "light": {
+      "uid": "A131",
+      "weight": 63.0,
+      "age": 25.0,
+      "height": 169.0,
+      "gender": "F",
+      "root_avg_speed": 12.475293371416932,
+      "csv": "data/trajectories/turning_crawling_light.csv",
+      "source_csv": "g1/csv/230120/turn_crawl_270_005__A131.csv",
+      "n_frames": 893
+    }
+  },
+  "turning_dancing": {
+    "heavy": {
+      "uid": "A309",
+      "weight": 90.0,
+      "age": 29.0,
+      "height": 187.0,
+      "gender": "M",
+      "root_avg_speed": 41.292457048461,
+      "csv": "data/trajectories/turning_dancing_heavy.csv",
+      "source_csv": "g1/csv/230411/dance_basic_turn_v1_180_R_002__A309.csv",
+      "n_frames": 643
+    },
+    "light": {
+      "uid": "A310",
+      "weight": 52.0,
+      "age": 28.0,
+      "height": 163.0,
+      "gender": "F",
+      "root_avg_speed": 33.65160458731933,
+      "csv": "data/trajectories/turning_dancing_light.csv",
+      "source_csv": "g1/csv/230411/dance_basic_turn_v1_270_R_001__A310.csv",
+      "n_frames": 898
+    }
+  },
+  "walking": {
+    "heavy": {
+      "uid": "A002",
+      "weight": 115.0,
+      "age": 30.0,
+      "height": 170.0,
+      "gender": "M",
+      "root_avg_speed": 57.04025460153643,
+      "csv": "data/trajectories/walking_heavy.csv",
+      "source_csv": "g1/csv/210531/walk_forward_amateur_impro_003__A002.csv",
+      "n_frames": 9117
+    },
+    "light": {
+      "uid": "A418",
+      "weight": 56.0,
+      "age": 26.0,
+      "height": 168.0,
+      "gender": "F",
+      "root_avg_speed": 63.574742723047024,
+      "csv": "data/trajectories/walking_light.csv",
+      "source_csv": "g1/csv/230710/walk_arc_cw_loop_R_001__A418.csv",
+      "n_frames": 903
+    }
+  },
+  "walking_action": {
+    "heavy": {
+      "uid": "A353",
+      "weight": 132.0,
+      "age": 29.0,
+      "height": 193.0,
+      "gender": "M",
+      "root_avg_speed": 71.3201260805245,
+      "csv": "data/trajectories/walking_action_heavy.csv",
+      "source_csv": "g1/csv/230425/item_pick_up_walk_R_002__A353.csv",
+      "n_frames": 718
+    },
+    "light": {
+      "uid": "A410",
+      "weight": 56.0,
+      "age": 31.0,
+      "height": 169.0,
+      "gender": "F",
+      "root_avg_speed": 117.78943776719213,
+      "csv": "data/trajectories/walking_action_light.csv",
+      "source_csv": "g1/csv/230530/item_pick_up_walk_R_002__A410.csv",
+      "n_frames": 588
+    }
+  },
+  "walking_crouching_poitning_turning": {
+    "heavy": {
+      "uid": "A494",
+      "weight": 83.0,
+      "age": 26.0,
+      "height": 180.0,
+      "gender": "M",
+      "root_avg_speed": 70.33155618754502,
+      "csv": "data/trajectories/walking_crouching_poitning_turning_heavy.csv",
+      "source_csv": "g1/csv/231024/walk_arc_cw_loop_R_wave_right_hand_270_R_turn_walk_270_R_002__A494.csv",
+      "n_frames": 1497
+    },
+    "light": {
+      "uid": "A472",
+      "weight": 49.0,
+      "age": 30.0,
+      "height": 167.0,
+      "gender": "F",
+      "root_avg_speed": 52.48947366514536,
+      "csv": "data/trajectories/walking_crouching_poitning_turning_light.csv",
+      "source_csv": "g1/csv/231010/show_bicep_R_on_all_fours_360_start_R_idle_right_R_002__A472.csv",
+      "n_frames": 1870
+    }
+  },
+  "walking_crouching_transition": {
+    "heavy": {
+      "uid": "A304",
+      "weight": 88.0,
+      "age": 33.0,
+      "height": 177.0,
+      "gender": "M",
+      "root_avg_speed": 26.11737243563165,
+      "csv": "data/trajectories/walking_crouching_transition_heavy.csv",
+      "source_csv": "g1/csv/230324/h_b_w_crouch_to_stand_270_stop_001__A304.csv",
+      "n_frames": 545
+    },
+    "light": {
+      "uid": "A305",
+      "weight": 56.0,
+      "age": 30.0,
+      "height": 167.0,
+      "gender": "F",
+      "root_avg_speed": 35.91985837739912,
+      "csv": "data/trajectories/walking_crouching_transition_light.csv",
+      "source_csv": "g1/csv/230324/h_b_w_crouch_to_stand_270_start_003__A305.csv",
+      "n_frames": 501
+    }
+  },
+  "walking_dancing": {
+    "heavy": {
+      "uid": "A314",
+      "weight": 90.0,
+      "age": 29.0,
+      "height": 187.0,
+      "gender": "M",
+      "root_avg_speed": 38.6082471481304,
+      "csv": "data/trajectories/walking_dancing_heavy.csv",
+      "source_csv": "g1/csv/230412/dance_hiphop_cabath_path_R_001__A314.csv",
+      "n_frames": 1256
+    },
+    "light": {
+      "uid": "A315",
+      "weight": 52.0,
+      "age": 28.0,
+      "height": 163.0,
+      "gender": "F",
+      "root_avg_speed": 30.69721627262245,
+      "csv": "data/trajectories/walking_dancing_light.csv",
+      "source_csv": "g1/csv/230412/dance_hiphop_cabath_path_R_001__A315.csv",
+      "n_frames": 1810
+    }
+  },
+  "walking_gesture": {
+    "heavy": {
+      "uid": "A431",
+      "weight": 132.0,
+      "age": 29.0,
+      "height": 193.0,
+      "gender": "M",
+      "root_avg_speed": 48.21766807495761,
+      "csv": "data/trajectories/walking_gesture_heavy.csv",
+      "source_csv": "g1/csv/230713/street_walking_hit_shoulder_180_aggresive_R_001__A431.csv",
+      "n_frames": 1449
+    },
+    "light": {
+      "uid": "A432",
+      "weight": 55.0,
+      "age": 28.0,
+      "height": 167.0,
+      "gender": "F",
+      "root_avg_speed": 57.93913143035249,
+      "csv": "data/trajectories/walking_gesture_light.csv",
+      "source_csv": "g1/csv/230713/street_walking_hit_shoulder_180_aggresive_R_001__A432.csv",
+      "n_frames": 1231
+    }
+  },
+  "walking_turning": {
+    "heavy": {
+      "uid": "A066",
+      "weight": 98.0,
+      "age": 56.0,
+      "height": 180.0,
+      "gender": "F",
+      "root_avg_speed": 62.706012584139614,
+      "csv": "data/trajectories/walking_turning_heavy.csv",
+      "source_csv": "g1/csv/221117/turn_walk_360_002__A066.csv",
+      "n_frames": 506
+    },
+    "light": {
+      "uid": "A061",
+      "weight": 47.0,
+      "age": 21.0,
+      "height": 157.0,
+      "gender": "M",
+      "root_avg_speed": 72.23750882131263,
+      "csv": "data/trajectories/walking_turning_light.csv",
+      "source_csv": "g1/csv/221115/turn_walk_360_002__A061.csv",
+      "n_frames": 848
+    }
+  },
+  "waving": {
+    "heavy": {
+      "uid": "A431",
+      "weight": 132.0,
+      "age": 29.0,
+      "height": 193.0,
+      "gender": "M",
+      "root_avg_speed": 8.635671864385191,
+      "csv": "data/trajectories/waving_heavy.csv",
+      "source_csv": "g1/csv/230713/wave_R_001__A431.csv",
+      "n_frames": 713
+    },
+    "light": {
+      "uid": "A432",
+      "weight": 55.0,
+      "age": 28.0,
+      "height": 167.0,
+      "gender": "F",
+      "root_avg_speed": 23.35768023740898,
+      "csv": "data/trajectories/waving_light.csv",
+      "source_csv": "g1/csv/230713/wave_R_001__A432.csv",
+      "n_frames": 412
+    }
+  }
+}

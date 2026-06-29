@@ -1,0 +1,33 @@
+{
+  "_doc": [
+    "Clips and tasks that produce a visually distorted SMPL human (broken pose, ",
+    "implausible limb position, fitting failure). NEVER use any of these in a ",
+    "hover popup, demo selector, video, screenshot, or any other form of ",
+    "visualization on the project page.",
+    "",
+    "Three levels of blocking:",
+    "  blocked_tasks            : task label is blocked across every panel.",
+    "  blocked_per_attr_feature : task label is blocked only for the named ",
+    "                             (attribute, feature) panel — useful when a ",
+    "                             clip looks fine elsewhere but the SMPL fit ",
+    "                             happens to flag the specific metric being shown.",
+    "  blocked_instance_ids     : single (attr, feature, task, actor) instances.",
+    "                             Use when only one actor's fit is bad and the",
+    "                             rest of the same task are fine.",
+    "",
+    "When loading instance lists (e.g. fixed_feature_instances_multi.json),",
+    "drop any instance whose `task` matches blocked_tasks, OR whose (attribute_short,",
+    "feature, task) tuple matches an entry in blocked_per_attr_feature, OR whose",
+    "instance_id matches blocked_instance_ids. The bar plot's dot cloud, the hover",
+    "popup, and the demo dropdown should all consult this list."
+  ],
+  "blocked_tasks": [
+    "turning",
+    "gesture, dancing"
+  ],
+  "blocked_per_attr_feature": {
+    "age|waist_rom":        ["dancing", "walking"],
+    "weight|ankle_peak_vel": ["walking"]
+  },
+  "blocked_instance_ids": []
+}

@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>UNVEIL — pipeline animation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet" />
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: 'Noto Serif', serif;
+    background: #ffffff;
+    color: #1c1c1c;
+    overflow: hidden;
+  }
+
+  /* Layout mirrors the original teaser figure:
+       human mesh (top-left)  ·  woman (top-center)  ·  attributes (top-right)
+       g1 robot  (bottom-left, right below the human mesh)  ·  predictions (bottom-right) */
+  .pipeline {
+    position: relative;
+    width: 100%;
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 14px 18px 16px;
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) 96px 132px 60px minmax(0, 0.72fr);
+    grid-template-rows: 250px 56px 250px;
+    grid-template-areas:
+      "human  larrow  woman   rarrow  rightcol"
+      "vdown  .       .       .       rightcol"
+      "robot  unveil  unveil  unveil  rightcol";
+    column-gap: 8px;
+    row-gap: 0;
+    align-items: start;
+  }
+
+  /* ── Viewer panels ─────────────────────────────────────────── */
+  .stage {
+    position: relative;
+    height: 250px;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #9a9fa4;
+    border: 1px solid #c4c8cd;
+    box-shadow: 0 4px 16px rgba(20,30,50,0.14);
+  }
+  .stage-human { grid-area: human; }
+  .stage-robot { grid-area: robot; }
+  .stage iframe { width: 100%; height: 100%; border: 0; display: block; }
+
+  .panel-label {
+    position: absolute;
+    left: 10px;
+    bottom: 10px;
+    background: rgba(255,255,255,0.92);
+    border: 1px solid #d3d7dd;
+    border-radius: 6px;
+    padding: 4px 12px;
+    font-size: 18px;
+    font-weight: 600;
+    color: #1c1c1c;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+    pointer-events: none;
+  }
+
+  /* ── Woman (real operator, center hub) ─────────────────────── */
+  .stage-woman {
+    grid-area: woman;
+    height: 250px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 6px;
+  }
+  .woman-img {
+    max-height: calc(100% - 36px);   /* leave room for the caption below */
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
+    display: block;
+  }
+  /* Plain-text labels — same typography as the process-stage labels
+     ("Motion Retargeting" / "UNVEIL"): 22px Noto Serif, weight 600. */
+  .woman-label, .training-label {
+    font-size: 22px;
+    font-weight: 600;
+    color: #1c1c1c;
+    white-space: nowrap;
+  }
+
+  /* ── Right column: attributes → Training arrow → predictions ─── */
+  .right-col {
+    grid-area: rightcol;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    /* Reproduce the original attrs-top (24px) and preds-bottom insets so the
+       boxes don't move; the training arrow flex-grows to fill the gap. */
+    padding: 24px 0 56px;
+  }
+
+  /* ── Attribute / prediction boxes ──────────────────────────── */
+  .box {
+    flex: 0 0 auto;
+    width: 100%;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 2px solid;
+    box-shadow: 0 3px 12px rgba(20,30,50,0.10);
+  }
+  .box-attrs { border-color: #6f9f5f; background: #e3f0da; }
+  .box-preds { border-color: #d79760; background: #fbe6d4; }
+
+  .box-title {
+    text-align: center;
+    font-weight: 700;
+    font-size: 18px;
+    padding: 7px 10px;
+    border-bottom: 1.5px solid;
+  }
+  .box-attrs .box-title { color: #2f5a23; background: #cfe6c2; border-color: #8fb87f; }
+  .box-preds .box-title { color: #8a4a1c; background: #f7d4ba; border-color: #e0ad86; }
+
+  .box-body { padding: 10px 14px 12px; font-size: 17px; line-height: 1.55; }
+  .box-body .row { display: flex; justify-content: space-between; gap: 10px; }
+  .box-body .k { color: #333; }
+  .box-body .v { font-weight: 700; }
+  .box-attrs .box-body .v { color: #2f5a23; }
+  .box-preds .box-body .v { color: #8a4a1c; }
+
+  /* ── Arrows ────────────────────────────────────────────────── */
+  .arrow { display: flex; align-items: center; justify-content: center; }
+  .arrow svg { display: block; overflow: visible; }
+  .arrow-left  { grid-area: larrow; align-self: center; }
+  .arrow-right { grid-area: rarrow; align-self: center; }
+
+  /* Motion Retargeting: vertical arrow under the human mesh, label to its right */
+  .arrow-down { grid-area: vdown; gap: 10px; }
+  .arrow-down .lab {
+    font-style: italic; font-weight: 600; font-size: 22px;
+    color: #1c1c1c; white-space: nowrap;
+  }
+
+  /* UNVEIL: long horizontal arrow from the right of the robot panel into the
+     predictions box, with the label centered in the middle of the line. */
+  .arrow-unveil {
+    grid-area: unveil;
+    align-self: center;
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin: 0 -8px;            /* bridge the column gaps so it touches both sides */
+  }
+  .unveil-line {
+    position: relative;
+    flex: 1 1 auto;
+    height: 2.6px;
+    background: #1c1c1c;
+    border-radius: 2px;
+  }
+  .unveil-line::after {        /* right-pointing arrowhead — tip touches the box edge */
+    content: '';
+    position: absolute;
+    right: 0; top: 50%;
+    transform: translateY(-50%);
+    width: 0; height: 0;
+    border-left: 20px solid #1c1c1c;
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+  }
+  .arrow-unveil .lab {
+    position: absolute;
+    left: 50%;
+    bottom: 100%;            /* sit on top of the line, not breaking it */
+    margin-bottom: 4px;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    font-weight: 700;
+    font-size: 22px;
+    letter-spacing: 0.06em;
+    color: #1c1c1c;
+  }
+
+  /* Training: vertical double-headed arrow that stretches to fill the gap
+     between the two boxes; the label sits to its left. Brand navy. */
+  .arrow-training {
+    flex: 1 1 auto;
+    min-height: 40px;
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;        /* let the line fill the full height */
+    justify-content: center;
+    gap: 8px;
+    position: relative;
+  }
+  .training-label { align-self: center; }
+  .training-line {
+    position: relative;
+    align-self: stretch;         /* line spans attrs-bottom → preds-top */
+    width: 2.8px;
+    background: #2c3e6b;
+    border-radius: 2px;
+  }
+  .training-line::before {        /* top arrowhead — touches the attributes box */
+    content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+    width: 0; height: 0;
+    border-bottom: 13px solid #2c3e6b;
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+  }
+  .training-line::after {         /* bottom arrowhead — touches the predictions box */
+    content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+    width: 0; height: 0;
+    border-top: 13px solid #2c3e6b;
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+  }
+
+  /* ── Reveal animation ──────────────────────────────────────── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.55s ease, transform 0.55s ease;
+  }
+  .reveal.shown { opacity: 1; transform: translateY(0); }
+
+  /* ── Replay control ────────────────────────────────────────── */
+  #replay {
+    position: fixed; right: 12px; bottom: 10px;
+    background: #2c3e6b; color: #fff; border: none; border-radius: 16px;
+    padding: 4px 13px; font-family: 'Noto Serif', serif; font-size: 12.5px;
+    font-weight: 600; cursor: pointer; opacity: 0.85;
+    box-shadow: 0 2px 8px rgba(20,30,50,0.2);
+    transition: background 0.15s, opacity 0.15s; z-index: 20;
+  }
+  #replay:hover { background: #e74c3c; opacity: 1; }
+
+  @media (max-width: 760px) {
+    .pipeline {
+      grid-template-columns: 1fr;
+      grid-template-rows: repeat(8, auto);
+      grid-template-areas:
+        "woman" "larrow" "human" "vdown" "robot" "unveil" "rarrow" "rightcol";
+      row-gap: 10px;
+    }
+    .stage, .stage-human, .stage-robot, .stage-woman { height: 230px; }
+    .right-col { height: auto; padding: 0; gap: 10px; }
+    .arrow-training { flex: 0 0 auto; min-height: 56px; }
+    .arrow-left svg, .arrow-right svg { transform: rotate(90deg); }
+  }
+</style>
+</head>
+<body>
+
+<div class="pipeline">
+
+  <!-- Human operator mesh panel (top-left) -->
+  <div class="stage stage-human reveal" id="stage-human">
+    <iframe id="human-frame"
+            src="./smpl_engine/viewer.html?embed=1&amp;seq=groundtruth&amp;bin_url=../assets/demos/teaser/operator_verts.bin&amp;faces_url=../assets/demos/teaser/faces.bin"
+            title="Human operator SMPL trajectory"></iframe>
+    <div class="panel-label">Human Operator Trajectory</div>
+  </div>
+
+  <!-- Left arrow: woman -> human mesh -->
+  <div class="arrow arrow-left reveal" id="arrow-left">
+    <svg width="112" height="22" viewBox="0 0 112 22" aria-hidden="true">
+      <defs><marker id="ah-l" markerWidth="9" markerHeight="9" refX="6.5" refY="3" orient="auto">
+        <path d="M0,0 L8,3 L0,6 Z" fill="#1c1c1c"/></marker></defs>
+      <path d="M 108 11 L 4 11" fill="none" stroke="#1c1c1c" stroke-width="2.6"
+            stroke-linecap="round" marker-end="url(#ah-l)"/>
+    </svg>
+  </div>
+
+  <!-- Woman = real operator (top-center hub) -->
+  <div class="stage-woman reveal" id="stage-woman">
+    <img class="woman-img" src="./assets/img/teaser_woman.png" alt="Real human operator" />
+    <div class="woman-label">Human Operator</div>
+  </div>
+
+  <!-- Right arrow: woman -> operator attributes -->
+  <div class="arrow arrow-right reveal" id="arrow-right">
+    <svg width="76" height="22" viewBox="0 0 76 22" aria-hidden="true">
+      <defs><marker id="ah-r" markerWidth="9" markerHeight="9" refX="6.5" refY="3" orient="auto">
+        <path d="M0,0 L8,3 L0,6 Z" fill="#1c1c1c"/></marker></defs>
+      <path d="M 4 11 L 72 11" fill="none" stroke="#1c1c1c" stroke-width="2.6"
+            stroke-linecap="round" marker-end="url(#ah-r)"/>
+    </svg>
+  </div>
+
+  <!-- Right column: operator attributes → Training double-arrow → predictions.
+       Flex column so the training arrow stretches to touch both boxes. -->
+  <div class="right-col">
+    <div class="box box-attrs reveal" id="box-attrs">
+      <div class="box-title">Operator&rsquo;s Attributes</div>
+      <div class="box-body">
+        <div class="row"><span class="k">Age</span><span class="v">45</span></div>
+        <div class="row"><span class="k">Gender</span><span class="v">Female</span></div>
+        <div class="row"><span class="k">Height</span><span class="v">156 cm</span></div>
+        <div class="row"><span class="k">Weight</span><span class="v">74 kg</span></div>
+      </div>
+    </div>
+
+    <!-- Training: vertical double-headed arrow; heads touch both boxes -->
+    <div class="arrow-training reveal" id="arrow-training">
+      <span class="training-label">Training</span>
+      <div class="training-line"></div>
+    </div>
+
+    <div class="box box-preds reveal" id="box-preds">
+      <div class="box-title">Our Predictions</div>
+      <div class="box-body">
+        <div class="row"><span class="k">Age</span><span class="v">43</span></div>
+        <div class="row"><span class="k">Gender</span><span class="v">Female</span></div>
+        <div class="row"><span class="k">Height</span><span class="v">160 cm</span></div>
+        <div class="row"><span class="k">Weight</span><span class="v">70 kg</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Down arrow (vertical): human mesh -> robot, Motion Retargeting -->
+  <div class="arrow arrow-down reveal" id="arrow-down">
+    <svg width="22" height="56" viewBox="0 0 22 56" aria-hidden="true">
+      <defs><marker id="ah-d" markerWidth="9" markerHeight="9" refX="6.5" refY="3" orient="auto">
+        <path d="M0,0 L8,3 L0,6 Z" fill="#1c1c1c"/></marker></defs>
+      <path d="M 11 2 L 11 52" fill="none" stroke="#1c1c1c" stroke-width="2.6"
+            stroke-linecap="round" marker-end="url(#ah-d)"/>
+    </svg>
+    <span class="lab">Motion Retargeting</span>
+  </div>
+
+  <!-- Humanoid robot panel (bottom-left, right below the human mesh) -->
+  <div class="stage stage-robot reveal" id="stage-robot">
+    <iframe id="robot-frame"
+            src="./g1_engine/viewer.html?embed=1&amp;csv_url=../assets/demos/teaser/operator_g1.csv"
+            title="Humanoid G1 robot trajectory"></iframe>
+    <div class="panel-label">Humanoid Trajectory</div>
+  </div>
+
+  <!-- UNVEIL arrow: from the right of the G1 panel into the predictions box -->
+  <div class="arrow-unveil reveal" id="arrow-unveil">
+    <div class="unveil-line"></div>
+    <span class="lab">UNVEIL</span>
+  </div>
+
+
+</div>
+
+<button id="replay" type="button">&#8635; Replay</button>
+
+<script>
+(function () {
+  const human = document.getElementById('human-frame');
+  const robot = document.getElementById('robot-frame');
+
+  // Master clock — both viewers map this `time` over their own (equal) motion
+  // duration, so one clock keeps the human and robot in lockstep.
+  const DURATION = 1093 / 120;            // ≈ 9.108 s
+  let masterTime = 0, lastTS = null, playing = true, speed = 0.5;
+
+  function windows() { return [human, robot].map(f => f.contentWindow).filter(Boolean); }
+  function broadcast() {
+    const msg = { type: 'SYNC', time: masterTime, playing, speed };
+    windows().forEach(w => w.postMessage(msg, '*'));
+  }
+  function tick(ts) {
+    requestAnimationFrame(tick);
+    if (playing) {
+      if (lastTS === null) lastTS = ts;
+      masterTime += (ts - lastTS) * 0.001 * speed;
+      lastTS = ts;
+      if (masterTime >= DURATION) masterTime %= DURATION;
+    } else { lastTS = null; }
+    broadcast();
+  }
+  requestAnimationFrame(tick);
+
+  // Zoom the cameras in a bit (default is [0,1.1,4.5]; pull closer).
+  const CAM = { type: 'CAMERA', source: 'parent', pos: [0, 1.0, 3.25], target: [0, 0.9, 0] };
+  function sendZoom() { windows().forEach(w => w.postMessage(CAM, '*')); }
+  [1300, 2300, 3600, 5200, 5800].forEach(t => setTimeout(sendZoom, t));
+  window.addEventListener('message', e => { if (e.data && e.data.type === 'READY') sendZoom(); });
+
+  // ── Staged reveal: woman → attributes → human mesh → robot → predictions ──
+  const STEPS = [
+    { id: 'stage-woman',  t:  300 },
+    { id: 'arrow-right',  t:  700 },
+    { id: 'box-attrs',    t:  900 },   // ~0.5 s after the woman
+    { id: 'arrow-left',   t: 1900 },
+    { id: 'stage-human',  t: 2300 },
+    { id: 'arrow-down',   t: 3400 },
+    { id: 'stage-robot',  t: 3800 },
+    { id: 'arrow-unveil', t: 5000 },
+    { id: 'box-preds',    t: 5400 },
+    { id: 'arrow-training', t: 6400 },   // after the predictions box is shown
+  ];
+  let timers = [];
+  function runReveal() {
+    timers.forEach(clearTimeout); timers = [];
+    STEPS.forEach(s => document.getElementById(s.id).classList.remove('shown'));
+    STEPS.forEach(s => timers.push(setTimeout(() => {
+      document.getElementById(s.id).classList.add('shown');
+    }, s.t)));
+  }
+  document.getElementById('replay').addEventListener('click', runReveal);
+  window.addEventListener('load', () => setTimeout(runReveal, 400));
+})();
+</script>
+</body>
+</html>

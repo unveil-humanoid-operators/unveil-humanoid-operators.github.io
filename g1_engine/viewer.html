@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>G1 Robot Viewer</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+html, body {
+  width: 100%; height: 100%;
+  background: var(--bg, #1a1a1a);
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  overflow: hidden;
+}
+
+#canvas-wrap {
+  position: absolute;
+  inset: 0 0 52px 0;
+}
+
+canvas { display: block; width: 100% !important; height: 100% !important; }
+
+/* ── Controls bar ──────────────────────────────── */
+#controls {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 52px;
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(8px);
+  border-top: 1px solid #e0e4ed;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 14px;
+}
+
+#btn-play {
+  flex-shrink: 0;
+  width: 32px; height: 32px;
+  border: none;
+  background: #2c3e6b;
+  color: #fff;
+  border-radius: 50%;
+  font-size: 13px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.15s;
+}
+#btn-play:hover { background: #e74c3c; }
+
+#progress {
+  flex: 1;
+  -webkit-appearance: none;
+  height: 4px;
+  background: #e0e4ed;
+  border-radius: 99px;
+  outline: none;
+  cursor: pointer;
+}
+#progress::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: #2c3e6b;
+  cursor: pointer;
+}
+
+#time-label {
+  flex-shrink: 0;
+  font-size: 11px;
+  color: #888;
+  min-width: 70px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#speed-select {
+  flex-shrink: 0;
+  font-size: 11px;
+  padding: 3px 6px;
+  border: 1px solid #dde;
+  border-radius: 4px;
+  background: #fff;
+  color: #444;
+  cursor: pointer;
+}
+
+/* hide own controls when parent is syncing */
+body.embedded #controls { display:none; }
+body.embedded #canvas-wrap { inset:0; }
+
+/* ── Zoom controls (bottom-right corner of canvas) ── */
+#zoom-controls {
+  position: absolute;
+  right: 10px;
+  bottom: 62px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  z-index: 5;
+}
+body.embedded #zoom-controls { bottom: 10px; }
+body.nozoom   #zoom-controls { display: none; }
+.zoom-btn {
+  width: 30px; height: 30px;
+  border: 1px solid rgba(255,255,255,0.18);
+  background: rgba(20,25,40,0.55);
+  color: #fff;
+  border-radius: 6px;
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.15s, transform 0.1s;
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  user-select: none;
+}
+.zoom-btn:hover  { background: rgba(231,76,60,0.85); }
+.zoom-btn:active { transform: scale(0.94); }
+
+/* ── Loading overlay ───────────────────────────── */
+#loading {
+  position: absolute;
+  inset: 0;
+  background: var(--bg, #1a1a1a);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  z-index: 10;
+}
+
+.spinner {
+  width: 36px; height: 36px;
+  border: 3px solid #dde;
+  border-top-color: #2c3e6b;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+#load-status {
+  font-size: 12px;
+  color: #888;
+  max-width: 240px;
+  text-align: center;
+}
+
+#error-box {
+  display: none;
+  position: absolute;
+  inset: 0;
+  background: #fff8f8;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 8px; padding: 20px; text-align: center;
+  font-size: 12px; color: #c0392b;
+}
+</style>
+</head>
+<body>
+
+<div id="canvas-wrap"></div>
+
+<div id="zoom-controls">
+  <button id="zoom-in"  class="zoom-btn" title="Zoom in">&#43;</button>
+  <button id="zoom-out" class="zoom-btn" title="Zoom out">&minus;</button>
+</div>
+
+<div id="controls">
+  <button id="btn-play" title="Play / Pause">&#9646;&#9646;</button>
+  <input id="progress" type="range" min="0" max="1" step="0.0005" value="0"/>
+  <span id="time-label">0.00 / 0.00s</span>
+  <select id="speed-select">
+    <option value="0.25">0.25×</option>
+    <option value="0.5">0.5×</option>
+    <option value="1" selected>1×</option>
+    <option value="2">2×</option>
+  </select>
+</div>
+
+<div id="loading">
+  <div class="spinner"></div>
+  <div id="load-status">Loading model…</div>
+</div>
+
+<!-- Three.js r128 -->
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/STLLoader.js"></script>
+<!-- CSV parser -->
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+
+<script>
+'use strict';
+
+// ── CSV col → MuJoCo joint name (mirrors app.py) ──────────────────────────
+const CSV_TO_JOINT = {
+  left_hip_pitch_joint_dof:       'left_hip_pitch_joint',
+  left_hip_roll_joint_dof:        'left_hip_roll_joint',
+  left_hip_yaw_joint_dof:         'left_hip_yaw_joint',
+  left_knee_joint_dof:            'left_knee_joint',
+  left_ankle_pitch_joint_dof:     'left_ankle_pitch_joint',
+  left_ankle_roll_joint_dof:      'left_ankle_roll_joint',
+  right_hip_pitch_joint_dof:      'right_hip_pitch_joint',
+  right_hip_roll_joint_dof:       'right_hip_roll_joint',
+  right_hip_yaw_joint_dof:        'right_hip_yaw_joint',
+  right_knee_joint_dof:           'right_knee_joint',
+  right_ankle_pitch_joint_dof:    'right_ankle_pitch_joint',
+  right_ankle_roll_joint_dof:     'right_ankle_roll_joint',
+  waist_yaw_joint_dof:            'waist_yaw_joint',
+  waist_roll_joint_dof:           'waist_roll_joint',
+  waist_pitch_joint_dof:          'waist_pitch_joint',
+  left_shoulder_pitch_joint_dof:  'left_shoulder_pitch_joint',
+  left_shoulder_roll_joint_dof:   'left_shoulder_roll_joint',
+  left_shoulder_yaw_joint_dof:    'left_shoulder_yaw_joint',
+  left_elbow_joint_dof:           'left_elbow_joint',
+  left_wrist_roll_joint_dof:      'left_wrist_roll_joint',
+  left_wrist_pitch_joint_dof:     'left_wrist_pitch_joint',
+  left_wrist_yaw_joint_dof:       'left_wrist_yaw_joint',
+  right_shoulder_pitch_joint_dof: 'right_shoulder_pitch_joint',
+  right_shoulder_roll_joint_dof:  'right_shoulder_roll_joint',
+  right_shoulder_yaw_joint_dof:   'right_shoulder_yaw_joint',
+  right_elbow_joint_dof:          'right_elbow_joint',
+  right_wrist_roll_joint_dof:     'right_wrist_roll_joint',
+  right_wrist_pitch_joint_dof:    'right_wrist_pitch_joint',
+  right_wrist_yaw_joint_dof:      'right_wrist_yaw_joint',
+};
+
+const DEG2RAD = Math.PI / 180;
+
+// ── State ─────────────────────────────────────────────────────────────────
+let cfg, modelData, motionData;
+let ENHANCED = false;   // set from cfg.enhancedMaterials after config loads
+let renderer, scene, camera, controls;
+let bodyGroups = {};   // body name → THREE.Group (joint-rotation group)
+let bodyRestQ  = {};   // body name → THREE.Quaternion (rest pose)
+let rootGroup  = null;
+
+let playing = true;
+let frameIdx  = 0;
+let lastTime  = null;
+let accumTime = 0;
+
+// ── Sync protocol ─────────────────────────────────────────────────────────
+const URL_PARAMS     = new URLSearchParams(location.search);
+const EMBEDDED_G1    = URL_PARAMS.has('embed');
+const DEMO_OVERRIDE  = URL_PARAMS.get('demo');   // e.g. ?demo=walking — picks ../assets/demos/g1_csv/<id>.csv
+const CSV_URL_OVERRIDE = URL_PARAMS.get('csv_url'); // explicit URL (relative to viewer.html or absolute)
+const CONFIG_OVERRIDE = URL_PARAMS.get('config'); // e.g. ?config=config_leg.json — swap default config.json
+const NOZOOM         = URL_PARAMS.has('nozoom'); // hide the zoom +/- buttons
+const PAUSED_INIT    = URL_PARAMS.has('paused'); // boot frozen at frame 0; parent can later send SYNC playing:true
+if (EMBEDDED_G1) document.body.classList.add('embedded');
+if (NOZOOM)      document.body.classList.add('nozoom');
+if (PAUSED_INIT) playing = false;                // override the autoPlay default
+
+window.addEventListener('message', e => {
+  const msg = e.data;
+  if (!msg || !msg.type) return;
+  if (msg.type === 'SYNC' && motionData) {
+    const dur = motionData.numFrames * motionData.frameTime;
+    const t   = msg.time % dur;
+    frameIdx  = Math.max(0, Math.min(motionData.numFrames - 1,
+                  Math.floor(t / motionData.frameTime)));
+    accumTime = t - frameIdx * motionData.frameTime;
+    playing   = msg.playing;
+    lastTime  = null;
+  }
+  if (msg.type === 'CAMERA' && msg.source !== 'g1' && controls) {
+    camera.position.set(...msg.pos);
+    controls.target.set(...msg.target);
+    controls.update();
+  }
+  if (msg.type === 'LOAD_DEMO' && msg.demo?.g1CsvFile) {
+    const csvUrl = '../assets/demos/' + msg.demo.g1CsvFile.replace('./','');
+    loadCSV(csvUrl, cfg.maxFrames || 600).then(md => {
+      motionData = md;
+      frameIdx   = 0;
+      accumTime  = 0;
+      lastTime   = null;
+    }).catch(err => console.error('LOAD_DEMO G1 error:', err));
+  }
+});
+
+// ── Boot ──────────────────────────────────────────────────────────────────
+async function boot() {
+  setStatus('Loading config…');
+  // Cache-bust the config fetch so iframe consumers see edits without forcing
+  // a full hard-reload of the page they live on.
+  const _cfgUrl = CONFIG_OVERRIDE ? `./${CONFIG_OVERRIDE}` : './config.json';
+  const _cfgSep = _cfgUrl.includes('?') ? '&' : '?';
+  cfg = await fetchJSON(`${_cfgUrl}${_cfgSep}_=${Date.now()}`);
+  ENHANCED = cfg.enhancedMaterials === true;
+  document.body.style.setProperty('--bg', cfg.backgroundColor || '#f0f2f7');
+  document.getElementById('speed-select').value = String(cfg.playbackSpeed || 1);
+
+  setStatus('Loading model…');
+  modelData = await fetchJSON('./model/g1_model.json');
+
+  setStatus('Loading motion…');
+  const csvUrl = CSV_URL_OVERRIDE
+    ? CSV_URL_OVERRIDE
+    : (DEMO_OVERRIDE
+        ? `../assets/demos/g1_csv/${DEMO_OVERRIDE}.csv`
+        : cfg.csvFile);
+  motionData = await loadCSV(csvUrl, cfg.maxFrames || 600);
+
+  setStatus('Building scene…');
+  setupThree();
+  setStatus('Loading meshes (60 files)…');
+  await buildRobot(modelData.bodies);
+
+  document.getElementById('loading').style.display = 'none';
+  setupControls();
+  if (cfg.autoPlay !== false && !PAUSED_INIT) playing = true;
+  requestAnimationFrame(loop);
+}
+
+// ── Helpers ───────────────────────────────────────────────────────────────
+async function fetchJSON(url) {
+  const r = await fetch(url);
+  if (!r.ok) throw new Error(`${r.status} ${url}`);
+  return r.json();
+}
+
+function setStatus(msg) {
+  const el = document.getElementById('load-status');
+  if (el) el.textContent = msg;
+}
+
+// ── CSV → motionData ──────────────────────────────────────────────────────
+async function loadCSV(url, maxFrames) {
+  setStatus('Fetching CSV…');
+  const text = await fetch(url).then(r => {
+    if (!r.ok) throw new Error(`CSV not found: ${url}`);
+    return r.text();
+  });
+
+  const parsed = Papa.parse(text, {
+    header: true,
+    skipEmptyLines: true,
+    dynamicTyping: true,
+  });
+  const rows = parsed.data;
+
+  // Downsample to maxFrames if needed
+  let frames = rows;
+  const ratio = rows.length / maxFrames;
+  if (rows.length > maxFrames) {
+    frames = Array.from({ length: maxFrames }, (_, i) =>
+      rows[Math.round(i * ratio)]
+    );
+  }
+  const effectiveFPS = 120 / (rows.length > maxFrames ? ratio : 1);
+
+  const md = {
+    numFrames:  frames.length,
+    frameTime:  1 / effectiveFPS,
+    duration:   frames.length / effectiveFPS,
+    rootPos:    new Float32Array(frames.length * 3),
+    rootQuat:   new Float32Array(frames.length * 4),  // [w,x,y,z]
+    joints:     {},
+  };
+
+  // Pre-allocate joint arrays
+  Object.values(CSV_TO_JOINT).forEach(name => {
+    md.joints[name] = new Float32Array(frames.length);
+  });
+
+  const tmpEuler = new THREE.Euler(0, 0, 0, 'ZYX');
+  const tmpQuat  = new THREE.Quaternion();
+
+  for (let i = 0; i < frames.length; i++) {
+    const row = frames[i];
+    // Root position: cm → m
+    md.rootPos[i*3]   = (row['root_translateX'] || 0) * 0.01;
+    md.rootPos[i*3+1] = (row['root_translateY'] || 0) * 0.01;
+    md.rootPos[i*3+2] = (row['root_translateZ'] || 0) * 0.01;
+
+    // Root orientation: ZYX Euler deg → quaternion [w,x,y,z]
+    tmpEuler.set(
+      (row['root_rotateX'] || 0) * DEG2RAD,
+      (row['root_rotateY'] || 0) * DEG2RAD,
+      (row['root_rotateZ'] || 0) * DEG2RAD,
+      'ZYX'
+    );
+    tmpQuat.setFromEuler(tmpEuler);
+    md.rootQuat[i*4]   = tmpQuat.w;
+    md.rootQuat[i*4+1] = tmpQuat.x;
+    md.rootQuat[i*4+2] = tmpQuat.y;
+    md.rootQuat[i*4+3] = tmpQuat.z;
+
+    // Joint angles: deg → rad
+    for (const [csvCol, jName] of Object.entries(CSV_TO_JOINT)) {
+      if (row[csvCol] !== undefined)
+        md.joints[jName][i] = row[csvCol] * DEG2RAD;
+    }
+  }
+  // Cancel global horizontal translation so locomotion clips don't walk
+  // out of frame (matches the SMPL viewer's "walk in place" centering).
+  // CSV is in MuJoCo Z-up coords:
+  //   X = lateral (small range in practice)
+  //   Y = forward/back (the WALKING axis — can be many meters)
+  //   Z = up (jumping height — keep!)
+  // The robotWorld group applies a -π/2 X-rotation to convert Z-up → Y-up
+  // at render time, so we zero in CSV space here (pre-rotation).
+  for (let i = 0; i < frames.length; i++) {
+    md.rootPos[i*3]   = 0;   // CSV X — lateral
+    md.rootPos[i*3+1] = 0;   // CSV Y — walking direction
+    // md.rootPos[i*3+2] left alone — CSV Z = jump height, body realism
+  }
+  return md;
+}
+
+// ── Three.js scene ────────────────────────────────────────────────────────
+function setupThree() {
+  const wrap = document.getElementById('canvas-wrap');
+
+  renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'low-power' });
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setSize(wrap.clientWidth, wrap.clientHeight);
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  wrap.appendChild(renderer.domElement);
+
+  // WebGL context-loss recovery — Chrome can silently drop the OLDEST WebGL
+  // context when too many are active (4 strip viewers + popup viewers easily
+  // exceed the per-page budget). Without this, the canvas goes blank but the
+  // SVG overlay above it keeps drawing, so the user sees "robot vanished but
+  // velocity chart still updating". Simplest fix: reload the iframe — it
+  // reinitializes Three.js cleanly and picks up where the synced clock left
+  // off because parent's rAF keeps incrementing.
+  renderer.domElement.addEventListener('webglcontextlost', (e) => {
+    e.preventDefault();
+    console.warn('[g1-viewer] WebGL context lost — reloading iframe');
+    setTimeout(() => { try { location.reload(); } catch {} }, 150);
+  });
+
+  scene = new THREE.Scene();
+  scene.background = new THREE.Color(cfg.backgroundColor || '#f0f2f7');
+  scene.fog = new THREE.Fog(cfg.backgroundColor || '#f0f2f7', 8, 20);
+
+  // Camera
+  camera = new THREE.PerspectiveCamera(42, wrap.clientWidth / wrap.clientHeight, 0.01, 30);
+  // Prefer absolute position+target (mirrors smpl_engine config); fall back to az/el/dist.
+  let camPos, camTarget;
+  if (cfg.camera && Array.isArray(cfg.camera.position) && Array.isArray(cfg.camera.target)) {
+    camPos = cfg.camera.position;
+    camTarget = cfg.camera.target;
+  } else {
+    const az = ((cfg.cameraAzimuth || 135) * DEG2RAD);
+    const el = ((cfg.cameraElevation || -20) * DEG2RAD);
+    const dist = cfg.cameraDistance || 3.2;
+    camPos = [
+      dist * Math.cos(el) * Math.sin(az),
+      dist * Math.sin(-el),
+      dist * Math.cos(el) * Math.cos(az),
+    ];
+    camTarget = [0, 0.9, 0];
+  }
+  camera.position.set(...camPos);
+  camera.lookAt(...camTarget);
+
+  // Orbit controls — rotate only; zoom is driven by the explicit +/- buttons
+  // so that holding the mouse button (or pinching) no longer dollies the camera.
+  controls = new THREE.OrbitControls(camera, renderer.domElement);
+  controls.target.set(...camTarget);
+  // Skip OrbitControls damping in paused mode — even with playing=false,
+  // damping nudges the camera every frame for a few seconds and reads as
+  // micro-motion in the strip thumbnail.
+  controls.enableDamping = !PAUSED_INIT;
+  controls.dampingFactor = 0.06;
+  controls.minDistance = 0.5;
+  controls.maxDistance = 12;
+  controls.enableZoom = false;
+  controls.update();
+
+  // Programmatic zoom via on-screen buttons
+  function zoomCamera(scale) {
+    const offset = new THREE.Vector3().subVectors(camera.position, controls.target);
+    const newLen = THREE.MathUtils.clamp(offset.length() * scale, controls.minDistance, controls.maxDistance);
+    offset.setLength(newLen);
+    camera.position.copy(controls.target).add(offset);
+    controls.update();
+  }
+  document.getElementById('zoom-in') ?.addEventListener('click', () => zoomCamera(0.85));
+  document.getElementById('zoom-out')?.addEventListener('click', () => zoomCamera(1.18));
+
+  // Lighting
+  const hemi = new THREE.HemisphereLight(0x606060, 0x202020, 0.9);
+  scene.add(hemi);
+
+  const sun = new THREE.DirectionalLight(0xffffff, 1.1);
+  sun.position.set(4, 8, 4);
+  sun.castShadow = true;
+  sun.shadow.mapSize.set(1024, 1024);
+  sun.shadow.camera.near = 0.1;
+  sun.shadow.camera.far  = 20;
+  sun.shadow.camera.left = sun.shadow.camera.bottom = -4;
+  sun.shadow.camera.right = sun.shadow.camera.top   =  4;
+  scene.add(sun);
+
+  const fill = new THREE.DirectionalLight(0xffffff, 0.3);
+  fill.position.set(-3, 4, -4);
+  scene.add(fill);
+
+  // ── Enhanced PBR lighting ─────────────────────────────────────────────────
+  if (ENHANCED) {
+    // Cooler sky colour helps metallic surfaces catch blue-ish highlights
+    hemi.color.setHex(0x8090b0);
+    hemi.groundColor.setHex(0x302820);
+    hemi.intensity = 1.15;
+    // Warmer, slightly brighter key light
+    sun.color.setHex(0xfff8f0);
+    sun.intensity = 1.4;
+    sun.shadow.mapSize.set(2048, 2048);
+    // Cool blue rim from upper-back-left for that promo-shot edge highlight
+    const rim = new THREE.DirectionalLight(0x6688cc, 0.55);
+    rim.position.set(-3, 6, -5);
+    scene.add(rim);
+  }
+
+  // Floor — canvas-texture grid (supports arbitrary line width)
+  if (cfg.showFloor !== false) {
+    const size = 10, divisions = 20;
+    const gridC  = new THREE.Color(cfg.gridColor  || '#363636');
+    const floorC = new THREE.Color(cfg.floorColor || '#262626');
+
+    const texPx = 1024;
+    const canvas = document.createElement('canvas');
+    canvas.width = canvas.height = texPx;
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = '#' + floorC.getHexString();
+    ctx.fillRect(0, 0, texPx, texPx);
+    ctx.strokeStyle = '#' + gridC.getHexString();
+    ctx.lineWidth = 4;
+    ctx.lineCap = 'square';
+    const step = texPx / divisions;
+    for (let i = 0; i <= divisions; i++) {
+      const p = Math.round(i * step);
+      ctx.beginPath(); ctx.moveTo(p, 0);     ctx.lineTo(p, texPx); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(0, p);     ctx.lineTo(texPx, p); ctx.stroke();
+    }
+    const tex = new THREE.CanvasTexture(canvas);
+
+    const floor = new THREE.Mesh(
+      new THREE.PlaneGeometry(size, size),
+      new THREE.MeshBasicMaterial({ map: tex })
+    );
+    floor.rotation.x = -Math.PI / 2;
+    floor.receiveShadow = true;
+    scene.add(floor);
+  }
+
+  // Resize handler
+  window.addEventListener('resize', () => {
+    const w = wrap.clientWidth, h = wrap.clientHeight;
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+    renderer.setSize(w, h);
+  });
+}
+
+// ── Robot kinematic tree ──────────────────────────────────────────────────
+async function buildRobot(bodies) {
+  // worldYaw: rotates the entire robot around Three.js +Y so its facing
+  // direction can be aligned with the camera regardless of the trajectory's
+  // recorded heading.
+  const yawGroup = new THREE.Group();
+  yawGroup.rotation.y = (cfg.worldYawDeg || 0) * DEG2RAD;
+  scene.add(yawGroup);
+
+  // robotWorld: MuJoCo Z-up → Three.js Y-up
+  const robotWorld = new THREE.Group();
+  robotWorld.rotation.x = -Math.PI / 2;
+  yawGroup.add(robotWorld);
+
+  // Index bodies by name and find parents
+  const bodyMap = {};
+  bodies.forEach(b => { bodyMap[b.name] = b; });
+
+  // Shared material cache
+  const matCache = {};
+
+  function getMat(rgba, meshName) {
+    if (ENHANCED) {
+      // Per-mesh special cases first
+      if (meshName === 'head_link') {
+        if (!matCache['enh_head']) {
+          matCache['enh_head'] = new THREE.MeshStandardMaterial({
+            color: new THREE.Color(0x0c0f14),
+            metalness: 0.45,
+            roughness: 0.30,
+          });
+        }
+        return matCache['enh_head'];
+      }
+      const isDark = rgba[0] < 0.4;
+      const eKey = isDark ? 'enh_dark' : 'enh_light';
+      if (!matCache[eKey]) {
+        matCache[eKey] = isDark
+          ? new THREE.MeshStandardMaterial({
+              color: new THREE.Color(0x111316),
+              metalness: 0.65,
+              roughness: 0.35,
+            })
+          : new THREE.MeshStandardMaterial({
+              // Lavender body — matches the static teaser figure under the
+              // abstract AND panel.html's demo pairs. Deeper than the
+              // teaser sample (#bfbfda) so the lavender reads through this
+              // viewer's brighter PBR lighting instead of getting washed
+              // out to near-white.
+              color: new THREE.Color(0x8e8eba),
+              metalness: 0.15,
+              roughness: 0.45,
+            });
+      }
+      return matCache[eKey];
+    }
+
+    // Original flat Phong materials
+    const key = rgba.map(v => v.toFixed(3)).join(',');
+    if (!matCache[key]) {
+      matCache[key] = new THREE.MeshPhongMaterial({
+        color: new THREE.Color(rgba[0], rgba[1], rgba[2]),
+        specular: 0x222222,
+        shininess: 40,
+      });
+    }
+    return matCache[key];
+  }
+
+  const stlLoader = new THREE.STLLoader();
+  let loadedMeshes = 0;
+
+  // Load all STL meshes, build groups
+  const geomCache = {};
+  async function loadSTL(name) {
+    if (geomCache[name]) return geomCache[name];
+    return new Promise(resolve => {
+      stlLoader.load(
+        `./meshes/${name}.STL`,
+        geo => { geo.computeVertexNormals(); geomCache[name] = geo; resolve(geo); },
+        undefined,
+        () => { geomCache[name] = null; resolve(null); }
+      );
+    });
+  }
+
+  // Build group hierarchy
+  const groupMap = {};  // body name → {outerGroup (position/rest-quat), innerGroup (joint rotation)}
+
+  // First pass: create groups
+  for (const body of bodies) {
+    // outerGroup: offset from parent + rest orientation
+    const outerGroup = new THREE.Group();
+    outerGroup.position.set(...body.pos);
+    const bq = body.quat;  // [w,x,y,z]
+    outerGroup.quaternion.set(bq[1], bq[2], bq[3], bq[0]);
+
+    // innerGroup: joint rotation (child of outerGroup)
+    const innerGroup = new THREE.Group();
+    outerGroup.add(innerGroup);
+
+    groupMap[body.name] = { outer: outerGroup, inner: innerGroup };
+    bodyGroups[body.name] = innerGroup;
+
+    // Store rest quaternion (identity — joint starts at zero)
+    bodyRestQ[body.name] = new THREE.Quaternion(0, 0, 0, 1);
+
+    if (body.name === bodies[0].name) rootGroup = outerGroup;
+  }
+
+  // Second pass: parent groups
+  for (const body of bodies) {
+    const { outer } = groupMap[body.name];
+    if (body.parent && groupMap[body.parent]) {
+      groupMap[body.parent].inner.add(outer);
+    } else {
+      robotWorld.add(outer);
+      rootGroup = outer;
+    }
+  }
+
+  // Third pass: load meshes and attach to inner groups
+  const loadPromises = [];
+  for (const body of bodies) {
+    for (const mesh of body.meshes) {
+      const p = loadSTL(mesh.name).then(geo => {
+        if (!geo) return;
+        const mat = getMat(mesh.rgba, mesh.name);
+        const mq  = mesh.quat;  // [w,x,y,z]
+        const obj = new THREE.Mesh(geo, mat);
+        obj.position.set(...mesh.pos);
+        obj.quaternion.set(mq[1], mq[2], mq[3], mq[0]);
+        obj.castShadow = true;
+        groupMap[body.name].inner.add(obj);
+
+        loadedMeshes++;
+        setStatus(`Loading meshes (${loadedMeshes}/60)…`);
+      });
+      loadPromises.push(p);
+    }
+  }
+
+  await Promise.all(loadPromises);
+}
+
+// ── Per-frame kinematic update ────────────────────────────────────────────
+const _tmpAxis = new THREE.Vector3();
+const _tmpJQ   = new THREE.Quaternion();
+
+function applyFrame(fi) {
+  if (!rootGroup || !motionData) return;
+
+  // Root position (MuJoCo space — robotWorld handles Z-up→Y-up)
+  rootGroup.position.set(
+    motionData.rootPos[fi*3],
+    motionData.rootPos[fi*3+1],
+    motionData.rootPos[fi*3+2]
+  );
+
+  // Root quaternion [w,x,y,z]
+  rootGroup.quaternion.set(
+    motionData.rootQuat[fi*4+1],
+    motionData.rootQuat[fi*4+2],
+    motionData.rootQuat[fi*4+3],
+    motionData.rootQuat[fi*4]
+  );
+
+  // Joint rotations — only bodies with a hinge joint
+  for (const body of modelData.bodies) {
+    if (!body.joint || body.joint.type !== 'hinge') continue;
+    const jName = body.joint.name;
+    const jArr  = motionData.joints[jName];
+    if (!jArr) continue;
+    const angle = jArr[fi];
+    _tmpAxis.set(...body.joint.axis);
+    _tmpJQ.setFromAxisAngle(_tmpAxis, angle);
+    bodyGroups[body.name].quaternion.copy(_tmpJQ);
+  }
+}
+
+// ── Animation loop ────────────────────────────────────────────────────────
+function loop(ts) {
+  requestAnimationFrame(loop);
+
+  if (playing && motionData) {
+    if (lastTime === null) lastTime = ts;
+    const dt = (ts - lastTime) * 0.001;
+    lastTime = ts;
+    const speed = parseFloat(document.getElementById('speed-select').value);
+    accumTime += dt * speed;
+
+    const frameDur = motionData.frameTime;
+    while (accumTime >= frameDur) {
+      accumTime -= frameDur;
+      frameIdx++;
+      if (frameIdx >= motionData.numFrames) {
+        if (cfg.loop !== false) frameIdx = 0;
+        else { frameIdx = motionData.numFrames - 1; playing = false; }
+      }
+    }
+  } else {
+    lastTime = null;
+  }
+
+  if (motionData) applyFrame(frameIdx);
+
+  // Update progress bar
+  const prog = document.getElementById('progress');
+  const timeEl = document.getElementById('time-label');
+  if (motionData) {
+    prog.value  = frameIdx / (motionData.numFrames - 1);
+    const cur   = (frameIdx * motionData.frameTime).toFixed(2);
+    const total = motionData.duration.toFixed(2);
+    timeEl.textContent = `${cur} / ${total}s`;
+  }
+
+  controls.update();
+  renderer.render(scene, camera);
+}
+
+// ── UI controls ───────────────────────────────────────────────────────────
+function setupControls() {
+  const btn  = document.getElementById('btn-play');
+  const prog = document.getElementById('progress');
+
+  btn.addEventListener('click', () => {
+    playing = !playing;
+    btn.innerHTML = playing ? '&#9646;&#9646;' : '&#9654;';
+    if (playing) lastTime = null;
+  });
+
+  prog.addEventListener('input', () => {
+    frameIdx = Math.round(parseFloat(prog.value) * (motionData.numFrames - 1));
+    accumTime = 0;
+    if (!playing) applyFrame(frameIdx);
+  });
+}
+
+// ── Entry ─────────────────────────────────────────────────────────────────
+boot().catch(err => {
+  document.getElementById('loading').style.display = 'none';
+  const eb = document.getElementById('error-box');
+  if (eb) { eb.style.display = 'flex'; eb.textContent = 'Error: ' + err.message; }
+  console.error(err);
+});
+</script>
+</body>
+</html>

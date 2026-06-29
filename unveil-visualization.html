@@ -1,0 +1,4016 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="robots" content="noindex, nofollow"/>
+<title>UNVEIL — Framework Walkthrough</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@500;700&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+:root {
+  --primary:    #2c3e6b;
+  --primary-2:  #3a528f;
+  --accent:     #e74c3c;
+  --ink:        #1a1f2e;
+  --muted:      #6e7689;
+  --soft:       #eef0f6;
+  --paper:      #ffffff;
+  --border:     #e0e5ee;
+  --c-torso:    #4a235a;     /* very dark purple */
+  --c-la:       #7b241c;     /* very dark red */
+  --c-ra:       #873600;     /* very dark burnt orange */
+  --c-ll:       #0e4524;     /* very dark green */
+  --c-rl:       #154360;     /* very dark navy blue */
+  --enc-color:  #9b6dbf;     /* kinematic encoding outline */
+  --graph-color:#2c8aa8;     /* graph convolution outline */
+  --spatial-color:#d49234;   /* spatiotemporal aggregation outline */
+}
+
+html, body {
+  width:100%; height:100%;
+  background: #ffffff;
+  font-family: 'Source Sans 3', 'Segoe UI', system-ui, sans-serif;
+  color: var(--ink);
+  overflow: hidden;
+}
+
+#page-wrap {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  /* Asymmetric padding: less at top, more at bottom — shifts the centered
+     panel UP so it has +1 cm more above and −2 cm less below */
+  padding: 4px 24px 118px 24px;
+  background: radial-gradient(circle at 50% 0%, #f4f6fb 0%, #ffffff 60%);
+}
+/* Embed mode (?embed=1 in URL): used when this page is iframed into the
+   main project page. Strips the standalone chrome (centering padding,
+   page background, panel border/shadow/rounded corners) so the visualization
+   fills the iframe edge-to-edge and visually fuses with the host page. */
+body.embed #page-wrap {
+  position: static;
+  padding: 0;
+  background: none;
+  height: 100%;
+}
+body.embed #panel {
+  width: 100%; height: 100%;
+  max-width: none; max-height: none;
+  border: none; border-radius: 0; box-shadow: none;
+}
+body.embed { background: transparent; }
+html.embed, body.embed { height: 100%; overflow: hidden; }
+#page-title {
+  font-family: 'Noto Serif', serif;
+  font-weight: 700; font-size: 19px;
+  color: var(--primary);
+  margin-bottom: 10px;
+}
+#page-title .sub {
+  font-family: 'Source Sans 3', sans-serif;
+  font-weight: 400; font-size: 15px;
+  color: var(--muted); margin-left: 10px;
+}
+
+#panel {
+  position: relative;
+  width: min(96vw, 1640px);
+  height: min(72vh, 630px);    /* 1 cm shorter than before (−38 px) */
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: 0 30px 80px rgba(33,52,100,0.08), 0 6px 18px rgba(33,52,100,0.06);
+  overflow: hidden;
+  display: flex; flex-direction: column;
+}
+
+#panel-header { display: none !important; }
+#caption-bar  { display: none !important; }
+#panel-header-DISABLED {
+  flex-shrink: 0;
+  height: 50px;
+  display: flex; align-items: center;
+  padding: 0 18px;
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(180deg, #fafbfd 0%, #ffffff 100%);
+  z-index: 4;
+}
+#panel-header .dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--accent); margin-right: 10px;
+  box-shadow: 0 0 0 3px rgba(231,76,60,0.18);
+}
+#panel-header .title {
+  font-family: 'Noto Serif', serif;
+  font-weight: 700; font-size: 16px;
+  color: var(--primary);
+}
+#panel-header .ref {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px; color: var(--muted); margin-left: 8px;
+}
+#panel-header .spacer { flex: 1; }
+#panel-header .stage-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12.5px; color: var(--muted);
+  background: var(--soft);
+  padding: 3px 9px; border-radius: 99px;
+  margin-right: 10px;
+  letter-spacing: 0.06em; text-transform: uppercase;
+}
+#panel-header select, #panel-header button {
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 14px; font-weight: 500;
+  background: #ffffff; color: var(--ink);
+  border: 1px solid var(--border);
+  padding: 5px 10px; border-radius: 6px;
+  cursor: pointer;
+}
+#panel-header select:hover, #panel-header button:hover {
+  border-color: var(--primary); color: var(--primary);
+}
+/* Replay button — always-visible, floats in the top-right corner of
+   #canvas-wrap (independent of the hidden #panel-header). Click anytime
+   to restart the walkthrough from §3.1. */
+#replay-btn {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  z-index: 6;
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  background: var(--primary);
+  color: #ffffff;
+  border: 1px solid var(--primary);
+  border-radius: 6px;
+  padding: 4px 10px;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(33,52,100,0.18);
+  transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+}
+#replay-btn:hover  { background: var(--accent); border-color: var(--accent); transform: scale(1.04); }
+#replay-btn:active { transform: scale(0.96); }
+/* Legacy .visible class (added by endWalkthrough) is now a no-op — the
+   button is unconditionally visible. */
+
+/* Viewer interaction hint — small muted line at the bottom of #canvas-wrap.
+   Works in both standalone and embed modes because it's anchored to
+   #canvas-wrap (which always fills the panel body). Keys (▶ ⏸ ↻ Replay)
+   are styled as small "keycap" chips so they read as glyph callouts. */
+#viewer-hint {
+  position: absolute;
+  left: 50%;
+  bottom: 10px;
+  transform: translateX(-50%);
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 14px;             /* was 11.5 — bumped for readability */
+  color: var(--muted);
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 4;
+  opacity: 0.95;
+}
+#viewer-hint .vh-key {
+  display: inline-block;
+  padding: 2px 7px;
+  margin: 0 2px;
+  border: 1px solid #d4dae6;
+  border-radius: 4px;
+  background: #ffffff;
+  color: var(--ink);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;             /* was 10.5 — scaled with the parent text */
+  font-weight: 600;
+}
+#viewer-hint .vh-dot { margin: 0 6px; color: #aab1c0; }
+
+#canvas-wrap {
+  flex: 1; position: relative;
+  background: #ffffff; overflow: visible;
+}
+canvas { display: block; }
+canvas#three-canvas { width: 100% !important; height: 100% !important; }
+
+/* SVG overlay drawn on top of canvas, covers full wrap */
+#svg-overlay {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  overflow: visible;
+}
+
+/* Slot labels — positioned BELOW the figures (anchor = top-center) */
+.slot-label {
+  position: absolute;
+  transform: translate(-50%, 0);
+  font-family: 'Noto Serif', serif;
+  font-size: 11.5px; font-weight: 700;
+  line-height: 1.15;
+  color: var(--primary);
+  letter-spacing: 0.02em;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.55s ease;
+  white-space: normal;
+  text-align: center;
+}
+.slot-label.visible { opacity: 1; }
+.slot-label .underline {
+  display: block; width: 30px; height: 2px;
+  background: var(--accent);
+  margin: 0 auto 5px; border-radius: 1px;
+}
+.slot-label .ref {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px; font-weight: 500;
+  color: var(--muted);
+  display: block;
+  letter-spacing: 0.06em;
+  margin-top: 2px;
+  text-transform: none;
+}
+
+
+/* Data plates — one box per joint, contains both vel + accel graphs */
+.data-plate {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  background: #ffffff;
+  border: 1px solid var(--enc-color);
+  border-radius: 8px;
+  padding: 5px 7px 6px;
+  width: 100px;            /* compact — was 130px */
+  box-shadow: 0 6px 16px rgba(155,109,191,0.18);
+  opacity: 0;
+  transition: opacity 0.55s ease;
+  pointer-events: none;
+  z-index: 3;
+}
+.data-plate.visible { opacity: 1; }
+.data-plate .dp-head {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--ink);
+  text-align: center;
+  letter-spacing: 0.06em;
+  margin-bottom: 5px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--soft);
+}
+.data-plate .dp-row {
+  display: flex; align-items: center; gap: 6px;
+  margin: 3px 0;
+}
+.data-plate .dp-row .dp-label {
+  font-family: 'Cambria Math', 'STIX Two Math', 'Times New Roman', serif;
+  font-size: 13px;
+  font-weight: 700;
+  width: 18px;
+  flex-shrink: 0;
+  text-align: left;
+  letter-spacing: 0;
+  line-height: 1;
+}
+.data-plate .dp-row canvas {
+  flex: 1; height: 16px; display: block;
+}
+
+/* Module rect labels (top of each rect) */
+#enc-label, #graph-label, #spatial-label {
+  position: absolute;
+  transform: translate(-50%, 0);          /* top-center anchor */
+  background: transparent;                /* no boundary box */
+  border: none;
+  box-shadow: none;
+  padding: 0;
+  font-family: 'Noto Serif', serif;
+  font-size: 15px; font-weight: 700;       /* bumped from 11.5 → 15 */
+  letter-spacing: 0.02em;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+  z-index: 3;
+  white-space: nowrap;
+  text-align: center;
+  line-height: 1.25;
+}
+#enc-label,
+#graph-label,
+#spatial-label { white-space: normal; max-width: 220px; }
+#enc-label     { color: var(--enc-color);     border: none; }
+#graph-label   { color: var(--graph-color);   border: none; }
+#spatial-label { color: var(--spatial-color); border: none; }
+#enc-label.visible, #graph-label.visible, #spatial-label.visible { opacity: 1; }
+/* Sub-line under a module title (e.g. "(velocity and acceleration)" under §3.1).
+   Smaller + lighter than the main title so the parenthetical reads as a
+   qualifier and the row stays compact enough to fit max-width: 220px. */
+#enc-label .sub,
+#graph-label .sub,
+#spatial-label .sub {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  margin-top: 1px;
+}
+
+/* ── Module timeline strip — fixed position below §3.x headings ───── */
+/* One white rounded "track" hosting three attached sub-bars (no gap),
+   sized in proportion to each module's stage duration. The container is
+   FIXED in canvas-wrap coordinates (does not track moving robots/labels);
+   left/right margins picked to land the strip under the three module
+   headings on a wide panel. */
+#module-timelines {
+  position: absolute;
+  top: 109px;                 /* 0.7 cm (~27 px) below the module headings */
+  /* Strip's left edge sits ~8 px from the panel's inner left border so the
+     §3.1 sub-bar reaches almost the whole way to the panel's left side.
+     The extra leftward extension is absorbed entirely by #mtl-31 (via its
+     flex-basis below) — §3.2 and §3.3 keep their previous widths. */
+  left: 8px;
+  right: calc(32% - 30px);    /* labels live in the left ~62%; §3.3 stretched +0.8 cm right */
+  height: 26px;
+  display: flex;
+  z-index: 5;
+  /* Flat on the right so #prediction-timeline butts up flush — the two strips
+     read as one continuous bar, divided only by an internal 1 px line. */
+  border-radius: 9px 0 0 9px;
+  overflow: hidden;
+  background: #ffffff;
+  border: 1px solid #d4dae6;
+  box-shadow: 0 1px 3px rgba(33,52,100,0.10), inset 0 1px 1px rgba(255,255,255,0.6);
+}
+.module-timeline {
+  position: relative;
+  height: 100%;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  border-right: 1px solid #e1e5ed;   /* thin divider between attached sub-bars */
+  pointer-events: none;              /* surface inert — only .mtl-btn clicks */
+  min-width: 56px;                   /* room for the play/pause button */
+}
+.module-timeline:last-child { border-right: none; }
+/* flex-grow values proportional to each module's stage duration.
+   Fixed flex-basis values (px) shift the boundaries between sub-bars:
+     §3.1 ← takes leftward strip extension (90 px) PLUS another 76 px
+            (≈2 cm) "borrowed" from §3.2's left edge → 196 px basis total.
+     §3.2 ← gets a small 20 px head-start on the right (≈1 cm extra width
+            on its right side, balanced by the 38 px shift taken from
+            §3.3's left edge).
+   Net: §3.1 = +2 cm, §3.2 = −1 cm, §3.3 = −1 cm. */
+#mtl-31 { --c: var(--enc-color);     flex: 9.2 1 196px; }
+#mtl-32 { --c: var(--graph-color);   flex: 17.8 1 20px; }   /* GRAPH_CYCLE_DUR(13.4)+ACC(1.2)+2 */
+#mtl-33 { --c: var(--spatial-color); flex-grow: 11.5; }
+.module-timeline .mtl-fill {
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 0;
+  background: var(--c);
+  /* INTERNAL SHADE — soft tint over the white track, not a solid fill */
+  opacity: 0.18;
+  transition: width 0.08s linear;
+}
+.module-timeline .mtl-btn {
+  position: relative;
+  z-index: 2;
+  margin-left: auto;
+  margin-right: 6px;
+  width: 19px; height: 19px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 1.2px solid var(--c);
+  color: var(--c);
+  font-size: 10px;
+  line-height: 1;
+  padding: 0;
+  cursor: pointer;
+  pointer-events: auto;              /* ONLY clickable element on the strip */
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 1px 2px rgba(33,52,100,0.18);
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+.module-timeline .mtl-btn:hover  { background: var(--c); color: #ffffff; transform: scale(1.08); }
+.module-timeline .mtl-btn:active { transform: scale(0.94); }
+
+/* "Attribute Prediction" strip — complementary timeline covering the right
+   ~32% of the panel: stages 5 (embedding) + 6 (attributes) + 7 (human-reveal).
+   Sits at the same Y as #module-timelines, starts just to the right of where
+   that strip ends, and runs to the panel's right edge. */
+#prediction-timeline {
+  position: absolute;
+  top: 109px;
+  /* Slide 1 px under #module-timelines' right border so its left border lands
+     ON TOP of that border (single 1 px line at the joint, not 2 px). */
+  left: calc(68% + 29px);
+  right: 8px;
+  height: 26px;
+  display: flex;
+  z-index: 5;
+  /* Flat on the left so it merges seamlessly with #module-timelines. */
+  border-radius: 0 9px 9px 0;
+  overflow: hidden;
+  background: #ffffff;
+  border: 1px solid #d4dae6;
+  box-shadow: 0 1px 3px rgba(33,52,100,0.10), inset 0 1px 1px rgba(255,255,255,0.6);
+}
+#prediction-timeline .pt-bar {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+  --c: var(--accent);            /* warm red — distinguishes from §3.1/3.2/3.3 */
+}
+#prediction-timeline .pt-fill {
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 0;
+  background: var(--c);
+  opacity: 0.18;
+  transition: width 0.08s linear;
+}
+#prediction-timeline .pt-btn {
+  position: relative;
+  z-index: 2;
+  margin-left: auto;
+  margin-right: 6px;
+  width: 19px; height: 19px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 1.2px solid var(--c);
+  color: var(--c);
+  font-size: 10px;
+  line-height: 1;
+  padding: 0;
+  cursor: pointer;
+  pointer-events: auto;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 1px 2px rgba(33,52,100,0.18);
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+#prediction-timeline .pt-btn:hover  { background: var(--c); color: #ffffff; transform: scale(1.08); }
+#prediction-timeline .pt-btn:active { transform: scale(0.94); }
+/* Heading sits at the same Y as the §3.1/3.2/3.3 module labels, centered
+   horizontally over the prediction strip. */
+#prediction-label {
+  position: absolute;
+  top: 30px;
+  left: calc(68% + 29px);   /* matches #prediction-timeline */
+  right: 8px;
+  text-align: center;
+  font-family: 'Noto Serif', serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--primary);
+  letter-spacing: 0.02em;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+  z-index: 4;
+}
+#prediction-label.visible { opacity: 1; }
+
+/* Output-of-module text — sits ABOVE a dashed arrow in the gap between rects.
+   Same visual idiom as the human→robot retarget label/arrow. */
+#enc-output, #graph-output {
+  position: absolute;
+  transform: translate(-50%, -100%);     /* anchor bottom-center */
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  line-height: 1.18;
+  padding: 5px 12px;
+  background: #ffffff;
+  border-radius: 6px;
+  white-space: normal;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.45s ease;
+  pointer-events: none;
+  z-index: 4;
+}
+#enc-output   { color: var(--enc-color);   border: 1px solid var(--enc-color);   box-shadow: 0 4px 12px rgba(155,109,191,0.18); }
+#graph-output { color: var(--graph-color); border: 1px solid var(--graph-color); box-shadow: 0 4px 12px rgba(44,138,168,0.18);  }
+#enc-output.visible, #graph-output.visible { opacity: 1; }
+/* Dashed arrows under the output labels */
+#enc-output-arrow, #graph-output-arrow {
+  stroke-width: 2;
+  stroke-dasharray: 9 5;
+  fill: none;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+#enc-output-arrow   { stroke: var(--enc-color); }
+#graph-output-arrow { stroke: var(--graph-color); }
+/* 3.3 → embedding / embedding → attributes / attributes → human arrows */
+#spatial-embed-arrow, #embed-attr-arrow, #attr-human-arrow {
+  stroke-width: 2;
+  stroke-dasharray: 9 5;
+  fill: none;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+#spatial-embed-arrow { stroke: var(--spatial-color); }
+#embed-attr-arrow    { stroke: var(--primary); }
+#attr-human-arrow    { stroke: var(--accent); }
+
+/* Operator attributes card (right side, before human) */
+#attributes-card {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 9px 11px 10px;
+  width: 124px;
+  box-shadow: 0 10px 24px rgba(33,52,100,0.12);
+  opacity: 0;
+  transition: opacity 0.55s ease, transform 0.55s ease;
+  pointer-events: none;
+  z-index: 4;
+  font-family: 'Source Sans 3', sans-serif;
+}
+#attributes-card.visible { opacity: 1; }
+#attributes-card .ac-head {
+  font-family: 'Noto Serif', serif;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--primary);
+  letter-spacing: 0.02em;
+  margin-bottom: 6px;
+  text-align: center;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--border);
+}
+#attributes-card .ac-row {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding: 2.5px 0;
+  font-size: 11.5px;
+  border-bottom: 1px dashed rgba(0,0,0,0.05);
+}
+#attributes-card .ac-row:last-child { border-bottom: none; }
+#attributes-card .ac-k {
+  color: var(--muted);
+  font-size: 10px;
+  font-family: 'JetBrains Mono', monospace;
+}
+#attributes-card .ac-v {
+  color: var(--ink);
+  font-weight: 700;
+  font-size: 11.5px;
+  font-variant-numeric: tabular-nums;
+}
+#enc-label .ref, #graph-label .ref, #spatial-label .ref {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--muted);
+  margin-left: 6px;
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+/* Retarget arrow label (between human and G1) */
+#retarget-label {
+  position: absolute;
+  transform: translate(-50%, -100%);
+  background: #ffffff;
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 13px; font-weight: 600;
+  color: var(--accent);
+  letter-spacing: 0.02em;
+  text-align: center;
+  line-height: 1.25;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+  z-index: 3;
+  box-shadow: 0 4px 12px rgba(231,76,60,0.18);
+}
+#retarget-label.visible { opacity: 1; }
+
+/* Beat indicator (graph conv) — positioned dynamically below graph G1 */
+#beat-indicator {
+  position: absolute;
+  transform: translateX(-50%);
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 99px;
+  padding: 6px 14px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+  box-shadow: 0 8px 22px rgba(33,52,100,0.14);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+  z-index: 4;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+#beat-indicator.visible { opacity: 1; }
+#beat-indicator .bi-limbs {
+  font-weight: 600;
+  font-size: 13.5px;
+  color: var(--ink);
+  letter-spacing: 0.02em;
+}
+
+/* Top tag: "Intra Limb" / "Inter Limb" — colored by mode, inside graph rect */
+#beat-mode-tag {
+  position: absolute;
+  transform: translateX(-50%);
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.04em;
+  background: #ffffff;
+  border-radius: 99px;
+  padding: 4px 12px;
+  border: 1px solid var(--border);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: 4;
+  pointer-events: none;
+  white-space: nowrap;
+}
+#beat-mode-tag.visible { opacity: 1; }
+#beat-mode-tag.intra { color: var(--primary); border-color: var(--primary); }
+#beat-mode-tag.inter { color: var(--accent);  border-color: var(--accent);  }
+
+/* Attribute embedding — vertical column. y + height + x driven by JS so it
+   sits between 3.3 and the attributes card in the reversed pipeline. */
+#embedding-strip {
+  position: absolute;
+  width: 64px;            /* tightened — was 96 — so visible gap matches the 0.5cm structural gap */
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 6px 10px;
+  box-shadow: 0 12px 32px rgba(33,52,100,0.14);
+  opacity: 0;
+  transition: opacity 0.6s ease, transform 0.6s ease;
+  pointer-events: none;
+  z-index: 4;
+  display: flex; flex-direction: column;
+  align-items: center; gap: 6px;
+  transform: translateX(20px);
+}
+#embedding-strip.visible { opacity: 1; transform: translateX(0); }
+#embedding-strip .em-head {
+  /* Taken out of flex flow so the canvas can center cleanly inside the white
+     panel with symmetric top/bottom gaps. Positioned absolutely above the
+     strip; horizontal centering via translateX(-50%). */
+  position: absolute;
+  left: 50%;
+  /* Sits above the strip; -52 px lifts the 2-line heading clear of the strip
+     top border so there's an ~18 px gap between heading bottom and panel top. */
+  top: -52px;
+  transform: translateX(-50%);
+  font-family: 'Noto Serif', serif;
+  font-size: 14px; font-weight: 700;
+  color: var(--primary);
+  letter-spacing: 0.02em;
+  text-align: center;
+  line-height: 1.15;
+  white-space: nowrap;
+}
+#embedding-strip .em-sub {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px; color: var(--muted);    /* bumped from 11.5 → 13 */
+  text-align: center;
+}
+#embedding-canvas {
+  width: 36px;
+  flex: 1;            /* fills the entire vertical space inside the strip
+                         (em-head no longer participates in flex flow), so
+                         the top + bottom gaps match the panel's 10 px padding. */
+  min-height: 80px;
+  display: block;
+  border-radius: 4px;
+  background: #f4f6fb;
+  border: 1px solid var(--border);
+}
+#embedding-strip .em-foot {
+  font-size: 11px; color: var(--muted);
+  text-align: center;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* Flying limb particle — travels from graph G1 to the accumulator robot. */
+.limb-fly-particle {
+  position: absolute;
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 22px rgba(0,0,0,0.45), inset 0 0 12px rgba(255,255,255,0.35);
+  border: 2px solid #ffffff;
+  transition: left 0.7s cubic-bezier(0.42, 0.0, 0.4, 1.0),
+              top  0.7s cubic-bezier(0.42, 0.0, 0.4, 1.0),
+              opacity 0.25s ease;
+  pointer-events: none;
+  z-index: 5;
+  opacity: 0.95;
+}
+
+/* Σ aggregate icon (compact so it always fits above the figures' heads) */
+#aggregate-icon {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  width: 60px; height: 60px;       /* was 44 — bigger circle */
+  background: linear-gradient(145deg, #b67cd8 0%, #9b6dbf 100%);
+  color: #ffffff;
+  border-radius: 50%;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  font-family: 'Noto Serif', serif;
+  font-weight: 700;
+  box-shadow: 0 6px 14px rgba(155,109,191,0.45);
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+  z-index: 3;
+  border: 1.5px solid #ffffff;
+}
+#aggregate-icon.visible { opacity: 1; }
+#aggregate-icon .ai-symbol {
+  font-size: 28px; line-height: 1;        /* was 21 */
+}
+#aggregate-icon .ai-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;                         /* was 7 */
+  letter-spacing: 0.04em;
+  margin-top: 1px;
+  font-weight: 500;
+}
+
+/* Caption */
+#caption-bar {
+  flex-shrink: 0;
+  height: 42px;
+  display: flex; align-items: center; justify-content: center;
+  padding: 0 20px;
+  border-top: 1px solid var(--border);
+  background: linear-gradient(0deg, #fafbfd 0%, #ffffff 100%);
+  font-size: 15px;
+  color: var(--ink);
+  text-align: center;
+}
+#caption-bar .ref {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px; color: var(--accent);
+  margin-right: 10px; font-weight: 600;
+}
+#caption-bar .text { font-weight: 500; }
+
+/* Loading / error */
+#loading {
+  position: absolute; inset: 0;
+  background: #ffffff;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 14px; z-index: 50;
+  color: var(--ink);
+}
+.spinner {
+  width: 38px; height: 38px;
+  border: 3px solid rgba(44,62,107,0.18);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+#load-status { font-size: 14px; color: var(--muted); max-width: 360px; text-align: center; }
+
+#error-box {
+  display: none; position: absolute; inset: 0;
+  background: #fff8f8;
+  align-items: center; justify-content: center;
+  color: var(--accent); font-size: 15px;
+  padding: 30px; text-align: center;
+  z-index: 60;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* SVG element styles */
+.svg-ellipse {
+  fill: none;
+  stroke-width: 1.8;
+  stroke-dasharray: 6 4;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.svg-conn {
+  /* High-contrast accent red — stays visible regardless of which limb is
+     currently tinted on the graph robot. Previously the line used the same
+     color as the limb tint, which made it nearly invisible. */
+  stroke: var(--accent);
+  stroke-width: 3.4;            /* was 2.8 — chunkier so the dash flow reads clearly */
+  stroke-linecap: round;
+  fill: none;
+  opacity: 0;
+  stroke-dasharray: 9 5;        /* same dash pattern as the rects */
+  filter: drop-shadow(0 0 1.6px rgba(255,255,255,0.95));   /* white halo for contrast on any tint */
+}
+/* Joint markers — small filled circles drawn at every joint that's part of
+   the currently-active intra/inter beat's connection set. White fill with
+   accent stroke pops against any robot-limb tint. */
+.svg-conn-dot {
+  fill: #ffffff;
+  stroke: var(--accent);
+  stroke-width: 2.4;
+  opacity: 0;
+  filter: drop-shadow(0 1px 1.8px rgba(0,0,0,0.30));
+}
+.svg-focus-ring {
+  fill: var(--enc-color);
+  stroke: none;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+/* Vertical "etc." dots between elbow/knee boxes — implies "same features
+   computed across every joint" */
+#enc-vertical-dots {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  display: flex; flex-direction: column;
+  align-items: center; gap: 5px;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+  z-index: 3;
+}
+#enc-vertical-dots span {
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: var(--enc-color);
+}
+.svg-leader {
+  stroke: var(--enc-color);
+  stroke-width: 1.2;
+  stroke-dasharray: 3 3;
+  fill: none;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+#enc-rect {
+  fill: none;
+  stroke: var(--enc-color);
+  stroke-width: 1.6;
+  stroke-dasharray: 9 5;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  rx: 14;
+  ry: 14;
+}
+#graph-rect {
+  fill: none;
+  stroke: var(--graph-color);
+  stroke-width: 1.6;
+  stroke-dasharray: 9 5;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  rx: 14;
+  ry: 14;
+}
+#spatial-rect {
+  fill: none;
+  stroke: var(--spatial-color);
+  stroke-width: 1.6;
+  stroke-dasharray: 9 5;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  rx: 14;
+  ry: 14;
+}
+#human-rect {
+  fill: none;
+  stroke: var(--muted);
+  stroke-width: 1.4;
+  stroke-dasharray: 7 4;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  rx: 10;
+  ry: 10;
+}
+#retarget-arrow {
+  stroke: var(--accent);
+  stroke-width: 2;
+  stroke-dasharray: 7 5;
+  fill: none;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+.joint-dot {
+  fill: var(--accent);
+  opacity: 0;
+}
+</style>
+</head>
+<body>
+
+<div id="page-wrap">
+
+  <div id="panel">
+    <div id="panel-header">
+      <span class="spacer"></span>
+    </div>
+
+    <div id="canvas-wrap">
+      <!-- Always-visible Replay button — top-right corner of the canvas. -->
+      <button id="replay-btn" type="button" title="Replay walkthrough from the start">↻ Replay</button>
+      <!-- 3D scene canvas -->
+      <!-- (renderer appends one here) -->
+
+      <!-- Slot labels (below the figures) -->
+      <div class="slot-label" id="lbl-human">
+        <span class="underline"></span>Human<br>Operator
+      </div>
+
+      <!-- Aggregate Σ icon (appears mid-stage 5) -->
+      <div id="aggregate-icon">
+        <div class="ai-symbol">Σ</div>
+        <div class="ai-label">Aggregate</div>
+      </div>
+
+      <!-- SVG overlay (all 2D shapes drawn over the 3D scene) -->
+      <svg id="svg-overlay">
+        <defs>
+          <marker id="arr-retarget" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#e74c3c"/>
+          </marker>
+          <marker id="arr-enc-out" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#9b6dbf"/>
+          </marker>
+          <marker id="arr-graph-out" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#2c8aa8"/>
+          </marker>
+          <marker id="arr-spatial-out" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#d49234"/>
+          </marker>
+          <marker id="arr-embed-attr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#2c3e6b"/>
+          </marker>
+          <marker id="arr-attr-human" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#e74c3c"/>
+          </marker>
+        </defs>
+        <!-- Human boundary (around SMPL) -->
+        <rect id="human-rect" x="0" y="0" width="0" height="0"/>
+        <!-- Kinematic encoding rectangle (around G1) -->
+        <rect id="enc-rect" x="0" y="0" width="0" height="0"/>
+        <!-- Graph convolution rectangle (around graph G1) -->
+        <rect id="graph-rect" x="0" y="0" width="0" height="0"/>
+        <!-- Spatiotemporal aggregation rectangle (around spatial G1 + ghosts + Σ icon) -->
+        <rect id="spatial-rect" x="0" y="0" width="0" height="0"/>
+        <!-- Retargeting arrow (human → G1) -->
+        <line id="retarget-arrow" x1="0" y1="0" x2="0" y2="0" marker-end="url(#arr-retarget)"/>
+        <!-- Output arrows under the per-module output labels -->
+        <line id="enc-output-arrow"     x1="0" y1="0" x2="0" y2="0" marker-end="url(#arr-enc-out)"/>
+        <line id="graph-output-arrow"   x1="0" y1="0" x2="0" y2="0" marker-end="url(#arr-graph-out)"/>
+        <!-- 3.3 (spatial rect) → attribute embedding strip -->
+        <line id="spatial-embed-arrow"  x1="0" y1="0" x2="0" y2="0" marker-end="url(#arr-spatial-out)"/>
+        <!-- embedding → attributes card -->
+        <line id="embed-attr-arrow"     x1="0" y1="0" x2="0" y2="0" marker-end="url(#arr-embed-attr)"/>
+        <!-- attributes card → human mesh -->
+        <line id="attr-human-arrow"     x1="0" y1="0" x2="0" y2="0" marker-end="url(#arr-attr-human)"/>
+        <!-- Focus rings + leader lines for picked joints -->
+        <g id="g-focus"></g>
+        <!-- Limb ellipses + animated cross-edges -->
+        <g id="g-limbs"></g>
+        <g id="g-conns"></g>
+      </svg>
+
+      <!-- Kinematic encoding label (positioned above the rectangle) -->
+      <div id="enc-label">Kinematic<br>Encoding <span class="ref">§3.1</span><br><span class="sub">(Velocity &amp; Acceleration)</span></div>
+      <!-- Graph conv label (positioned above the graph rectangle) -->
+      <div id="graph-label">Hierarchical Spatial<br>Graph Convolution <span class="ref">§3.2</span></div>
+      <!-- Temporal aggregation label (positioned above the spatial rectangle) -->
+      <div id="spatial-label">Temporal<br>Aggregation <span class="ref">§3.3</span></div>
+
+      <!-- One fixed-position timeline strip with 3 attached sub-bars
+           (§3.1, §3.2, §3.3). White track, each sub-bar fills with a soft
+           tint of its module's color as that module plays. Only the small
+           play/pause button at the right of each sub-bar is clickable;
+           the bar surface itself is inert. Position is FIXED — the strip
+           doesn't track the moving robots/labels. -->
+      <div id="module-timelines">
+        <div class="module-timeline" id="mtl-31" data-stage="0">
+          <div class="mtl-fill"></div>
+          <button class="mtl-btn" type="button" data-seek="0" aria-label="Play §3.1">▶</button>
+        </div>
+        <div class="module-timeline" id="mtl-32" data-stage="3">
+          <div class="mtl-fill"></div>
+          <button class="mtl-btn" type="button" data-seek="3" aria-label="Play §3.2">▶</button>
+        </div>
+        <div class="module-timeline" id="mtl-33" data-stage="4">
+          <div class="mtl-fill"></div>
+          <button class="mtl-btn" type="button" data-seek="4" aria-label="Play §3.3">▶</button>
+        </div>
+      </div>
+
+      <!-- "Attribute Prediction" strip — separate from #module-timelines, sits
+           over the right ~32% of the panel (attribute embedding + operator card
+           + human mesh) and fills during stages 5-7. -->
+      <div id="prediction-label">Attribute<br>Prediction</div>
+      <div id="prediction-timeline">
+        <div class="pt-bar" id="pt-bar">
+          <div class="pt-fill"></div>
+          <button class="pt-btn" type="button" data-seek="5" aria-label="Play Attribute Prediction">▶</button>
+        </div>
+      </div>
+
+      <!-- Output-of-module text tags (sit in the gap to the RIGHT of each rect) -->
+      <div id="enc-output">Joint<br>Features</div>
+      <div id="graph-output">Spatially<br>Aggregated<br>Features</div>
+      <!-- Retargeting arrow label (positioned at midpoint between human and G1) -->
+      <div id="retarget-label">Human to Humanoid<br>Retargeting</div>
+
+      <!-- Data plates (created by JS) -->
+      <div id="plates-holder"></div>
+      <!-- Vertical "etc." dots between elbow/knee plates -->
+      <div id="enc-vertical-dots">
+        <span></span><span></span><span></span><span></span><span></span>
+      </div>
+
+      <!-- Beat mode tag (top of graph rect: "Intra Limb" / "Inter Limb") -->
+      <div id="beat-mode-tag"><span id="bi-mode-top">—</span></div>
+      <!-- Beat indicator (bottom of graph rect: "Left Leg-Right Arm") -->
+      <div id="beat-indicator">
+        <span class="bi-limbs" id="bi-limbs">—</span>
+      </div>
+
+<!-- Attribute embedding (vertical, positioned dynamically) -->
+      <div id="embedding-strip">
+        <div class="em-head">Attribute<br>Embedding</div>
+        <canvas id="embedding-canvas"></canvas>
+      </div>
+      <!-- Recovered operator attributes — between embedding and human -->
+      <div id="attributes-card">
+        <div class="ac-head">Operator</div>
+        <div class="ac-row"><span class="ac-k">Gender</span><span class="ac-v" id="ac-gender">—</span></div>
+        <div class="ac-row"><span class="ac-k">Age</span>   <span class="ac-v" id="ac-age">—</span></div>
+        <div class="ac-row"><span class="ac-k">Height</span><span class="ac-v" id="ac-height">—</span></div>
+        <div class="ac-row"><span class="ac-k">Weight</span><span class="ac-v" id="ac-weight">—</span></div>
+      </div>
+
+      <div id="loading">
+        <div class="spinner"></div>
+        <div id="load-status">Booting…</div>
+      </div>
+      <div id="error-box"></div>
+
+      <!-- Viewer interaction hint — always visible, anchored bottom-center
+           inside #canvas-wrap so it works in both standalone and embed modes. -->
+      <div id="viewer-hint">
+        Use the <span class="vh-key">▶</span> / <span class="vh-key">⏸</span>
+        buttons on each bar to play or pause each module.
+        <span class="vh-dot">·</span>
+        click <span class="vh-key">↻ Replay</span> anytime to start from the beginning
+      </div>
+    </div>
+
+    <div id="caption-bar">
+      <span class="text" id="cap-text"></span>
+    </div>
+  </div>
+</div>
+
+<!-- Three.js + loaders -->
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/STLLoader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+
+<script>
+'use strict';
+
+// ─── Embed-mode init (?embed=1) ─────────────────────────────────────────────
+// When the page is iframed into the main project page, drop the standalone
+// chrome (centered card, page background, panel shadow/border/rounded
+// corners) so the visualization sits flush against the parent layout.
+(function embedModeInit() {
+  if (location.search.includes('embed')) {
+    document.documentElement.classList.add('embed');
+    document.body.classList.add('embed');
+  }
+})();
+
+// ─── Dev-only auto-reload (Option B) ────────────────────────────────────────
+// Polls this page's Last-Modified header once per second; if it changes,
+// reloads the page. Only active when served from localhost so the deployed
+// site on project-unveil.github.io never hits this.
+(function autoReloadOnChange() {
+  const isLocal = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+  if (!isLocal) return;
+  // ?nopoll=1 (used by the headless recorder) disables auto-reload so a save
+  // during recording doesn't restart the page mid-take.
+  if (location.search.includes('nopoll')) return;
+  let lastMod = null;
+  setInterval(async () => {
+    try {
+      const r = await fetch(location.pathname, { method: 'HEAD', cache: 'no-store' });
+      const lm = r.headers.get('Last-Modified');
+      if (!lm) return;
+      if (lastMod === null) { lastMod = lm; return; }
+      if (lm !== lastMod) location.reload();
+    } catch (_) { /* server briefly offline during save — ignore */ }
+  }, 1000);
+})();
+
+// ─── Config ─────────────────────────────────────────────────────────────────
+const DEG2RAD = Math.PI / 180;
+const DEFAULT_DEMO = 'hiphop';
+const BIN_VERSION  = '2026-05-19a';
+const withV = u => u + (u.includes('?') ? '&' : '?') + 'v=' + BIN_VERSION;
+
+// Reversed pipeline layout: 3.1 → 3.2 → 3.3 → Embedding → Attributes → Human
+// All slot positions are FIXED. Embedding / attributes / human stay at their
+// world-x throughout the walkthrough (no dynamic shifting). The three rects
+// (enc/graph/spatial) animate ("moving") during their first cycle, then lock
+// to their max-bounds size for the rest of the walkthrough.
+// SLOT_X.graph shifted right so the graph robot's left arm always stays inside
+// the strict 3.1↔3.2 gap. SLOT_X.spatial + embedding + attributes shifted right
+// in lock-step so all 1cm gaps still hold against the FIXED human-rect on the
+// right side of the panel.
+// Human is a STATIC snapshot at SLOT_X.human. Embedding + attrs hug the human
+// with only 0.5 cm gaps between each (now that the human doesn't need to
+// reserve space for arm swings).
+// 3.1, 3.2, 3.3 chosen so each robot fits inside its rect AFTER the strict
+// inter-rect gaps (= output-textbox widths). The right side (embedding,
+// attributes, human) is compressed to give 3.1↔3.3 enough room.
+// Embedding pushed further right (SPATIAL_EMBED_GAP_PX = 80) to clear bilateral
+// ghosts → human is pushed correspondingly to preserve the 0.5 cm attrs↔human gap.
+// ════════════════════════════════════════════════════════════════════════
+// LAYOUT CONFIG — single source of truth for every position / gap / Y line.
+// Edit these to move things; everything else derives from them.
+// See .claude/skills/viz-positions.md for a friendly cheat sheet.
+// ════════════════════════════════════════════════════════════════════════
+
+// World X (frustum is −6.75 .. +6.75; ≈ 120 px per world unit at 1620 px canvas)
+const SLOT_X = {
+  robot:      -6.05,   // 3.1 kinematic G1
+  graph:      -2.5,    // 3.2 graph-conv G1
+  aggregator: -0.5,    // static color-accumulator robot (between 3.2 and 3.3)
+  spatial:     1.55,   // 3.3 aggregate G1 + ghost stack center
+  human:       6.20,   // SMPL human snapshot (rightmost)
+};
+const SLOT_X_EMBEDDING  = 3.95;     // embedding strip world X (fallback if not chained)
+const SLOT_X_ATTRIBUTES = 4.85;     // attributes card world X (shifted left by 0.40 / ~48 px so the attrs→human arrow has more room — was 4.95)
+const MODULE_LABEL_TOP_Y = 30;      // canvas-wrap Y (px) for the 3 module titles
+// Per-title pixel offsets from their robot's slot X — non-zero values shift
+// the title without moving the underlying robot. Positive = right, negative = left.
+const MODULE_LABEL_DX_PX = {
+  enc:     68,    // 3.1 title shifted +1.8 cm right of SLOT_X.robot (was 38 / +1 cm)
+  graph:   114,   // 3.2 title shifted +3 cm right of SLOT_X.graph
+  spatial: 0,
+};
+
+// Inter-element gaps (pixels)
+const RIGHT_GAP_PX         = 19;    // 0.5 cm — embedding↔attrs, attrs↔human
+const SPATIAL_EMBED_GAP_PX = 40;    // dedicated 3.3 right edge → embedding strip gap
+
+// Ghost-stack spacing in world units (used by 3.3 temporal frames)
+const GHOST_SPREAD = 0.30;
+// When true, only the CURRENT phase's robots animate; previous-phase robots
+// freeze at their last applied frame. When false, every robot animates every
+// frame (original behavior).
+const SINGLE_PHASE_ANIMATION = true;
+// World units the arrow's right end stays away from G1 root — sized so the G1's
+// extreme left swing during motion just touches the arrow tip (never crosses).
+const ARROW_END_OFFSET = 0.55;
+// Duration that the kinematic-encoding plates take to fade in (drives stage-3 length)
+const PLATE_FADE_DUR = 0.5;
+// One full graph-conv beat cycle (5 intra beats × 2.8s + 4 inter beats × 3.0s)
+const GRAPH_CYCLE_DUR = 5 * 1.4 + 4 * 1.6;   // 13.4s (was 26s — sped up the 3.2 loop to make limbs fly to the static accumulator faster)
+// Kinematic-encoding loop cycle: 6 steps × 1s + 0.5s hold + 0.5s fade-out
+const KINEMATIC_CYCLE_DUR = 7.0;
+
+const LIMBS = {
+  torso: { color: '#4a235a', bodies: ['pelvis','waist_yaw_link','waist_roll_link','torso_link'] },             // very dark purple
+  la:    { color: '#7b241c', bodies: ['left_shoulder_pitch_link','left_shoulder_roll_link','left_shoulder_yaw_link','left_elbow_link','left_wrist_roll_link','left_wrist_pitch_link','left_wrist_yaw_link'] },     // very dark red
+  ra:    { color: '#873600', bodies: ['right_shoulder_pitch_link','right_shoulder_roll_link','right_shoulder_yaw_link','right_elbow_link','right_wrist_roll_link','right_wrist_pitch_link','right_wrist_yaw_link'] }, // very dark burnt orange
+  ll:    { color: '#0e4524', bodies: ['left_hip_pitch_link','left_hip_roll_link','left_hip_yaw_link','left_knee_link','left_ankle_pitch_link','left_ankle_roll_link'] },                                            // very dark green
+  rl:    { color: '#154360', bodies: ['right_hip_pitch_link','right_hip_roll_link','right_hip_yaw_link','right_knee_link','right_ankle_pitch_link','right_ankle_roll_link'] },                                      // very dark navy blue
+};
+const LIMB_LABEL = { torso: 'Torso / Waist', la: 'Left arm', ra: 'Right arm', ll: 'Left leg', rl: 'Right leg' };
+const LIMB_FULL  = { torso: 'Torso',          la: 'Left Arm', ra: 'Right Arm', ll: 'Left Leg', rl: 'Right Leg' };
+
+// Intra-limb connections to animate per limb (1-2 specific joint pairs)
+const INTRA_CONNS = {
+  torso: [['pelvis', 'torso_link']],
+  la:    [['left_shoulder_pitch_link','left_elbow_link'], ['left_elbow_link','left_wrist_pitch_link']],
+  ra:    [['right_shoulder_pitch_link','right_elbow_link'], ['right_elbow_link','right_wrist_pitch_link']],
+  ll:    [['left_hip_pitch_link','left_knee_link'], ['left_knee_link','left_ankle_pitch_link']],
+  rl:    [['right_hip_pitch_link','right_knee_link'], ['right_knee_link','right_ankle_pitch_link']],
+};
+
+// LIMB-TORSO phase palette: brighter than the INTRA dark palette, so the
+// inter-phase colors are visually distinct on the accumulator.
+const INTER_COLORS = {
+  la:    '#03a9f4',     // light blue
+  ra:    '#ffc107',     // amber
+  ll:    '#4caf50',     // green
+  rl:    '#ff5722',     // deep orange
+  torso: '#e91e63',     // (fallback) magenta-pink
+};
+// Torso re-colors during EACH of the 4 inter (limb-torso) beats, so the torso
+// visibly changes color every turn. The LAST entry persists in 3.3 after
+// transfer.
+const INTER_TORSO_COLORS = [
+  '#e91e63',   // beat 0 (la↔torso)   — magenta-pink
+  '#9c27b0',   // beat 1 (ra↔torso)   — purple
+  '#673ab7',   // beat 2 (ll↔torso)   — deep purple
+  '#3f51b5',   // beat 3 (rl↔torso)   — indigo  ← this is the one that ends up in 3.3
+];
+// LIMB-TORSO beats — each pairs one extremity limb with the torso.
+const INTER_BEATS = [
+  { key:'la-torso', limbs:['la','torso'], color: INTER_COLORS.la, label:'L arm ↔ Torso',
+    conns: [['left_shoulder_pitch_link','torso_link']] },
+  { key:'ra-torso', limbs:['ra','torso'], color: INTER_COLORS.ra, label:'R arm ↔ Torso',
+    conns: [['right_shoulder_pitch_link','torso_link']] },
+  { key:'ll-torso', limbs:['ll','torso'], color: INTER_COLORS.ll, label:'L leg ↔ Torso',
+    conns: [['left_hip_pitch_link','pelvis']] },
+  { key:'rl-torso', limbs:['rl','torso'], color: INTER_COLORS.rl, label:'R leg ↔ Torso',
+    conns: [['right_hip_pitch_link','pelvis']] },
+];
+
+// Picked joints — each gets a small focus ring + one combined box (vel + accel inside)
+// dx/dy = pixel offset from joint to box center; each joint's box can go in any direction
+// Picked joints — get a combined box (vel + accel) to the right of the body.
+// Stage 3 introduces them in order: elbow circle → elbow box → other circles → dots → knee box.
+const PICKED_JOINTS = [
+  { body:'left_elbow_link', joint:'left_elbow_joint', label:'Left elbow', dx: 120, dy: -50 },
+  { body:'left_knee_link',  joint:'left_knee_joint',  label:'Left knee',  dx: 120, dy:  50 },
+];
+// Tiny dots shown ONLY on these representative joints — one per limb segment.
+// Hand: shoulder, elbow, wrist. Leg: hip (top of thigh), knee, ankle. Plus one waist.
+const ENCODING_FOCUS_JOINTS = [
+  'left_shoulder_pitch_link',  'left_elbow_link',  'left_wrist_pitch_link',
+  'right_shoulder_pitch_link', 'right_elbow_link', 'right_wrist_pitch_link',
+  'torso_link',
+  'left_hip_pitch_link',       'left_knee_link',   'left_ankle_pitch_link',
+  'right_hip_pitch_link',      'right_knee_link',  'right_ankle_pitch_link',
+];
+// Per-graph colors (used inside each box)
+const PLATE_DEFS = {
+  pos: { feature: 'position', label: 'θ',  color: '#2c3e6b' },
+  vel: { feature: 'velocity', label: '∇',  color: '#9b6dbf' },
+  acc: { feature: 'accel',    label: '∇²', color: '#e74c3c' },
+};
+
+const CSV_TO_JOINT = {
+  left_hip_pitch_joint_dof:'left_hip_pitch_joint', left_hip_roll_joint_dof:'left_hip_roll_joint', left_hip_yaw_joint_dof:'left_hip_yaw_joint',
+  left_knee_joint_dof:'left_knee_joint',
+  left_ankle_pitch_joint_dof:'left_ankle_pitch_joint', left_ankle_roll_joint_dof:'left_ankle_roll_joint',
+  right_hip_pitch_joint_dof:'right_hip_pitch_joint', right_hip_roll_joint_dof:'right_hip_roll_joint', right_hip_yaw_joint_dof:'right_hip_yaw_joint',
+  right_knee_joint_dof:'right_knee_joint',
+  right_ankle_pitch_joint_dof:'right_ankle_pitch_joint', right_ankle_roll_joint_dof:'right_ankle_roll_joint',
+  waist_yaw_joint_dof:'waist_yaw_joint', waist_roll_joint_dof:'waist_roll_joint', waist_pitch_joint_dof:'waist_pitch_joint',
+  left_shoulder_pitch_joint_dof:'left_shoulder_pitch_joint', left_shoulder_roll_joint_dof:'left_shoulder_roll_joint', left_shoulder_yaw_joint_dof:'left_shoulder_yaw_joint',
+  left_elbow_joint_dof:'left_elbow_joint',
+  left_wrist_roll_joint_dof:'left_wrist_roll_joint', left_wrist_pitch_joint_dof:'left_wrist_pitch_joint', left_wrist_yaw_joint_dof:'left_wrist_yaw_joint',
+  right_shoulder_pitch_joint_dof:'right_shoulder_pitch_joint', right_shoulder_roll_joint_dof:'right_shoulder_roll_joint', right_shoulder_yaw_joint_dof:'right_shoulder_yaw_joint',
+  right_elbow_joint_dof:'right_elbow_joint',
+  right_wrist_roll_joint_dof:'right_wrist_roll_joint', right_wrist_pitch_joint_dof:'right_wrist_pitch_joint', right_wrist_yaw_joint_dof:'right_wrist_yaw_joint',
+};
+
+// Body name → joint name (used for velocity/accel signals)
+const BODY_TO_JOINT = {
+  'left_elbow_link': 'left_elbow_joint',
+  'left_knee_link':  'left_knee_joint',
+};
+
+// ─── State ──────────────────────────────────────────────────────────────────
+let renderer, scene, camera;
+let canvasW = 0, canvasH = 0;
+let canvasWrapEl, svgEl;
+let modelData;
+let g1Motion, smplData, smplFaces;
+let demosConfig, currentDemo;
+let g1Main, smplGroup, g1Aggregate, g1Graph, g1LimbAcc;
+// Per-limb fade-in progress on the accumulator (0 = original gray, 1 = full color)
+const aggregatorLimbState = {};   // limbKey → { color, progress }
+const aggregatorBeatsTriggered = new Set();   // beat ids that already kicked off a fade
+// Stage-after-accumulator: once every beat fired AND every limb finished its
+// fade-in, the whole accumulator robot flies to 3.3 and its colors are
+// transferred onto g1Aggregate + ghosts.
+let accumulatorComplete    = false;
+let accumulatorFlyStart    = -1;
+let accumulatorTransferred = false;
+const ACC_FLY_DURATION_S   = 1.2;
+let g1Ghosts = [];
+let stlGeomCache = {};
+let masterClock = 0;
+let stageIdx = -1, stageStart = 0;
+let stages = [];
+let walkthroughEnded = false;
+let lastTS = null;
+// Continuous-animation start times. -1 = not started yet.
+let graphAnimStart = -1, temporalAnimStart = -1, kinematicAnimStart = -1;
+// Once 3.1's rect has appeared (end of first cycle), keep it visible forever.
+let encRectStuckVisible = false;
+// Rect-lock state: each rect resizes during its first cycle ("moving") then
+// locks to its accumulated max-bounds for the rest of the walkthrough.
+let encRectLocked = false,  encRectMaxBounds = null;
+let graphRectLocked = false, graphRectMaxBounds = null;
+let spatialRectLocked = false, spatialRectMaxBounds = null;
+// Latched Y for the 3 module titles — captured ONCE when encRectLocked flips
+// true so the titles stop drifting with the embedding-strip's per-frame top.
+let lockedModuleLabelTopY = null;
+function _accumulateMax(maxB, x, y, w, h) {
+  if (!maxB) return { x, y, w, h };
+  const r1 = maxB.x + maxB.w, r2 = x + w;
+  const b1 = maxB.y + maxB.h, b2 = y + h;
+  const nx = Math.min(maxB.x, x);
+  const ny = Math.min(maxB.y, y);
+  return { x: nx, y: ny, w: Math.max(r1, r2) - nx, h: Math.max(b1, b2) - ny };
+}
+
+// Sparkline buffers per picked joint
+const sparkBuffers = {};   // jointName → { vel: [], acc: [], pos: [] }
+const romCache = {};       // jointName → { min, max }
+
+// SVG element refs
+let svgEnc, svgLimbs = {}, svgConns = [];
+let plates = {};           // body → plate DOM
+
+// ─── Helpers ────────────────────────────────────────────────────────────────
+const lerp = (a,b,t)=>a+(b-a)*t;
+const clamp = (x,lo,hi)=>Math.max(lo,Math.min(hi,x));
+const easeInOut = t=>t*t*(3-2*t);
+function fetchJSON(u){return fetch(u).then(r=>{if(!r.ok)throw new Error(r.status+' '+u);return r.json();});}
+function setStatus(m){const e=document.getElementById('load-status');if(e)e.textContent=m;}
+function showLoading(m){document.getElementById('loading').style.display='flex';setStatus(m||'Loading…');}
+function hideLoading(){document.getElementById('loading').style.display='none';}
+function showError(m){const e=document.getElementById('error-box');e.style.display='flex';e.textContent='Error: '+m;}
+function svg(tag, attrs={}) {
+  const el = document.createElementNS('http://www.w3.org/2000/svg', tag);
+  for (const [k,v] of Object.entries(attrs)) el.setAttribute(k, v);
+  return el;
+}
+function show(id){ document.getElementById(id).classList.add('visible'); }
+function hide(id){ document.getElementById(id).classList.remove('visible'); }
+
+// ─── G1 motion loader ───────────────────────────────────────────────────────
+async function loadG1Motion(url, maxFrames=600) {
+  const text = await fetch(url).then(r => { if (!r.ok) throw new Error(`CSV not found: ${url}`); return r.text(); });
+  const parsed = Papa.parse(text, { header:true, skipEmptyLines:true, dynamicTyping:true });
+  const rows = parsed.data;
+  let frames = rows;
+  const ratio = rows.length / maxFrames;
+  if (rows.length > maxFrames) frames = Array.from({length: maxFrames}, (_,i) => rows[Math.round(i*ratio)]);
+  const fps = 120 / (rows.length > maxFrames ? ratio : 1);
+  const md = {
+    numFrames: frames.length, frameTime: 1/fps, fps, duration: frames.length/fps,
+    rootPos: new Float32Array(frames.length*3),
+    rootQuat: new Float32Array(frames.length*4),
+    joints: {},
+  };
+  Object.values(CSV_TO_JOINT).forEach(n => { md.joints[n] = new Float32Array(frames.length); });
+  const e = new THREE.Euler(0,0,0,'ZYX'); const q = new THREE.Quaternion();
+  for (let i = 0; i < frames.length; i++) {
+    const r = frames[i];
+    md.rootPos[i*3]   = (r['root_translateX']||0)*0.01;
+    md.rootPos[i*3+1] = (r['root_translateY']||0)*0.01;
+    md.rootPos[i*3+2] = (r['root_translateZ']||0)*0.01;
+    e.set((r['root_rotateX']||0)*DEG2RAD, (r['root_rotateY']||0)*DEG2RAD, (r['root_rotateZ']||0)*DEG2RAD, 'ZYX');
+    q.setFromEuler(e);
+    md.rootQuat[i*4] = q.w; md.rootQuat[i*4+1] = q.x; md.rootQuat[i*4+2] = q.y; md.rootQuat[i*4+3] = q.z;
+    for (const [c, jn] of Object.entries(CSV_TO_JOINT)) {
+      if (r[c] !== undefined) md.joints[jn][i] = r[c] * DEG2RAD;
+    }
+  }
+  return md;
+}
+async function loadVertsBin(url) {
+  const buf = await fetch(url).then(r => { if(!r.ok) throw new Error(r.status+' '+url); return r.arrayBuffer(); });
+  const dv = new DataView(buf);
+  return { numFrames: dv.getUint32(0,true), numVerts: dv.getUint32(4,true), fps: dv.getFloat32(8,true), verts: new Float32Array(buf,12) };
+}
+async function loadFacesBin(url) {
+  const buf = await fetch(url).then(r => { if(!r.ok) throw new Error(r.status+' '+url); return r.arrayBuffer(); });
+  const dv = new DataView(buf);
+  const n = dv.getUint32(0,true);
+  return new Uint32Array(buf, 4, n*3);
+}
+
+// ─── G1 builder ─────────────────────────────────────────────────────────────
+const stlLoader = new THREE.STLLoader();
+function loadSTL(name) {
+  if (stlGeomCache[name] !== undefined) return Promise.resolve(stlGeomCache[name]);
+  return new Promise(resolve => {
+    stlLoader.load(`./g1_engine/meshes/${name}.STL`,
+      g => { g.computeVertexNormals(); stlGeomCache[name] = g; resolve(g); },
+      undefined,
+      () => { stlGeomCache[name] = null; resolve(null); }
+    );
+  });
+}
+function makeG1Material(rgba, meshName, opacityRef) {
+  let color, metalness, roughness;
+  if (meshName === 'head_link')          { color = new THREE.Color(0x0c0f14); metalness = 0.45; roughness = 0.30; }
+  else if (rgba[0] < 0.4)                { color = new THREE.Color(0x111316); metalness = 0.55; roughness = 0.35; }
+  else                                   { color = new THREE.Color(0xd8dce6); metalness = 0.15; roughness = 0.45; }
+  const mat = new THREE.MeshStandardMaterial({ color, metalness, roughness, transparent:true, opacity: opacityRef.value, depthWrite: opacityRef.value >= 0.95 });
+  opacityRef.materials.push(mat);
+  return mat;
+}
+async function buildG1Robot({opacityRef={value:1.0, materials:[]}}={}) {
+  const root = new THREE.Group();
+  const yaw  = new THREE.Group();
+  root.add(yaw);
+  const robotWorld = new THREE.Group();
+  robotWorld.rotation.x = -Math.PI/2;
+  yaw.add(robotWorld);
+  const bodies = modelData.bodies;
+  const groupMap = {}, bodyGroups = {}, bodyMeshes = {};
+  for (const b of bodies) {
+    const outer = new THREE.Group();
+    outer.position.set(...b.pos);
+    const bq = b.quat;
+    outer.quaternion.set(bq[1], bq[2], bq[3], bq[0]);
+    const inner = new THREE.Group();
+    outer.add(inner);
+    groupMap[b.name] = { outer, inner };
+    bodyGroups[b.name] = inner;
+  }
+  let rootOuter = null;
+  for (const b of bodies) {
+    if (b.parent && groupMap[b.parent]) groupMap[b.parent].inner.add(groupMap[b.name].outer);
+    else { robotWorld.add(groupMap[b.name].outer); rootOuter = groupMap[b.name].outer; }
+  }
+  const jobs = [];
+  for (const b of bodies) {
+    for (const m of b.meshes) {
+      jobs.push(loadSTL(m.name).then(geo => {
+        if (!geo) return;
+        const mat = makeG1Material(m.rgba, m.name, opacityRef);
+        const mq = m.quat;
+        const obj = new THREE.Mesh(geo, mat);
+        obj.position.set(...m.pos);
+        obj.quaternion.set(mq[1], mq[2], mq[3], mq[0]);
+        groupMap[b.name].inner.add(obj);
+        if (!bodyMeshes[b.name]) bodyMeshes[b.name] = [];
+        bodyMeshes[b.name].push(obj);
+      }));
+    }
+  }
+  await Promise.all(jobs);
+  const _ax = new THREE.Vector3(); const _q = new THREE.Quaternion();
+  function applyFrame(motion, fIdx) {
+    if (!rootOuter) return;
+    const N = motion.numFrames;
+    const fi = (((fIdx % N) + N) % N) | 0;
+    rootOuter.position.set(motion.rootPos[fi*3], motion.rootPos[fi*3+1], motion.rootPos[fi*3+2]);
+    rootOuter.quaternion.set(motion.rootQuat[fi*4+1], motion.rootQuat[fi*4+2], motion.rootQuat[fi*4+3], motion.rootQuat[fi*4]);
+    for (const b of bodies) {
+      if (!b.joint || b.joint.type !== 'hinge') continue;
+      const arr = motion.joints[b.joint.name];
+      if (!arr) continue;
+      _ax.set(...b.joint.axis);
+      _q.setFromAxisAngle(_ax, arr[fi]);
+      bodyGroups[b.name].quaternion.copy(_q);
+    }
+  }
+  function getBodyWorldPos(name, out) {
+    const g = bodyGroups[name]; if (!g) return null;
+    g.updateWorldMatrix(true,false);
+    out.setFromMatrixPosition(g.matrixWorld);
+    return out;
+  }
+  function setOpacity(a) {
+    opacityRef.value = a;
+    for (const m of opacityRef.materials) { m.opacity = a; m.transparent = a < 1; m.depthWrite = a >= 0.95; }
+  }
+  return { object3D: root, bodyGroups, bodyMeshes, applyFrame, getBodyWorldPos, setOpacity, opacityRef };
+}
+
+// ─── SMPL builder ───────────────────────────────────────────────────────────
+function buildSMPL(vd, faces) {
+  const numVerts = vd.numVerts, numFrames = vd.numFrames;
+  const geo = new THREE.BufferGeometry();
+  const posAttr = new THREE.BufferAttribute(new Float32Array(numVerts*3), 3);
+  geo.setAttribute('position', posAttr);
+  geo.setIndex(new THREE.BufferAttribute(faces, 1));
+  // Phong gives a more natural skin look than Standard on this scene
+  const mat = new THREE.MeshPhongMaterial({
+    color: new THREE.Color(0.45, 0.28, 0.18),     // dark brown skin tone
+    specular: 0x221409,
+    shininess: 14,
+    transparent: true, opacity: 1.0, side: THREE.DoubleSide,
+  });
+  const mesh = new THREE.Mesh(geo, mat);
+  mesh.castShadow = true;
+  posAttr.array.set(vd.verts.subarray(0, numVerts*3));
+  posAttr.needsUpdate = true;
+  geo.computeVertexNormals();
+  const frameMin = new Float32Array(numFrames);
+  for (let fi = 0; fi < numFrames; fi++) {
+    const base = fi*numVerts*3; let mn = Infinity;
+    for (let j = 1; j < numVerts*3; j += 3) { const y = vd.verts[base+j]; if (y < mn) mn = y; }
+    frameMin[fi] = mn;
+  }
+  const sorted = Array.from(frameMin).sort((a,b)=>a-b);
+  const p10 = sorted[Math.floor(numFrames*0.10)];
+  mesh.position.y = -p10;
+  const wrap = new THREE.Group();
+  wrap.add(mesh);
+  function applyFrame(fIdx) {
+    const N = numFrames;
+    const fi = (((fIdx % N) + N) % N) | 0;
+    posAttr.array.set(vd.verts.subarray(fi*numVerts*3, fi*numVerts*3+numVerts*3));
+    posAttr.needsUpdate = true;
+    geo.computeVertexNormals();
+  }
+  function setOpacity(a){ mat.opacity = a; mat.transparent = a < 1; mat.depthWrite = a >= 0.95; }
+  return { object3D: wrap, mesh, mat, applyFrame, setOpacity, numFrames, numVerts };
+}
+
+// ─── Scene setup ────────────────────────────────────────────────────────────
+function setupScene() {
+  canvasWrapEl = document.getElementById('canvas-wrap');
+  svgEl = document.getElementById('svg-overlay');
+
+  renderer = new THREE.WebGLRenderer({ antialias:true, alpha:false });
+  renderer.setPixelRatio(window.devicePixelRatio);
+  canvasW = canvasWrapEl.clientWidth; canvasH = canvasWrapEl.clientHeight;
+  renderer.setSize(canvasW, canvasH);
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.outputEncoding = THREE.sRGBEncoding;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.18;
+  renderer.domElement.id = 'three-canvas';
+  canvasWrapEl.insertBefore(renderer.domElement, canvasWrapEl.firstChild);
+
+  // Recover from WebGL context loss — without these handlers the canvas
+  // renders blank ("only joint dots / dashed lines visible") after the GPU
+  // process is killed, the tab sits backgrounded, or the driver hiccups.
+  // preventDefault on lost lets the browser try to restore; on restored we
+  // reload so all GPU-side resources (materials, textures, shadow maps) are
+  // rebuilt cleanly under r128.
+  renderer.domElement.addEventListener('webglcontextlost', (e) => {
+    e.preventDefault();
+    playing = false;
+    console.warn('[unveil] WebGL context lost — render paused, awaiting restore');
+  }, false);
+  renderer.domElement.addEventListener('webglcontextrestored', () => {
+    console.warn('[unveil] WebGL context restored — reloading to rebuild GPU resources');
+    location.reload();
+  }, false);
+  // Safety net: if the context is lost and never restored (some Chrome paths
+  // kill the GPU process without firing 'restored'), poll and force-reload
+  // after a short hold so the page self-heals instead of stranding the user.
+  setInterval(() => {
+    const gl = renderer.getContext && renderer.getContext();
+    if (gl && gl.isContextLost && gl.isContextLost()) {
+      if (!window.__ctxLostAt) window.__ctxLostAt = performance.now();
+      else if (performance.now() - window.__ctxLostAt > 3000) location.reload();
+    } else {
+      window.__ctxLostAt = 0;
+    }
+  }, 1000);
+
+  scene = new THREE.Scene();
+  scene.background = new THREE.Color('#ffffff');
+
+  const frustumW = 13.5;
+  const aspect = canvasW / canvasH;
+  const frustumH = frustumW / aspect;
+  camera = new THREE.OrthographicCamera(
+    -frustumW/2, frustumW/2, frustumH/2 + 0.0, -frustumH/2 + 0.0,
+    -100, 100
+  );
+  camera.position.set(0, 1.0, 10);
+  camera.lookAt(0, 1.0, 0);
+
+  scene.add(new THREE.HemisphereLight(0xffffff, 0xeef0f6, 0.85));
+  const key = new THREE.DirectionalLight(0xffffff, 0.9);
+  key.position.set(3, 8, 5);
+  key.castShadow = true;
+  key.shadow.mapSize.set(2048, 2048);
+  key.shadow.camera.near = 0.1; key.shadow.camera.far = 30;
+  key.shadow.camera.left = -12; key.shadow.camera.right = 12;
+  key.shadow.camera.top  =  10; key.shadow.camera.bottom = -2;
+  scene.add(key);
+  const fill = new THREE.DirectionalLight(0xeaf0fa, 0.35);
+  fill.position.set(-3, 5, -3);
+  scene.add(fill);
+  const rim = new THREE.DirectionalLight(0xccd6e8, 0.3);
+  rim.position.set(0, 4, -6);
+  scene.add(rim);
+
+  const floor = new THREE.Mesh(
+    new THREE.PlaneGeometry(40, 8),
+    new THREE.MeshStandardMaterial({ color: 0xf6f7fa, roughness: 0.95, metalness: 0.0 })
+  );
+  floor.rotation.x = -Math.PI / 2;
+  floor.position.y = 0;
+  floor.receiveShadow = true;
+  scene.add(floor);
+
+  // SVG overlay viewBox
+  svgEl.setAttribute('viewBox', `0 0 ${canvasW} ${canvasH}`);
+  svgEl.setAttribute('preserveAspectRatio', 'none');
+
+  window.addEventListener('resize', onResize);
+}
+function onResize() {
+  canvasW = canvasWrapEl.clientWidth; canvasH = canvasWrapEl.clientHeight;
+  const frustumW = 13.5;
+  const aspect = canvasW / canvasH;
+  const frustumH = frustumW / aspect;
+  camera.left = -frustumW/2; camera.right = frustumW/2;
+  camera.top = frustumH/2 + 0.0; camera.bottom = -frustumH/2 + 0.0;
+  camera.updateProjectionMatrix();
+  renderer.setSize(canvasW, canvasH);
+  svgEl.setAttribute('viewBox', `0 0 ${canvasW} ${canvasH}`);
+}
+
+// ─── world → screen ────────────────────────────────────────────────────────
+const _v3 = new THREE.Vector3();
+function worldToCanvasPx(wx, wy, wz) {
+  _v3.set(wx, wy, wz).project(camera);
+  return { x: (_v3.x * 0.5 + 0.5) * canvasW, y: (1 - (_v3.y * 0.5 + 0.5)) * canvasH };
+}
+function jointScreenOf(robot, bodyName) {
+  if (!robot) return null;
+  const p = robot.getBodyWorldPos(bodyName, _v3);
+  if (!p) return null;
+  return worldToCanvasPx(p.x, p.y, p.z);
+}
+function jointScreen(bodyName)      { return jointScreenOf(g1Main, bodyName); }
+function jointScreenGraph(bodyName) { return jointScreenOf(g1Graph, bodyName); }
+
+// ─── Ghosts ─────────────────────────────────────────────────────────────────
+async function buildGhosts(N = 5) {
+  // Fanned BOTH SIDES of the spatial-slot G1: half to the left, half to the
+  // right. Each ghost is lagged in time so the row reads as a temporal flipbook.
+  for (let k = 0; k < N; k++) {
+    const opacityRef = { value: 0.0, materials: [] };
+    const r = await buildG1Robot({opacityRef});
+    // Symmetric offset: k=0,1,2,3,4 → offsets -2,-1,+1,+2,+3 * spread (skipping 0 = aggregate)
+    // For N=5: positions [-2,-1,+1,+2,+3] × GHOST_SPREAD around SLOT_X.spatial
+    const half = Math.floor(N / 2);                    // 2 for N=5
+    const offsetIdx = k < half ? (k - half) : (k - half + 1);   // -2,-1,+1,+2,+3
+    const baseX = SLOT_X.spatial + offsetIdx * GHOST_SPREAD;
+    r.object3D.position.set(baseX, 0, -0.05 * k);
+    r.object3D.scale.setScalar(1.3);
+    r.setOpacity(0.0);
+    scene.add(r.object3D);
+    g1Ghosts.push({ robot: r, baseX, lagFrames: (k + 1) * 8 });
+  }
+}
+
+// ─── Tiny rings on ALL joints + combined plates for PICKED joints ──────────
+function setupFocusRingsAndPlates() {
+  const gFocus = document.getElementById('g-focus');
+  gFocus.innerHTML = '';
+
+  // One arrowhead marker (purple, matches the encoding box outline)
+  const defs = svg('defs');
+  const marker = svg('marker', {
+    id: 'arr-enc',
+    viewBox: '0 0 10 10', refX: '9', refY: '5',
+    markerWidth: '6', markerHeight: '6', orient: 'auto',
+  });
+  marker.appendChild(svg('path', { d: 'M 0 0 L 10 5 L 0 10 z', fill: '#9b6dbf' }));
+  defs.appendChild(marker);
+  gFocus.appendChild(defs);
+
+  // Tiny dot on a curated set of joints — one per limb segment + waist
+  for (const bn of ENCODING_FOCUS_JOINTS) {
+    const ring = svg('circle', { class: 'svg-focus-ring', r: 3.5, cx: 0, cy: 0 });
+    ring.setAttribute('data-body', bn);
+    gFocus.appendChild(ring);
+  }
+
+  // Leader arrow for the picked joints only (joint → plate)
+  for (const J of PICKED_JOINTS) {
+    const leader = svg('line', {
+      class: 'svg-leader',
+      stroke: '#9b6dbf',
+      'stroke-width': 1.4,
+      'stroke-dasharray': '5 4',
+      'marker-end': 'url(#arr-enc)',
+    });
+    leader.setAttribute('data-body', J.body);
+    gFocus.appendChild(leader);
+  }
+
+  // Build one combined plate per PICKED joint (elbow + knee)
+  const platesHolder = document.getElementById('plates-holder');
+  platesHolder.innerHTML = '';
+  for (const J of PICKED_JOINTS) {
+    const plate = document.createElement('div');
+    plate.className = 'data-plate';
+    plate.setAttribute('data-body', J.body);
+    plate.innerHTML = `
+      <div class="dp-head">${J.label}</div>
+      <div class="dp-row"><span class="dp-label" style="color:${PLATE_DEFS.pos.color}">${PLATE_DEFS.pos.label}</span><canvas data-feature="position"></canvas></div>
+      <div class="dp-row"><span class="dp-label" style="color:${PLATE_DEFS.vel.color}">${PLATE_DEFS.vel.label}</span><canvas data-feature="velocity"></canvas></div>
+      <div class="dp-row"><span class="dp-label" style="color:${PLATE_DEFS.acc.color}">${PLATE_DEFS.acc.label}</span><canvas data-feature="accel"></canvas></div>
+    `;
+    platesHolder.appendChild(plate);
+    plates[J.body] = plate;
+    sparkBuffers[J.body] = { vel: [], acc: [], pos: [] };
+  }
+}
+
+function setFocusOpacity(o) {
+  document.querySelectorAll('.svg-focus-ring').forEach(r => r.style.opacity = o);
+  document.querySelectorAll('.svg-leader').forEach(r => r.style.opacity = o);
+  document.getElementById('enc-vertical-dots').style.opacity = o;
+  for (const J of PICKED_JOINTS) {
+    const el = plates[J.body];
+    if (!el) continue;
+    if (o > 0.05) el.classList.add('visible'); else el.classList.remove('visible');
+  }
+}
+
+const SPARK_LEN = 70;
+function tickSparkBuffers(fIdx) {
+  const N = g1Motion.numFrames;
+  const wrap = i => ((i % N) + N) % N;
+  const fi  = wrap(fIdx | 0);
+  const fp  = wrap(fi - 1);
+  const fpp = wrap(fi - 2);
+  for (const J of PICKED_JOINTS) {
+    const arr = g1Motion.joints[J.joint];
+    if (!arr) continue;
+    const buf = sparkBuffers[J.body];
+    buf.pos.push(arr[fi]);                        if (buf.pos.length > SPARK_LEN) buf.pos.shift();
+    buf.vel.push(arr[fi] - arr[fp]);              if (buf.vel.length > SPARK_LEN) buf.vel.shift();
+    buf.acc.push(arr[fi] - 2*arr[fp] + arr[fpp]); if (buf.acc.length > SPARK_LEN) buf.acc.shift();
+  }
+}
+
+function renderPlateSparklines() {
+  for (const J of PICKED_JOINTS) {
+    const el = plates[J.body];
+    if (!el) continue;
+    const posCanvas = el.querySelector('canvas[data-feature="position"]');
+    const velCanvas = el.querySelector('canvas[data-feature="velocity"]');
+    const accCanvas = el.querySelector('canvas[data-feature="accel"]');
+    if (posCanvas) drawSpark(posCanvas, sparkBuffers[J.body].pos, PLATE_DEFS.pos.color);
+    if (velCanvas) drawSpark(velCanvas, sparkBuffers[J.body].vel, PLATE_DEFS.vel.color);
+    if (accCanvas) drawSpark(accCanvas, sparkBuffers[J.body].acc, PLATE_DEFS.acc.color);
+  }
+}
+function drawSpark(canvas, buf, color) {
+  const w = canvas.width = canvas.clientWidth * (window.devicePixelRatio || 1);
+  const h = canvas.height = canvas.clientHeight * (window.devicePixelRatio || 1);
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0,0,w,h);
+  if (buf.length < 2) return;
+  let mn = Infinity, mx = -Infinity;
+  for (const v of buf) { if (v<mn)mn=v; if (v>mx)mx=v; }
+  if (mx - mn < 1e-6) { mn -= 0.01; mx += 0.01; }
+  ctx.strokeStyle = '#e9ecf3'; ctx.lineWidth = 1 * (window.devicePixelRatio || 1);
+  ctx.beginPath(); ctx.moveTo(0, h/2); ctx.lineTo(w, h/2); ctx.stroke();
+  ctx.strokeStyle = color; ctx.lineWidth = 1.8 * (window.devicePixelRatio || 1);
+  ctx.beginPath();
+  for (let i = 0; i < buf.length; i++) {
+    const x = (i / (SPARK_LEN - 1)) * w;
+    const y = h - ((buf[i] - mn) / (mx - mn)) * (h - 4) - 2;
+    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  }
+  ctx.stroke();
+  if (buf.length > 0) {
+    const xT = ((buf.length - 1) / (SPARK_LEN - 1)) * w;
+    const yT = h - ((buf[buf.length-1] - mn)/(mx-mn))*(h-4) - 2;
+    ctx.fillStyle = color;
+    ctx.beginPath(); ctx.arc(xT, yT, 2.6 * (window.devicePixelRatio || 1), 0, Math.PI*2); ctx.fill();
+  }
+}
+
+// (ROM removed — kinematic encoding now shows only velocity + acceleration)
+function computeROM() { /* no-op */ }
+function renderROMFans() { /* no-op */ }
+
+// ─── Limb ellipses + animated edges (SVG) ───────────────────────────────────
+function setupLimbEllipses() {
+  const gLimbs = document.getElementById('g-limbs');
+  gLimbs.innerHTML = '';
+  for (const [key, L] of Object.entries(LIMBS)) {
+    const ell = svg('ellipse', {
+      class: 'svg-ellipse',
+      stroke: L.color,
+      cx: 0, cy: 0, rx: 0, ry: 0,
+    });
+    ell.setAttribute('data-limb', key);
+    gLimbs.appendChild(ell);
+    svgLimbs[key] = ell;
+  }
+}
+function setLimbEllipseVisible(key, on, color) {
+  const ell = svgLimbs[key];
+  if (!ell) return;
+  ell.style.opacity = on ? 1 : 0;
+  if (color) ell.setAttribute('stroke', color);
+}
+function updateLimbEllipses() {
+  for (const [key, L] of Object.entries(LIMBS)) {
+    const ell = svgLimbs[key];
+    if (!ell || ell.style.opacity == 0) continue;
+    // Compute bounding box of all joint screen positions in this limb (on the GRAPH G1)
+    let mnX=Infinity, mnY=Infinity, mxX=-Infinity, mxY=-Infinity, cnt=0;
+    for (const bn of L.bodies) {
+      const p = jointScreenGraph(bn);
+      if (!p) continue;
+      cnt++;
+      if (p.x<mnX)mnX=p.x; if (p.x>mxX)mxX=p.x;
+      if (p.y<mnY)mnY=p.y; if (p.y>mxY)mxY=p.y;
+    }
+    if (cnt < 2) continue;
+    const pad = 16;
+    const cx = (mnX + mxX) / 2;
+    const cy = (mnY + mxY) / 2;
+    const rx = Math.max(28, (mxX - mnX)/2 + pad);
+    const ry = Math.max(34, (mxY - mnY)/2 + pad);
+    ell.setAttribute('cx', cx.toFixed(1));
+    ell.setAttribute('cy', cy.toFixed(1));
+    ell.setAttribute('rx', rx.toFixed(1));
+    ell.setAttribute('ry', ry.toFixed(1));
+  }
+}
+
+// ─── Active connections (animated SVG lines that draw between joints) ──────
+let activeConns = [];     // array of {a, b, color, line, startedAt}
+function clearConns() {
+  const g = document.getElementById('g-conns');
+  g.innerHTML = '';
+  activeConns = [];
+}
+function setConns(pairs, color) {
+  clearConns();
+  const g = document.getElementById('g-conns');
+  const seenJoints = new Set();
+  for (const [a, b] of pairs) {
+    // Stroke is driven by .svg-conn CSS (accent red) so the line stays
+    // high-contrast against every limb tint. `color` is still stored on the
+    // record for label/debug callers.
+    const line = svg('line', { class:'svg-conn' });
+    g.appendChild(line);
+    activeConns.push({ a, b, color, line, startedAt: masterClock });
+    // Markers — one filled circle per unique joint in this connection set.
+    // They make the "joints being aggregated" obvious even when the limb
+    // tint and connection color visually clash.
+    for (const j of [a, b]) {
+      if (seenJoints.has(j)) continue;
+      seenJoints.add(j);
+      const dot = svg('circle', { class:'svg-conn-dot', r: 5.5 });
+      g.appendChild(dot);
+      activeConns.push({ a: j, b: null, color, line: dot, startedAt: masterClock, isDot: true });
+    }
+  }
+}
+function updateConns() {
+  const ts = masterClock;
+  for (const c of activeConns) {
+    if (c.isDot) {
+      const pa = jointScreenGraph(c.a);
+      if (!pa) continue;
+      c.line.setAttribute('cx', pa.x.toFixed(1));
+      c.line.setAttribute('cy', pa.y.toFixed(1));
+      const lt = ts - c.startedAt;
+      const op = Math.min(1, lt / 0.3) * (1 - Math.max(0, (lt - 2.0) / 0.5));
+      c.line.style.opacity = Math.max(0, Math.min(1, op));
+      continue;
+    }
+    const pa = jointScreenGraph(c.a), pb = jointScreenGraph(c.b);
+    if (!pa || !pb) continue;
+    c.line.setAttribute('x1', pa.x.toFixed(1));
+    c.line.setAttribute('y1', pa.y.toFixed(1));
+    c.line.setAttribute('x2', pb.x.toFixed(1));
+    c.line.setAttribute('y2', pb.y.toFixed(1));
+    // Animate the dash pattern so it flows from joint A → joint B
+    const off = -((ts - c.startedAt) * 40) % 14;     // 14 = 9+5 (dasharray period)
+    c.line.setAttribute('stroke-dashoffset', off.toFixed(2));
+    // Fade in/out over a ~2.5s lifecycle
+    const lt = ts - c.startedAt;
+    const op = Math.min(1, lt / 0.4) * (1 - Math.max(0, (lt - 2.0) / 0.5));
+    c.line.style.opacity = Math.max(0, Math.min(1, op));
+  }
+}
+
+const RING_R = 3.5;       // tiny dot radius (drawn on every joint)
+const PLATE_HALF_W = 50;  // half-width of a combined data-plate (matches CSS width 100)
+const PLATE_HALF_H = 40;  // approx half-height (header + 2 graph rows)
+
+// ─── Per-frame: position tiny rings on ALL joints + plates/arrows for picked ───
+function updateFocusRings() {
+  // 1) Position the tiny dots on the curated set of joints
+  for (const bn of ENCODING_FOCUS_JOINTS) {
+    const ring = document.querySelector(`.svg-focus-ring[data-body="${bn}"]`);
+    if (!ring) continue;
+    const js = jointScreen(bn);
+    if (!js) continue;
+    ring.setAttribute('cx', js.x.toFixed(1));
+    ring.setAttribute('cy', js.y.toFixed(1));
+  }
+
+  // 2) Position plates + leader arrows for PICKED joints
+  //    Plates sit just OUTSIDE the robot's current silhouette on the right
+  //    side, recomputed each frame so they stay close to the body without
+  //    ever overlapping it.
+  let bodyRightX = -Infinity;
+  for (const b of modelData.bodies) {
+    const p = jointScreen(b.name);
+    if (p && p.x > bodyRightX) bodyRightX = p.x;
+  }
+  // 12 px breathing gap between rightmost joint and the plate's near edge.
+  const plateX = (isFinite(bodyRightX) ? bodyRightX : worldToCanvasPx(SLOT_X.robot, 1.0, 0).x) + PLATE_HALF_W + 12;
+  for (const J of PICKED_JOINTS) {
+    const js = jointScreen(J.body);
+    if (!js) continue;
+    const plate = plates[J.body];
+    if (!plate) continue;
+    const px = plateX;             // tracks the body's right edge — never overlaps
+    const py = js.y + J.dy;        // Y still tracks elbow / knee height
+    plate.style.left = px.toFixed(1) + 'px';
+    plate.style.top  = py.toFixed(1) + 'px';
+
+    // Leader arrow joint → plate (stop at plate's near edge)
+    const leader = document.querySelector(`.svg-leader[data-body="${J.body}"]`);
+    if (!leader) continue;
+    const dxv = px - js.x, dyv = py - js.y;
+    const len = Math.hypot(dxv, dyv) || 1;
+    const ux = dxv / len, uy = dyv / len;
+    const sx = js.x + ux * (RING_R + 2);
+    const sy = js.y + uy * (RING_R + 2);
+    const ax = Math.abs(ux), ay = Math.abs(uy);
+    const tEdgeX = (PLATE_HALF_W + 4) / Math.max(ax, 1e-6);
+    const tEdgeY = (PLATE_HALF_H + 4) / Math.max(ay, 1e-6);
+    const tEdge = Math.min(tEdgeX, tEdgeY);
+    const tx = px - ux * tEdge;
+    const ty = py - uy * tEdge;
+    leader.setAttribute('x1', sx.toFixed(1));
+    leader.setAttribute('y1', sy.toFixed(1));
+    leader.setAttribute('x2', tx.toFixed(1));
+    leader.setAttribute('y2', ty.toFixed(1));
+  }
+
+  // 3) Vertical "etc." dots between the two plates
+  const dots = document.getElementById('enc-vertical-dots');
+  if (PICKED_JOINTS.length >= 2) {
+    const p1 = plates[PICKED_JOINTS[0].body];
+    const p2 = plates[PICKED_JOINTS[1].body];
+    if (p1 && p2 && p1.style.left && p2.style.left) {
+      const cx = (parseFloat(p1.style.left) + parseFloat(p2.style.left)) / 2;
+      const cy = (parseFloat(p1.style.top)  + parseFloat(p2.style.top))  / 2;
+      dots.style.left = cx.toFixed(1) + 'px';
+      dots.style.top  = cy.toFixed(1) + 'px';
+    }
+  }
+}
+
+// ─── Kinematic encoding rectangle ───────────────────────────────────────────
+function setEncRectVisible(on) {
+  document.getElementById('enc-rect').style.opacity = 0;
+  if (on) show('enc-label'); else hide('enc-label');
+}
+function updateEncRect() {
+  const r = document.getElementById('enc-rect');
+  // No early-return: always compute bounds so the max-bounds accumulator
+  // works even before the rect is shown (after cycle 1 completes).
+  // Bounding box covers G1 silhouette + the combined plates (not the human)
+  let mnX=Infinity, mnY=Infinity, mxX=-Infinity, mxY=-Infinity;
+  for (const b of modelData.bodies) {
+    const p = jointScreen(b.name);
+    if (!p) continue;
+    if (p.x<mnX)mnX=p.x; if (p.x>mxX)mxX=p.x;
+    if (p.y<mnY)mnY=p.y; if (p.y>mxY)mxY=p.y;
+  }
+  for (const J of PICKED_JOINTS) {
+    const plate = plates[J.body];
+    if (!plate) continue;
+    const left = parseFloat(plate.style.left);
+    const top  = parseFloat(plate.style.top);
+    if (!isFinite(left) || !isFinite(top)) continue;
+    const x0 = left - PLATE_HALF_W, y0 = top - PLATE_HALF_H;
+    const x1 = left + PLATE_HALF_W, y1 = top + PLATE_HALF_H;
+    if (x0<mnX)mnX=x0; if (x1>mxX)mxX=x1;
+    if (y0<mnY)mnY=y0; if (y1>mxY)mxY=y1;
+  }
+  const padX = 22, padY = 28;
+  let x = mnX - padX, y = mnY - padY;
+  let w = (mxX - mnX) + padX*2;
+  let h = (mxY - mnY) + padY*2;
+  // Clamp the top so the rect's own label (above it) stays inside the canvas
+  const MIN_RECT_TOP_Y = 50;
+  if (y < MIN_RECT_TOP_Y) { h -= (MIN_RECT_TOP_Y - y); y = MIN_RECT_TOP_Y; }
+  // Reversed pipeline — no retarget arrow on the left anymore.
+  // If the rect is locked, replace dynamic bounds with the saved max-bounds.
+  if (encRectLocked && encRectMaxBounds) {
+    ({ x, y, w, h } = encRectMaxBounds);
+  } else {
+    encRectMaxBounds = _accumulateMax(encRectMaxBounds, x, y, w, h);
+  }
+  r.setAttribute('x', x.toFixed(1));
+  r.setAttribute('y', y.toFixed(1));
+  r.setAttribute('width', Math.max(0, w).toFixed(1));
+  r.setAttribute('height', Math.max(0, h).toFixed(1));
+  const label = document.getElementById('enc-label');
+  label.style.left = (x + w/2).toFixed(1) + 'px';
+  label.style.top  = (y - 6).toFixed(1) + 'px';
+}
+
+// ─── Slot labels positioning (BELOW the figures, anchored at floor level) ──
+function positionSlotLabels() {
+  // Human-rect removed — anchor HUMAN OPERATOR label directly to SLOT_X.human
+  // (mesh center), since the mesh is fixed at that world coordinate.
+  const floorPx = worldToCanvasPx(SLOT_X.human, -0.05, 0);
+  const lh = document.getElementById('lbl-human');
+  if (lh) lh.style.cssText += `;left:${floorPx.x}px;top:${floorPx.y+10}px;`;
+}
+
+// Human-rect bounds (world coords) — drives both the border and the retarget arrow start
+const HUMAN_RECT_W = 1.4;     // total width in world units (wide enough to never clip the mesh)
+const GAP_31_32_PX = 38;      // ~1 cm horizontal gap between 3.1 and 3.2 rects
+const HUMAN_RECT_TOP_Y = 1.95;
+const HUMAN_RECT_BOT_Y = -0.05;
+
+function setHumanRectVisible(on) {
+  // Human rect removed — keep stub so call sites still resolve.
+  document.getElementById('human-rect').style.opacity = 0;
+}
+// Dynamic SMPL bounds — recomputed each frame so the mesh never crosses the border.
+const _smplBBox = new THREE.Box3();
+function updateHumanRect() {
+  const r = document.getElementById('human-rect');
+  if (r.style.opacity == 0) return;
+  // FIXED bounds: right edge flush with the panel's right side (small inset),
+  // height/y mirrored from the enc-rect so all four rects line up flush.
+  const canvasW = (canvasWrapEl && canvasWrapEl.clientWidth) || 1620;
+  const RIGHT_INSET = 4;             // tiny gap from the canvas-wrap right edge
+  const HUMAN_RECT_PX_W = 150;       // fixed width — covers SMPL mesh extent
+  const rectRight = canvasW - RIGHT_INSET;
+  const rectLeft  = rectRight - HUMAN_RECT_PX_W;
+  // y / height mirror enc-rect so the human-rect aligns with the other three
+  let y = 50, h = 200;
+  const encR = document.getElementById('enc-rect');
+  if (encR && encR.style.opacity != 0) {
+    const encTop    = parseFloat(encR.getAttribute('y'));
+    const encHeight = parseFloat(encR.getAttribute('height'));
+    if (isFinite(encTop))    y = encTop;
+    if (isFinite(encHeight)) h = encHeight;
+  }
+  r.setAttribute('x', rectLeft.toFixed(1));
+  r.setAttribute('y', y.toFixed(1));
+  r.setAttribute('width',  HUMAN_RECT_PX_W.toFixed(1));
+  r.setAttribute('height', h.toFixed(1));
+}
+
+// Retargeting arrow no longer used in the reversed pipeline — keep stubs so
+// any leftover call-sites are safe no-ops.
+function setRetargetVisible(on) {
+  document.getElementById('retarget-arrow').style.opacity = 0;
+  hide('retarget-label');
+}
+// Arrow start = right edge of the human boundary rect; arrow end = approach to G1
+function getRetargetArrowEndPx() {
+  return worldToCanvasPx(SLOT_X.robot - ARROW_END_OFFSET, 1.0, 0);
+}
+function positionRetargetArrow() { return; /* disabled in reversed pipeline */
+  // legacy body kept below for reference:
+  // Arrow + textbox at chest height (between human and G1).
+  const hr = document.getElementById('human-rect');
+  const hrX = parseFloat(hr.getAttribute('x'));
+  const hrW = parseFloat(hr.getAttribute('width'));
+  const fallback = worldToCanvasPx(SLOT_X.human + HUMAN_RECT_W/2, 1.0, 0);
+  const hrRight = (isFinite(hrX) && isFinite(hrW)) ? hrX + hrW : fallback.x;
+  const pr = getRetargetArrowEndPx();
+  const label = document.getElementById('retarget-label');
+  const labelW = label.offsetWidth || 130;
+
+  let labelCenter = (hrRight + pr.x) / 2;
+  const minCenter = hrRight + labelW/2 + 4;
+  if (labelCenter < minCenter) labelCenter = minCenter;
+
+  const chestY = (fallback.y + pr.y) / 2;     // ~ screen y at world Y = 1.0
+  label.style.left = labelCenter.toFixed(1) + 'px';
+  label.style.top  = (chestY - 6).toFixed(1) + 'px';
+
+  const arrowY = chestY + 8;                  // arrow just below the textbox
+  const ax1 = labelCenter - labelW/2 + 2;
+  const ax2 = labelCenter + labelW/2 - 2;
+  const arrow = document.getElementById('retarget-arrow');
+  arrow.setAttribute('x1', ax1.toFixed(1));
+  arrow.setAttribute('y1', arrowY.toFixed(1));
+  arrow.setAttribute('x2', ax2.toFixed(1));
+  arrow.setAttribute('y2', arrowY.toFixed(1));
+}
+// Compute the textbox's right edge in px (used by enc-rect / plate clamps)
+function getRetargetLabelRightPx() {
+  const label = document.getElementById('retarget-label');
+  const left = parseFloat(label.style.left);
+  if (!isFinite(left)) return -Infinity;
+  const w = label.offsetWidth || 130;
+  return left + w/2;
+}
+
+// ─── Graph rectangle (around graph G1, includes beat indicator) ────────────
+function setGraphRectVisible(on) {
+  document.getElementById('graph-rect').style.opacity = 0;
+  if (on) show('graph-label'); else hide('graph-label');
+}
+function updateGraphRect() {
+  const r = document.getElementById('graph-rect');
+  // No early-return: bounds computed regardless of visibility.
+  let mnX=Infinity, mnY=Infinity, mxX=-Infinity, mxY=-Infinity;
+  for (const b of modelData.bodies) {
+    const p = jointScreenGraph(b.name);
+    if (!p) continue;
+    if (p.x<mnX)mnX=p.x; if (p.x>mxX)mxX=p.x;
+    if (p.y<mnY)mnY=p.y; if (p.y>mxY)mxY=p.y;
+  }
+  const bi = document.getElementById('beat-indicator');
+  if (bi && bi.classList.contains('visible')) {
+    const biLeft = parseFloat(bi.style.left);
+    const biTop  = parseFloat(bi.style.top);
+    if (isFinite(biLeft) && isFinite(biTop)) {
+      const halfW = 110, halfH = 14;
+      if (biLeft - halfW < mnX) mnX = biLeft - halfW;
+      if (biLeft + halfW > mxX) mxX = biLeft + halfW;
+      if (biTop  + halfH > mxY) mxY = biTop + halfH;
+    }
+  }
+  const padX = 12, padY = 28;  // tight padX — rect hugs extreme L/R joint extent
+  let x = mnX - padX;
+  // Default y/h from natural bounds; will be overwritten by enc-rect mirror below
+  let y = mnY - padY;
+  let h = (mxY + padY) - y;
+  const encR = document.getElementById('enc-rect');
+  if (encR && encR.style.opacity != 0) {
+    const encTop    = parseFloat(encR.getAttribute('y'));
+    const encHeight = parseFloat(encR.getAttribute('height'));
+    if (isFinite(encTop))    y = encTop;
+    if (isFinite(encHeight)) h = encHeight;     // SAME height as 3.1
+    // STRICT gap to 3.1 = enc-output label width. (Robot is positioned so its
+    // natural extent fits inside the clamped rect.)
+    const encLeft  = parseFloat(encR.getAttribute('x'));
+    const encWidth = parseFloat(encR.getAttribute('width'));
+    if (isFinite(encLeft) && isFinite(encWidth)) {
+      const minLeft = encLeft + encWidth + getEncOutputW();
+      if (x < minLeft) x = minLeft;
+    }
+  }
+  let w = (mxX - mnX) + padX*2;
+  if (mxX + padX < x + w) w = (mxX + padX) - x;
+  // Lock-after-cycle: freeze to accumulated max-bounds.
+  if (graphRectLocked && graphRectMaxBounds) {
+    ({ x, y, w, h } = graphRectMaxBounds);
+  } else {
+    graphRectMaxBounds = _accumulateMax(graphRectMaxBounds, x, y, w, h);
+  }
+  r.setAttribute('x', x.toFixed(1));
+  r.setAttribute('y', y.toFixed(1));
+  r.setAttribute('width', Math.max(0, w).toFixed(1));
+  r.setAttribute('height', h.toFixed(1));
+  const label = document.getElementById('graph-label');
+  label.style.left = (x + w/2).toFixed(1) + 'px';
+  label.style.top  = (y - 6).toFixed(1) + 'px';
+}
+
+// ─── Aggregate icon positioning ─────────────────────────────────────────────
+// X: midpoint between leftmost visible ghost and the aggregate G1 (so the icon
+//    rides with the robots wherever they move).
+// Y: just below the spatial rect's top edge.
+// Both clamped to keep the icon entirely inside the spatial rect.
+const ICON_HALF = 30;   // CSS width/height = 60
+function positionAggregateIcon() {
+  // 1) Compute center X from visible robots' pelvis screen positions
+  let leftPx = null, rightPx = null;
+  if (g1Aggregate && g1Aggregate.opacityRef.value > 0.1) {
+    const p = jointScreenOf(g1Aggregate, 'pelvis');
+    if (p) rightPx = p.x;
+  }
+  for (const g of g1Ghosts) {
+    if (g.robot.opacityRef.value > 0.1) {
+      const p = jointScreenOf(g.robot, 'pelvis');
+      if (p && (leftPx === null || p.x < leftPx)) leftPx = p.x;
+    }
+  }
+  let cx;
+  if (leftPx !== null && rightPx !== null) cx = (leftPx + rightPx) / 2;
+  else if (leftPx !== null)                cx = leftPx;
+  else if (rightPx !== null)               cx = rightPx;
+  else                                     cx = worldToCanvasPx(SLOT_X.spatial - 0.5, 2.0, 0).x;
+
+  // 2) Compute Y from the spatial rect's top edge (or world fallback)
+  const r = document.getElementById('spatial-rect');
+  let cy;
+  if (r && r.style.opacity != 0) {
+    const ry = parseFloat(r.getAttribute('y'));
+    cy = isFinite(ry) ? ry + ICON_HALF + 6 : worldToCanvasPx(SLOT_X.spatial, 2.0, 0).y;
+  } else {
+    cy = worldToCanvasPx(SLOT_X.spatial, 2.0, 0).y;
+  }
+
+  // 3) Clamp icon to stay inside the spatial rect
+  if (r && r.style.opacity != 0) {
+    const rx = parseFloat(r.getAttribute('x'));
+    const ry = parseFloat(r.getAttribute('y'));
+    const rw = parseFloat(r.getAttribute('width'));
+    const rh = parseFloat(r.getAttribute('height'));
+    if (isFinite(rx) && isFinite(rw)) {
+      const minCx = rx + ICON_HALF + 8;
+      const maxCx = rx + rw - ICON_HALF - 8;
+      if (cx < minCx) cx = minCx;
+      if (cx > maxCx) cx = maxCx;
+    }
+    if (isFinite(ry) && isFinite(rh)) {
+      const minCy = ry + ICON_HALF + 8;
+      const maxCy = ry + rh - ICON_HALF - 8;
+      if (cy < minCy) cy = minCy;
+      if (cy > maxCy) cy = maxCy;
+    }
+  }
+
+  const el = document.getElementById('aggregate-icon');
+  el.style.left = cx.toFixed(1) + 'px';
+  el.style.top  = cy.toFixed(1) + 'px';
+}
+
+// ─── Output text + dashed arrow between rects ─────────────────────────────
+//   leftRect (3.1 or 3.2)  →  [Joint Features / Spatially Aggregated Features]
+//                              ───────────────► dashed arrow  →  rightRect
+function _positionRectOutput(labelId, arrowId, leftRectId, rightRectId, fallbackEndPx) {
+  const label = document.getElementById(labelId);
+  const arrow = document.getElementById(arrowId);
+  const lr = document.getElementById(leftRectId);
+  const rr = document.getElementById(rightRectId);
+  // If the label isn't visible, park it off-screen so it can't flash at (0,0).
+  if (!label.classList.contains('visible')) {
+    arrow.style.opacity = '0';
+    label.style.left = '-9999px';
+    label.style.top  = '-9999px';
+    return;
+  }
+  // Rect bounds are computed each frame even when the dashed border is hidden,
+  // so we read them directly without gating on rect.opacity.
+  if (!lr) return;
+  const lx = parseFloat(lr.getAttribute('x'));
+  const ly = parseFloat(lr.getAttribute('y'));
+  const lw = parseFloat(lr.getAttribute('width'));
+  const lh = parseFloat(lr.getAttribute('height'));
+  if (!isFinite(lx) || !isFinite(lw)) return;
+  const leftEdge = lx + lw;
+  // Right end: prefer adjacent rect's left edge; else fall back
+  let rightEdge;
+  if (rr) {
+    const rx = parseFloat(rr.getAttribute('x'));
+    if (isFinite(rx)) rightEdge = rx;
+  }
+  if (!isFinite(rightEdge)) rightEdge = fallbackEndPx;
+  const labelW = label.offsetWidth || 130;
+  // Center horizontally in the gap; vertical = rect's chest area (~y + h*0.40)
+  const cx = (leftEdge + rightEdge) / 2;
+  const cy = ly + lh * 0.55;
+  // Label: bottom-center at (cx, cy - 4)
+  label.style.left = cx.toFixed(1) + 'px';
+  label.style.top  = (cy - 4).toFixed(1) + 'px';
+  // Arrow: horizontal line just below label, same width as label
+  const ax1 = cx - labelW / 2 + 2;
+  const ax2 = cx + labelW / 2 - 2;
+  const ay  = cy + 8;
+  arrow.setAttribute('x1', ax1.toFixed(1));
+  arrow.setAttribute('y1', ay.toFixed(1));
+  arrow.setAttribute('x2', ax2.toFixed(1));
+  arrow.setAttribute('y2', ay.toFixed(1));
+  // Sync arrow opacity with label visibility
+  arrow.style.opacity = label.classList.contains('visible') ? '0.95' : '0';
+}
+function positionEncOutput() {
+  // Static right edge at a fixed world X safely left of the 3.2 robot's
+  // leftmost reach. Don't read graph-rect.left — that bound shifts as the
+  // 3.2 robot swings, which would drag the "Joint Features" label rightward
+  // into the robot. Passing null for the right-rect makes _positionRectOutput
+  // use the fallback px below instead.
+  const fallbackEndPx = worldToCanvasPx(-3.6, 1.0, 0).x;
+  _positionRectOutput('enc-output', 'enc-output-arrow', 'enc-rect', null,
+    fallbackEndPx);
+}
+// graph-output (Spatially Aggregated Features):
+//   - During accumulation (3.2): text sits BENEATH the static accumulator,
+//     no arrow visible.
+//   - When the accumulator flies toward 3.3: text slides UP, arrow appears.
+//   - On arrival: text sits at the accumulator's former chest height with arrow.
+function positionGraphOutput() {
+  const label = document.getElementById('graph-output');
+  const arrow = document.getElementById('graph-output-arrow');
+  if (!label.classList.contains('visible')) {
+    label.style.left = '-9999px';
+    label.style.top  = '-9999px';
+    arrow.style.opacity = '0';
+    return;
+  }
+  const cx     = worldToCanvasPx(SLOT_X.aggregator, 1.0, 0).x;
+  // Final/upper Y for graph-output. Goal: align graph-output's TOP edge with
+  // enc-output's top edge (so both labels read on the same horizontal line).
+  // Both labels are bottom-anchored (transform: translate(-50%, -100%)) but
+  // have different heights (enc = 2 lines, graph = 3 lines), so we add the
+  // height difference to graph-output's bottom to push its top up to enc's.
+  let yChest;
+  const er = document.getElementById('enc-rect');
+  const enc = document.getElementById('enc-output');
+  const grph = document.getElementById('graph-output');
+  if (er && enc && grph) {
+    const ry = parseFloat(er.getAttribute('y'));
+    const rh = parseFloat(er.getAttribute('height'));
+    if (isFinite(ry) && isFinite(rh)) {
+      const heightDiff = (grph.offsetHeight || 0) - (enc.offsetHeight || 0);
+      yChest = ry + rh * 0.40 - 4 + heightDiff + 38;   // +38 px ≈ +1 cm down
+    }
+  }
+  if (yChest === undefined) yChest = worldToCanvasPx(SLOT_X.aggregator, 1.0, 0).y;
+  const yBelow = worldToCanvasPx(SLOT_X.aggregator, -0.70, 0).y;   // ↓ lower this (more negative world Y) to push text further below the static robot's feet
+  let u = 0;
+  if (accumulatorComplete && accumulatorFlyStart >= 0) {
+    const raw = Math.min(1, (masterClock - accumulatorFlyStart) / ACC_FLY_DURATION_S);
+    u = raw < 0.5 ? 2*raw*raw : 1 - Math.pow(-2*raw + 2, 2) / 2;       // ease-in-out
+  }
+  const cy = yBelow + (yChest - yBelow) * u;
+  label.style.left = cx.toFixed(1) + 'px';
+  label.style.top  = cy.toFixed(1) + 'px';
+  // Arrow only appears once the accumulator has completed (= fly starts).
+  if (accumulatorComplete) {
+    const labelW = label.offsetWidth || 110;
+    arrow.setAttribute('x1', (cx - labelW/2 + 2).toFixed(1));
+    arrow.setAttribute('y1', (cy + 8).toFixed(1));
+    arrow.setAttribute('x2', (cx + labelW/2 - 2).toFixed(1));
+    arrow.setAttribute('y2', (cy + 8).toFixed(1));
+    arrow.style.opacity = '0.95';
+    const off = 0;   // static dashes (no flow animation)
+    arrow.setAttribute('stroke-dashoffset', off.toFixed(2));
+  } else {
+    arrow.style.opacity = '0';
+  }
+}
+// ─── 3.3 → embedding strip arrow (animated dashed flow) ─────────────────
+function positionSpatialEmbedArrow() {
+  const arrow = document.getElementById('spatial-embed-arrow');
+  const es = document.getElementById('embedding-strip');
+  const visible = es && es.classList.contains('visible');
+  arrow.style.opacity = visible ? '0.95' : '0';
+  if (!visible) return;
+  // Short 1-cm arrow tucked right before the embedding strip (so it never
+  // crosses the robot body). Length controlled by ARROW_LEN_PX.
+  const ARROW_LEN_PX = 38;                        // 1 cm at 96 dpi
+  const endX   = es.offsetLeft - 6;
+  const startX = endX - ARROW_LEN_PX;
+  if (startX >= endX) return;                     // degenerate guard
+  // Y aligned with the embedding↔attrs↔human arrows (card center).
+  const card = document.getElementById('attributes-card');
+  let y;
+  if (card && card.classList.contains('visible')) {
+    const cy = parseFloat(card.style.top);
+    if (isFinite(cy)) y = cy;
+  }
+  if (!isFinite(y)) y = worldToCanvasPx(SLOT_X.spatial, 1.0, 0).y;
+  arrow.setAttribute('x1', startX.toFixed(1));
+  arrow.setAttribute('y1', y.toFixed(1));
+  arrow.setAttribute('x2', endX.toFixed(1));
+  arrow.setAttribute('y2', y.toFixed(1));
+  // Animated dash flow
+  const off = 0;   // static dashes (no flow animation)
+  arrow.setAttribute('stroke-dashoffset', off.toFixed(2));
+}
+
+// ─── Attributes card — x chained 0.5 cm after embedding strip's right edge
+function positionAttributesCard() {
+  const card = document.getElementById('attributes-card');
+  // x: FIXED at SLOT_X_ATTRIBUTES world coord (no longer chained from embedding)
+  const cx = worldToCanvasPx(SLOT_X_ATTRIBUTES, 1.0, 0).x;
+  // y: align to spatial rect center
+  const sr = document.getElementById('spatial-rect');
+  let cy = worldToCanvasPx(SLOT_X_ATTRIBUTES, 1.0, 0).y;
+  if (sr && sr.style.opacity != 0) {
+    const sy = parseFloat(sr.getAttribute('y'));
+    const sh = parseFloat(sr.getAttribute('height'));
+    if (isFinite(sy) && isFinite(sh)) cy = sy + sh / 2;
+  }
+  card.style.left = cx.toFixed(1) + 'px';
+  card.style.top  = cy.toFixed(1) + 'px';
+}
+// Human stays at fixed SLOT_X.human throughout the walkthrough — no dynamic
+// shift. (Kept as a no-op so the loop call site still resolves.)
+function positionHumanMesh() {
+  if (smplGroup) smplGroup.object3D.position.x = SLOT_X.human;
+}
+function populateAttributesCard() {
+  if (!currentDemo) return;
+  const gt = currentDemo.groundTruth;
+  document.getElementById('ac-gender').textContent = capitalize(gt.gender);
+  document.getElementById('ac-age').textContent    = `${gt.age} yr`;
+  document.getElementById('ac-height').textContent = `${gt.height} cm`;
+  document.getElementById('ac-weight').textContent = `${gt.weight} kg`;
+}
+
+// ─── embedding → attributes arrow ────────────────────────────────────────
+function positionEmbedAttrArrow() {
+  const arrow = document.getElementById('embed-attr-arrow');
+  const es = document.getElementById('embedding-strip');
+  const card = document.getElementById('attributes-card');
+  const show = es && es.classList.contains('visible')
+            && card && card.classList.contains('visible');
+  arrow.style.opacity = show ? '0.95' : '0';
+  if (!show) return;
+  const esRight = es.offsetLeft + es.offsetWidth;
+  const cardW   = card.offsetWidth || 180;
+  const cardLeft = parseFloat(card.style.left) - cardW / 2;
+  const y       = parseFloat(card.style.top);
+  arrow.setAttribute('x1', (esRight + 3).toFixed(1));
+  arrow.setAttribute('y1', y.toFixed(1));
+  arrow.setAttribute('x2', (cardLeft - 3).toFixed(1));
+  arrow.setAttribute('y2', y.toFixed(1));
+}
+
+// ─── attributes → human arrow (disabled — arrow removed by user request) ──
+function positionAttrHumanArrow() {
+  const arrow = document.getElementById('attr-human-arrow');
+  if (arrow) arrow.style.opacity = '0';
+}
+// Helpers to expose each output label's width (used by rect-gap clamps)
+function getEncOutputW()   { return (document.getElementById('enc-output').offsetWidth   || 130) + 14; }
+function getGraphOutputW() { return (document.getElementById('graph-output').offsetWidth || 200) + 14; }
+
+// ─── Attribute-embedding strip — y + height mirror the other rects ────────
+function positionEmbeddingStrip() {
+  const strip = document.getElementById('embedding-strip');
+  const r = document.getElementById('enc-rect');
+  // Always mirror enc-rect's stored y/height attributes — they're set every
+  // frame by updateEncRect regardless of visibility (rect is invisible but
+  // its bounds are tracked), so the strip stays vertically aligned with the
+  // module row. EMBED_STRIP_TOP_OFFSET pushes the white panel down so its top
+  // edge no longer touches the "Attribute Embedding" heading (em-head's
+  // negative margin is bumped by the same amount so the heading stays put).
+  const EMBED_STRIP_TOP_OFFSET = 36;   /* +10 from 26 — bumps em-head text down ~10 px (2-3 mm) */
+  if (r) {
+    const ry = parseFloat(r.getAttribute('y'));
+    const rh = parseFloat(r.getAttribute('height'));
+    if (isFinite(ry)) strip.style.top    = (ry + EMBED_STRIP_TOP_OFFSET).toFixed(1) + 'px';
+    if (isFinite(rh)) strip.style.height = Math.max(60, rh - EMBED_STRIP_TOP_OFFSET).toFixed(1) + 'px';
+  }
+  // x: FIXED at SLOT_X_EMBEDDING world coord (no longer chained from spatial rect).
+  // In SINGLE_PHASE_ANIMATION mode, once 3.3 has settled into its standstill
+  // (stages 5+), shift the embedding strip 1 cm to the left so the right side
+  // feels less crowded.
+  const stripW = strip.offsetWidth || 78;
+  let cx = worldToCanvasPx(SLOT_X_EMBEDDING, 1.0, 0).x;
+  if (SINGLE_PHASE_ANIMATION && stageIdx > 4) cx -= 38;   // 38 px = 1 cm
+  strip.style.left = (cx - stripW/2).toFixed(1) + 'px';
+}
+
+// ─── Spatiotemporal rectangle — wraps spatial G1 + ghost stack + Σ icon ───
+function setSpatialRectVisible(on) {
+  document.getElementById('spatial-rect').style.opacity = 0;
+  if (on) show('spatial-label'); else hide('spatial-label');
+}
+function updateSpatialRect() {
+  const r = document.getElementById('spatial-rect');
+  // No early-return: bounds computed regardless of visibility.
+  // Sample joint screen positions of every VISIBLE robot in slot 3.3
+  // (aggregate G1 + visible ghosts) so the rect tracks arm swings, not just
+  // root positions.
+  let mnX = Infinity, mxX = -Infinity;
+  const visibleRobots = [];
+  if (g1Aggregate && g1Aggregate.opacityRef.value > 0.05) visibleRobots.push(g1Aggregate);
+  for (const g of g1Ghosts) {
+    if (g.robot.opacityRef.value > 0.05) visibleRobots.push(g.robot);
+  }
+  for (const robot of visibleRobots) {
+    for (const b of modelData.bodies) {
+      const p = jointScreenOf(robot, b.name);
+      if (!p) continue;
+      if (p.x < mnX) mnX = p.x;
+      if (p.x > mxX) mxX = p.x;
+    }
+  }
+  if (!isFinite(mnX)) {
+    // Nothing visible — fall back to the spatial slot center with a small box
+    const def = worldToCanvasPx(SLOT_X.spatial, 1.0, 0);
+    mnX = def.x - 60; mxX = def.x + 60;
+  }
+  const padX = 15;   // tight padX — rect just covers extreme L/R joint extent
+  let x = mnX - padX;
+  let w = (mxX - mnX) + padX*2;
+  // STRICT gap to 3.2 = graph-output label width. Robots in 3.3 are
+  // positioned so their natural extent fits to the right of this clamp.
+  const graphR = document.getElementById('graph-rect');
+  if (graphR && graphR.style.opacity != 0) {
+    const gx = parseFloat(graphR.getAttribute('x'));
+    const gw = parseFloat(graphR.getAttribute('width'));
+    if (isFinite(gx) && isFinite(gw)) {
+      const minLeft = gx + gw + getGraphOutputW();
+      if (x < minLeft) {
+        w -= (minLeft - x);
+        x = minLeft;
+      }
+    }
+  }
+  // Mirror enc-rect's y AND height so all three rects line up flush
+  let y = 50, h = 200;
+  const encR = document.getElementById('enc-rect');
+  if (encR && encR.style.opacity != 0) {
+    const encTop    = parseFloat(encR.getAttribute('y'));
+    const encHeight = parseFloat(encR.getAttribute('height'));
+    if (isFinite(encTop))    y = encTop;
+    if (isFinite(encHeight)) h = encHeight;
+  }
+  // Lock-after-cycle: freeze to accumulated max-bounds.
+  if (spatialRectLocked && spatialRectMaxBounds) {
+    ({ x, y, w, h } = spatialRectMaxBounds);
+  } else {
+    spatialRectMaxBounds = _accumulateMax(spatialRectMaxBounds, x, y, w, h);
+  }
+  r.setAttribute('x', x.toFixed(1));
+  r.setAttribute('y', y.toFixed(1));
+  r.setAttribute('width',  Math.max(0, w).toFixed(1));
+  r.setAttribute('height', Math.max(0, h).toFixed(1));
+  const label = document.getElementById('spatial-label');
+  label.style.left = (x + w/2).toFixed(1) + 'px';
+  label.style.top  = (y - 6).toFixed(1) + 'px';
+}
+
+// ─── Embedding strip rendering ─────────────────────────────────────────────
+const Z_CELLS = 64;        // visible segmented blocks (representative of full Z ∈ ℝ²⁵⁶)
+function drawEmbedding(seed) {
+  const c = document.getElementById('embedding-canvas');
+  const w = c.width = c.clientWidth * (window.devicePixelRatio || 1);
+  const h = c.height = c.clientHeight * (window.devicePixelRatio || 1);
+  const ctx = c.getContext('2d');
+  ctx.clearRect(0,0,w,h);
+  const ch = h / Z_CELLS;     // vertical layout — cells stack top-to-bottom
+  for (let i = 0; i < Z_CELLS; i++) {
+    const v = 0.5*Math.abs(Math.sin(i*0.713 + seed*0.012))
+            + 0.5*Math.abs(Math.cos(i*0.281 + seed*0.0078));
+    const r = Math.round(44 + v*200);
+    const g = Math.round(62 + v*80);
+    const b = Math.round(107 + v*80);
+    ctx.fillStyle = `rgb(${r},${g},${b})`;
+    ctx.fillRect(0, i*ch, w, Math.ceil(ch+0.5));
+  }
+  // subtle dividers between segments
+  ctx.fillStyle = 'rgba(255,255,255,0.18)';
+  for (let i = 1; i < Z_CELLS; i++) {
+    ctx.fillRect(0, i*ch - 0.5, w, 0.5);
+  }
+}
+
+// ─── Short joint labels for live connection text ───────────────────────────
+const JOINT_LABELS_OVERRIDE = {
+  'pelvis': 'Pelvis',
+  'torso_link': 'Torso',
+  'waist_yaw_link': 'Waist', 'waist_roll_link': 'Waist',
+};
+function jointShortLabel(bodyName) {
+  if (JOINT_LABELS_OVERRIDE[bodyName]) return JOINT_LABELS_OVERRIDE[bodyName];
+  let s = bodyName.replace(/_link$/, '');
+  s = s.replace(/^left_/, 'L ').replace(/^right_/, 'R ');
+  s = s.replace(/_pitch|_roll|_yaw/g, '');
+  s = s.replace(/_/g, ' ');
+  return s;
+}
+function connsText() {
+  if (!activeConns.length) return '—';
+  return activeConns
+    .filter(c => !c.isDot)
+    .map(c => `${jointShortLabel(c.a)} ↔ ${jointShortLabel(c.b)}`)
+    .join('  ·  ');
+}
+
+// ─── Caption / badge ───────────────────────────────────────────────────────
+function setCaption(){}     // no-op: bottom caption bar is empty by design
+function setBadge(){}   // no-op: stage badge removed
+function setBeat(mode, limbA, limbB) {
+  const bi = document.getElementById('beat-indicator');
+  const limbsEl = document.getElementById('bi-limbs');
+  if (limbA && LIMBS[limbA] && limbB && LIMBS[limbB]) {
+    const useInter = (mode === 'inter');
+    const ca = (useInter && INTER_COLORS[limbA]) ? INTER_COLORS[limbA] : LIMBS[limbA].color;
+    const cb = (useInter && INTER_COLORS[limbB]) ? INTER_COLORS[limbB] : LIMBS[limbB].color;
+    limbsEl.innerHTML =
+      `<span style="color:${ca}">${LIMB_FULL[limbA]}</span>` +
+      `<span style="color:var(--ink)">-</span>` +
+      `<span style="color:${cb}">${LIMB_FULL[limbB]}</span>`;
+  } else {
+    limbsEl.textContent = limbA || '';
+  }
+  // TOP tag: "Intra Limb" / "Inter Limb" colored by mode
+  const bm = document.getElementById('beat-mode-tag');
+  bm.classList.remove('intra','inter');
+  if (mode) bm.classList.add(mode);
+  document.getElementById('bi-mode-top').textContent = mode === 'intra' ? 'Intra Limb' :
+                                                       mode === 'inter' ? 'Limb Torso' : '—';
+}
+
+// Bottom indicator: follows the graph G1's pelvis horizontally, but always
+// clamped to stay inside the graph rect (so the text never escapes).
+function positionBeatIndicator() {
+  const floorPx = worldToCanvasPx(SLOT_X.graph, -0.05, 0);
+  let cx = floorPx.x;
+  if (g1Graph) {
+    const pelvisPx = jointScreenGraph('pelvis');
+    if (pelvisPx) cx = pelvisPx.x;
+  }
+  const bi = document.getElementById('beat-indicator');
+  // Clamp to graph rect bounds (using current frame's rect — caller must
+  // ensure updateGraphRect ran first).
+  const r = document.getElementById('graph-rect');
+  if (r && r.style.opacity != 0) {
+    const rx = parseFloat(r.getAttribute('x'));
+    const rw = parseFloat(r.getAttribute('width'));
+    const biW = bi.offsetWidth || 220;
+    if (isFinite(rx) && isFinite(rw)) {
+      const minCx = rx + biW/2 + 8;
+      const maxCx = rx + rw - biW/2 - 8;
+      if (cx < minCx) cx = minCx;
+      if (cx > maxCx) cx = maxCx;
+    }
+  }
+  bi.style.left = cx.toFixed(1) + 'px';
+  bi.style.top  = (floorPx.y + 9).toFixed(1) + 'px';   // raised ~0.5cm
+  bi.style.bottom = 'auto';
+}
+
+// Top mode tag: sits ABOVE the graph robot's head — tracks torso_link (the
+// model has no head_link; torso_link is the highest body, just below the head
+// mesh). Offset upward so it sits above where the head visually is.
+function positionBeatModeTag() {
+  const el = document.getElementById('beat-mode-tag');
+  if (!el.classList.contains('visible')) return;
+  const torso = jointScreenGraph('torso_link');
+  let cx, top;
+  if (torso) {
+    cx  = torso.x;
+    top = torso.y - 117;      // lifted ~1.5 cm more so it clears the robot head
+  } else {
+    const p = worldToCanvasPx(SLOT_X.graph, 1.85, 0);
+    cx  = p.x;
+    top = p.y - 19;
+  }
+  el.style.left = cx.toFixed(1) + 'px';
+  el.style.top  = top.toFixed(1) + 'px';
+}
+
+// Pin the 3 module titles at the SAME fixed Y so they share a horizontal row.
+// Visibility is controlled by .visible class; position runs unconditionally.
+// TOP_Y is derived each frame from the embedding strip's .em-head element so
+// the three titles share a baseline with the "Attribute Embedding" text on
+// the right; falls back to the legacy fixed value if em-head isn't measurable.
+// Module titles pinned at a single FIXED Y (MODULE_LABEL_TOP_Y, in the
+// LAYOUT CONFIG block near the top of the file). No dynamic em-head tracking.
+function positionModuleLabels() {
+  const set = (id, slot, dxPx) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const p = worldToCanvasPx(slot, 1.0, 0);
+    el.style.left = (p.x + (dxPx || 0)).toFixed(1) + 'px';
+    el.style.top  = MODULE_LABEL_TOP_Y.toFixed(1) + 'px';
+  };
+  set('enc-label',     SLOT_X.robot,   MODULE_LABEL_DX_PX.enc);
+  set('graph-label',   SLOT_X.graph,   MODULE_LABEL_DX_PX.graph);
+  set('spatial-label', SLOT_X.spatial, MODULE_LABEL_DX_PX.spatial);
+}
+
+// ─── Stages ────────────────────────────────────────────────────────────────
+function defineStages() {
+  stages = [
+    // All stage durations are 1s — adjacent modules appear 1s apart.
+    // Animations that take longer (limb beats, ghost collapse) keep running
+    // in continuous ticks (see tickGraphBeats / tickTemporalAnim).
+
+    // Staged with proper delays. Each module finishes its cycle before
+    // the next begins. Total runtime ≈ 1 + 7 + 29 + 11.5 + 1 + 1 + 1 ≈ 51 s.
+    // 1: 3.1 robot fades in (1 s).
+    { name:'robot', duration: 1.0,
+      enter() {},
+      update(t) { if (g1Main) g1Main.setOpacity(clamp(t / 0.9, 0, 1)); },
+    },
+    // 2: 3.1 kinematic cycle — plates accumulate over one full cycle (7 s).
+    //    enc-output ("Joint Features") stays HIDDEN until cycle finishes.
+    { name:'kinematic', duration: KINEMATIC_CYCLE_DUR + 0.2,
+      enter() {
+        for (const bn of ENCODING_FOCUS_JOINTS) {
+          const r = document.querySelector(`.svg-focus-ring[data-body="${bn}"]`);
+          if (r) r.style.opacity = 0;
+        }
+        for (const J of PICKED_JOINTS) {
+          const l = document.querySelector(`.svg-leader[data-body="${J.body}"]`);
+          if (l) l.style.opacity = 0;
+          plates[J.body].classList.remove('visible');
+        }
+        document.getElementById('enc-vertical-dots').style.opacity = 0;
+        setEncRectVisible(false);
+        show('enc-label');
+        kinematicAnimStart = masterClock;
+      },
+      update(){},
+    },
+    // 3: 1-second pause showing the "Joint Features" arrow + textbox before
+    //    3.2 begins.
+    { name:'enc-output-pause', duration: 1.0,
+      enter() { show('enc-output'); },
+      update(){},
+    },
+    // 4: 3.2 graph cycle — graph robot + accumulator both fade in, all 9
+    //    beats fire, accumulator fills with colored limbs and flies to 3.3.
+    //    Duration = full graph cycle (26 s) + fly (1.2 s) + buffer.
+    { name:'graph', duration: GRAPH_CYCLE_DUR + ACC_FLY_DURATION_S + 2.0,
+      enter() {
+        show('graph-label');
+        show('graph-output');        // "Spatially Aggregated Features" beneath the static robot
+        document.getElementById('beat-indicator').classList.add('visible');
+        document.getElementById('beat-mode-tag').classList.add('visible');
+        clearConns();
+        graphAnimStart = masterClock;
+      },
+      update(){},
+    },
+    // 4: 3.3 temporal cycle — duration-only buffer. The cycle is normally
+    // kicked off the moment the accumulator landed in 3.3 (see
+    // updateAccumulatorFly). Safety net: if for some reason the accumulator
+    // never finished (e.g., a pending particle on a Replay cycle), force the
+    // 3.3 start here so the temporal viz always plays.
+    { name:'temporal', duration: TEMPORAL_CYCLE_DUR,
+      enter() {
+        if (temporalAnimStart < 0) {
+          if (g1LimbAcc) g1LimbAcc.setOpacity(0);
+          transferAccumulatorColors();
+          show('spatial-label');
+          for (const g of g1Ghosts) g.robot.object3D.position.x = g.baseX;
+          temporalAnimStart = masterClock;
+          accumulatorComplete = true;
+          accumulatorTransferred = true;
+          accumulatorFlyStart = masterClock - ACC_FLY_DURATION_S;
+        }
+      },
+      update(){},
+    },
+    // 5: embedding strip appears → hold for 3 s before attrs.
+    { name:'embedding', duration: 3.0,
+      enter() {
+        show('embedding-strip');
+        show('prediction-label');      // reveal "Attribute Prediction" heading
+      },
+      update(){},
+    },
+    // 6: attributes card appears → hold for 3 s before human reveal.
+    { name:'attributes', duration: 3.0,
+      enter() {
+        populateAttributesCard();
+        show('attributes-card');
+      },
+      update(){},
+    },
+    // 7: after 1 s, the human mesh + label appear.
+    { name:'human-reveal', duration: 1.0,
+      enter() {
+        show('lbl-human');
+        setHumanRectVisible(true);
+        if (smplGroup) smplGroup.setOpacity(1.0);
+      },
+      update(){},
+    },
+  ];
+}
+
+// ─── Limb mesh tinting on the graph G1 ────────────────────────────────────
+// Lerps the mesh's diffuse color toward the limb color AND adds emissive
+// glow, so the limb visibly takes on its color during the beat.
+const _tintColor = new THREE.Color();
+function tintGraphLimb(limbKey, intensity, colorOverride) {
+  if (!g1Graph || !g1Graph.bodyMeshes) return;
+  _tintColor.set(colorOverride || LIMBS[limbKey].color);
+  for (const bn of LIMBS[limbKey].bodies) {
+    const arr = g1Graph.bodyMeshes[bn];
+    if (!arr) continue;
+    for (const m of arr) {
+      // Cache original diffuse color the first time we touch this mesh
+      if (!m.userData.origColor) m.userData.origColor = m.material.color.clone();
+      m.material.color.copy(m.userData.origColor).lerp(_tintColor, intensity);
+      m.material.emissive.copy(_tintColor);
+      m.material.emissiveIntensity = intensity * 0.55;
+    }
+  }
+}
+function resetGraphTints() {
+  if (!g1Graph || !g1Graph.bodyMeshes) return;
+  for (const key of Object.keys(LIMBS)) {
+    for (const bn of LIMBS[key].bodies) {
+      const arr = g1Graph.bodyMeshes[bn];
+      if (!arr) continue;
+      for (const m of arr) {
+        if (m.userData.origColor) m.material.color.copy(m.userData.origColor);
+        m.material.emissive.setScalar(0);
+        m.material.emissiveIntensity = 0;
+      }
+    }
+  }
+}
+
+// ─── Limb accumulator (static robot beside 3.2) ─────────────────────────
+// At the end of each 3.2 beat, the limb's ACTUAL meshes (cloned from the
+// graph robot, frozen in their current pose, tinted to the limb color) drift
+// across to the static accumulator's matching limb position. On arrival they
+// fade out and the static robot's same limb fades into color.
+const FLY_DURATION_S = 0.8;            // was 1.4 — faster particle travel to match shorter beats
+const flyParticles3D = [];             // [{ meshes:[Mesh], startTime, limbKey }]
+const _flyTmpPos   = new THREE.Vector3();
+const _flyTmpQuat  = new THREE.Quaternion();
+const _flyTmpScale = new THREE.Vector3();
+function flyLimbToAggregator(limbKey, colorOverride) {
+  // Allow re-coloring on subsequent flights (e.g. inter beat overrides intra color).
+  // Preserve the CURRENT color as the start of the new fade so the limb
+  // smoothly morphs from its intra color to its inter color (instead of
+  // flashing back to gray first).
+  const prev = aggregatorLimbState[limbKey];
+  const startColor = prev ? prev.color.clone() : null;
+  aggregatorLimbState[limbKey] = {
+    color: new THREE.Color(colorOverride || LIMBS[limbKey].color),
+    startColor,                                    // null = lerp from origColor
+    progress: 0,
+    pending: true,
+  };
+  if (!g1Graph || !g1LimbAcc || !g1Graph.bodyMeshes || !g1LimbAcc.bodyMeshes) {
+    aggregatorLimbState[limbKey].pending = false;
+    return;
+  }
+  // Make sure both robots' world matrices are current.
+  g1Graph.object3D.updateMatrixWorld(true);
+  g1LimbAcc.object3D.updateMatrixWorld(true);
+  const limbColor = new THREE.Color(colorOverride || LIMBS[limbKey].color);
+  const flyMeshes = [];
+  for (const bn of LIMBS[limbKey].bodies) {
+    const srcMeshes = g1Graph.bodyMeshes[bn];
+    const tgtMeshes = g1LimbAcc.bodyMeshes[bn];
+    if (!srcMeshes || !tgtMeshes) continue;
+    const n = Math.min(srcMeshes.length, tgtMeshes.length);
+    for (let i = 0; i < n; i++) {
+      const sm = srcMeshes[i], tm = tgtMeshes[i];
+      if (!sm || !tm) continue;
+      // Independent material clone (tint + alpha-fade safe)
+      const mat = sm.material.clone();
+      mat.transparent = true; mat.opacity = 1.0; mat.depthWrite = true;
+      if (mat.color)    mat.color.copy(limbColor);
+      if (mat.emissive) { mat.emissive.copy(limbColor); mat.emissiveIntensity = 0.55; }
+      const clone = new THREE.Mesh(sm.geometry, mat);
+      clone.matrixAutoUpdate = false;
+      // Decompose source & target world matrices — we'll lerp pos / slerp quat
+      // / lerp scale each frame and re-compose. End state = exact target pose.
+      const sPos = new THREE.Vector3(), sQuat = new THREE.Quaternion(), sScale = new THREE.Vector3();
+      const tPos = new THREE.Vector3(), tQuat = new THREE.Quaternion(), tScale = new THREE.Vector3();
+      sm.matrixWorld.decompose(sPos, sQuat, sScale);
+      tm.matrixWorld.decompose(tPos, tQuat, tScale);
+      clone.userData = { sPos, sQuat, sScale, tPos, tQuat, tScale };
+      clone.matrix.copy(sm.matrixWorld);     // start at the source's world pose
+      scene.add(clone);
+      flyMeshes.push(clone);
+    }
+  }
+  if (flyMeshes.length === 0) {
+    aggregatorLimbState[limbKey].pending = false;
+    return;
+  }
+  flyParticles3D.push({
+    meshes: flyMeshes,
+    startTime: masterClock, animDur: FLY_DURATION_S,
+    limbKey,
+  });
+}
+// Each frame: lerp every flying mesh from its source pose to the static
+// accumulator's corresponding pose. At u=1 it lands EXACTLY on the target.
+function updateFlyParticles3D() {
+  for (let i = flyParticles3D.length - 1; i >= 0; i--) {
+    const p = flyParticles3D[i];
+    const u = Math.min(1, (masterClock - p.startTime) / p.animDur);
+    const eased = u < 0.5 ? 2*u*u : 1 - Math.pow(-2*u + 2, 2) / 2;
+    for (const m of p.meshes) {
+      const d = m.userData;
+      _flyTmpPos.lerpVectors(d.sPos, d.tPos, eased);
+      _flyTmpQuat.slerpQuaternions(d.sQuat, d.tQuat, eased);
+      _flyTmpScale.lerpVectors(d.sScale, d.tScale, eased);
+      m.matrix.compose(_flyTmpPos, _flyTmpQuat, _flyTmpScale);
+      // Hold full opacity until the very end, then a quick fade so the static
+      // robot's color fade picks up the visual.
+      m.material.opacity = u > 0.9 ? Math.max(0, 1 - (u - 0.9) / 0.1) : 1.0;
+    }
+    if (u >= 1) {
+      for (const m of p.meshes) { scene.remove(m); m.material.dispose(); }
+      flyParticles3D.splice(i, 1);
+      if (aggregatorLimbState[p.limbKey]) aggregatorLimbState[p.limbKey].pending = false;
+    }
+  }
+}
+// Each frame: lerp diffuse + emissive for every limb whose fade has started
+// (skipping those whose particle hasn't landed yet — flagged `pending`).
+function updateAggregatorTints(dt) {
+  if (!g1LimbAcc || !g1LimbAcc.bodyMeshes) return;
+  const FADE_RATE = 1.5;        // ~0.66 s to reach full color
+  for (const limbKey of Object.keys(aggregatorLimbState)) {
+    const s = aggregatorLimbState[limbKey];
+    if (s.pending) continue;     // particle still flying — don't tint yet
+    s.progress = Math.min(1, s.progress + dt * FADE_RATE);
+    for (const bn of LIMBS[limbKey].bodies) {
+      const arr = g1LimbAcc.bodyMeshes[bn];
+      if (!arr) continue;
+      for (const m of arr) {
+        if (!m.userData.origColor) m.userData.origColor = m.material.color.clone();
+        // Lerp from the previous final color (intra) to the new one (inter)
+        // when re-coloring, otherwise from the mesh's original gray.
+        const startC = s.startColor || m.userData.origColor;
+        m.material.color.copy(startC).lerp(s.color, s.progress);
+        m.material.emissive.copy(s.color);
+        m.material.emissiveIntensity = s.progress * 0.55;
+      }
+    }
+  }
+}
+// Clear all accumulator tints + flush any in-flight fly meshes (Replay).
+function resetAggregatorTints() {
+  for (const k of Object.keys(aggregatorLimbState)) delete aggregatorLimbState[k];
+  aggregatorBeatsTriggered.clear();
+  for (const p of flyParticles3D) {
+    for (const m of p.meshes) { scene.remove(m); if (m.material && m.material.dispose) m.material.dispose(); }
+  }
+  flyParticles3D.length = 0;
+  document.querySelectorAll('.limb-fly-particle').forEach(el => el.remove());
+  if (!g1LimbAcc || !g1LimbAcc.bodyMeshes) return;
+  for (const key of Object.keys(LIMBS)) {
+    for (const bn of LIMBS[key].bodies) {
+      const arr = g1LimbAcc.bodyMeshes[bn];
+      if (!arr) continue;
+      for (const m of arr) {
+        if (m.userData.origColor) m.material.color.copy(m.userData.origColor);
+        m.material.emissive.setScalar(0);
+        m.material.emissiveIntensity = 0;
+      }
+    }
+  }
+}
+
+// ─── Accumulator → 3.3 transfer pipeline ────────────────────────────────
+// Checks whether the accumulator robot is fully filled (every limb done
+// fading in). Once it is, fires the fly animation toward SLOT_X.spatial and
+// at arrival copies all its limb colors onto g1Aggregate + every ghost.
+function _accumulatorAllLimbsDone() {
+  if (aggregatorBeatsTriggered.size < 5 + INTER_BEATS.length) return false;
+  for (const key of Object.keys(LIMBS)) {
+    const s = aggregatorLimbState[key];
+    if (!s || s.pending || s.progress < 0.95) return false;
+  }
+  return true;
+}
+function checkAccumulatorCompletion() {
+  if (accumulatorComplete) return;
+  if (_accumulatorAllLimbsDone()) {
+    accumulatorComplete = true;
+    accumulatorFlyStart = masterClock;
+    // graph-output was already revealed at graph-stage start (beneath the
+    // accumulator). When fly starts, positionGraphOutput begins sliding it up
+    // and the arrow appears.
+  }
+}
+function updateAccumulatorFly() {
+  if (!accumulatorComplete || accumulatorTransferred || !g1LimbAcc) return;
+  const u = Math.min(1, (masterClock - accumulatorFlyStart) / ACC_FLY_DURATION_S);
+  const eased = u < 0.5 ? 2*u*u : 1 - Math.pow(-2*u + 2, 2) / 2;
+  const startX = SLOT_X.aggregator;
+  const endX   = SLOT_X.spatial;
+  g1LimbAcc.object3D.position.x = startX + (endX - startX) * eased;
+  if (u >= 1) {
+    accumulatorTransferred = true;
+    transferAccumulatorColors();
+    g1LimbAcc.setOpacity(0);            // hide the original — its colors are now in 3.3
+    // 3.3 starts NOW that the accumulator has landed — show spatial label,
+    // reset ghost positions, kick off the temporal cycle.
+    show('spatial-label');
+    for (const g of g1Ghosts) g.robot.object3D.position.x = g.baseX;
+    temporalAnimStart = masterClock;
+  }
+}
+// Copy each accumulated limb color onto every 3.3 robot (g1Aggregate + all ghosts).
+function transferAccumulatorColors() {
+  const robots = [];
+  if (g1Aggregate) robots.push(g1Aggregate);
+  for (const g of g1Ghosts) if (g && g.robot) robots.push(g.robot);
+  for (const key of Object.keys(LIMBS)) {
+    const s = aggregatorLimbState[key];
+    if (!s) continue;
+    for (const robot of robots) {
+      if (!robot.bodyMeshes) continue;
+      for (const bn of LIMBS[key].bodies) {
+        const arr = robot.bodyMeshes[bn];
+        if (!arr) continue;
+        for (const m of arr) {
+          if (!m.userData.origColor) m.userData.origColor = m.material.color.clone();
+          m.material.color.copy(s.color);
+          m.material.emissive.copy(s.color);
+          m.material.emissiveIntensity = 0.55;
+        }
+      }
+    }
+  }
+}
+
+// ─── Continuous kinematic-encoding tick (loops forever) ──────────────────
+// Same 6 steps as the staged appearance, then a brief hold and a smooth
+// fade-out so the cycle restarts without flicker.
+function tickKinematicAnim(rawT) {
+  const C = KINEMATIC_CYCLE_DUR;
+  const eb = 'left_elbow_link';
+  const kn = 'left_knee_link';
+  const FADE = 0.45;
+  // Once cycle 1 completes, every overlay stays at full opacity forever —
+  // no fade-out, no restart-from-scratch.
+  const cycleDone = rawT >= C;
+  if (cycleDone) {
+    const eRing = document.querySelector(`.svg-focus-ring[data-body="${eb}"]`);
+    if (eRing) eRing.style.opacity = 1;
+    const eLeader = document.querySelector(`.svg-leader[data-body="${eb}"]`);
+    if (eLeader) eLeader.style.opacity = 1;
+    plates[eb].classList.add('visible');
+    for (const bn of ENCODING_FOCUS_JOINTS) {
+      if (bn === eb) continue;
+      const r = document.querySelector(`.svg-focus-ring[data-body="${bn}"]`);
+      if (r) r.style.opacity = 1;
+    }
+    document.getElementById('enc-vertical-dots').style.opacity = 1;
+    const kLeader = document.querySelector(`.svg-leader[data-body="${kn}"]`);
+    if (kLeader) kLeader.style.opacity = 1;
+    plates[kn].classList.add('visible');
+    return;
+  }
+  // Cycle 1: staged appearance (no fade-out at the end — overlays just
+  // accumulate until the cycle completes, then stay).
+  const t = rawT;
+  // Step 1: left-elbow ring (t=0)
+  const u1 = clamp((t - 0.0) / FADE, 0, 1);
+  const eRing = document.querySelector(`.svg-focus-ring[data-body="${eb}"]`);
+  if (eRing) eRing.style.opacity = u1;
+  // Step 2: left-elbow box + leader (t=1)
+  const u2 = clamp((t - 1.0) / FADE, 0, 1);
+  const eLeader = document.querySelector(`.svg-leader[data-body="${eb}"]`);
+  if (eLeader) eLeader.style.opacity = u2;
+  if (u2 > 0.05) plates[eb].classList.add('visible'); else plates[eb].classList.remove('visible');
+  // Step 3: other joint rings (t=2)
+  const u3 = clamp((t - 2.0) / FADE, 0, 1);
+  for (const bn of ENCODING_FOCUS_JOINTS) {
+    if (bn === eb) continue;
+    const r = document.querySelector(`.svg-focus-ring[data-body="${bn}"]`);
+    if (r) r.style.opacity = u3;
+  }
+  // Step 4: vertical "etc." dots (t=3)
+  const u4 = clamp((t - 3.0) / FADE, 0, 1);
+  document.getElementById('enc-vertical-dots').style.opacity = u4;
+  // Step 5: left-knee box + leader (t=4)
+  const u5 = clamp((t - 4.0) / FADE, 0, 1);
+  const kLeader = document.querySelector(`.svg-leader[data-body="${kn}"]`);
+  if (kLeader) kLeader.style.opacity = u5;
+  if (u5 > 0.05) plates[kn].classList.add('visible'); else plates[kn].classList.remove('visible');
+}
+
+// ─── Continuous limb-beat tick (runs after stage 4 starts; loops forever) ──
+function tickGraphBeats(localT) {
+  // One-shot fade-in of graph G1 AND accumulator robot — both build gradually.
+  if (g1Graph)   g1Graph.setOpacity(clamp(localT / 1.0, 0, 1));
+  if (g1LimbAcc && !accumulatorTransferred) g1LimbAcc.setOpacity(clamp(localT / 1.0, 0, 1));
+
+  const limbOrder = ['torso','la','ra','ll','rl'];
+  const INTRA_BEAT_DUR = 1.4;   // was 2.8 — speed-up
+  const INTRA_DUR      = limbOrder.length * INTRA_BEAT_DUR;
+  const INTER_BEAT_DUR = 1.6;   // was 3.0 — speed-up
+  const INTER_DUR      = INTER_BEATS.length * INTER_BEAT_DUR;
+  const CYCLE_DUR      = INTRA_DUR + INTER_DUR;
+
+  // One-pass policy: after the single intra→inter cycle finishes, freeze
+  // g1Graph as a COLORED static representation of 3.2's output (every limb
+  // wearing its final inter color, including the last torso color from
+  // INTER_TORSO_COLORS). No re-loop, no further beats, no flashing limb
+  // indicator. Colors persist into stage 4+.
+  if (localT > CYCLE_DUR || (SINGLE_PHASE_ANIMATION && stageIdx > 3)) {
+    if (g1Graph && g1Graph.bodyMeshes) {
+      resetGraphTints();
+      for (const l of limbOrder) {
+        const c = (l === 'torso')
+          ? (INTER_TORSO_COLORS[INTER_TORSO_COLORS.length - 1] || INTER_COLORS.torso)
+          : INTER_COLORS[l];
+        tintGraphLimb(l, 1.0, c);
+      }
+    }
+    if (activeConns.length) clearConns();
+    document.getElementById('beat-mode-tag').classList.remove('visible');
+    document.getElementById('beat-indicator').classList.remove('visible');
+    // End-of-cycle safety net: in the rare case the per-frame catch-up loop
+    // still missed a beat (e.g. a wide-dt frame crossed both 0.85 windows
+    // AND the CYCLE_DUR boundary in one tick), force-fire every untriggered
+    // beat now so aggregatorLimbState is complete before
+    // transferAccumulatorColors() paints the 3.3 robots.
+    for (let i = 0; i < limbOrder.length; i++) {
+      const beatId = `intra-${i}`;
+      if (aggregatorBeatsTriggered.has(beatId)) continue;
+      aggregatorBeatsTriggered.add(beatId);
+      flyLimbToAggregator(limbOrder[i]);
+    }
+    for (let i = 0; i < INTER_BEATS.length; i++) {
+      const beatId = `inter-${i}`;
+      if (aggregatorBeatsTriggered.has(beatId)) continue;
+      aggregatorBeatsTriggered.add(beatId);
+      const missedBeat = INTER_BEATS[i];
+      const missedColorFor = (l) => (l === 'torso')
+        ? (INTER_TORSO_COLORS[i] || INTER_COLORS.torso)
+        : INTER_COLORS[l];
+      for (const l of missedBeat.limbs) flyLimbToAggregator(l, missedColorFor(l));
+    }
+    return;
+  }
+
+  const t = localT;
+  // Sin-shaped intensity per beat: ramp up at start, peak in middle, fade at end
+  if (t < INTRA_DUR) {
+    const idx = clamp(Math.floor(t / INTRA_BEAT_DUR), 0, limbOrder.length - 1);
+    const within = (t - idx * INTRA_BEAT_DUR) / INTRA_BEAT_DUR;
+    // Sudden on/off — full color while the beat is active, no ramp
+    resetGraphTints();
+    tintGraphLimb(limbOrder[idx], 1.0);
+    if (within < 0.03 && (!activeConns.length || activeConns[0]._beatIdx !== idx || activeConns[0]._mode !== 'intra')) {
+      setConns(INTRA_CONNS[limbOrder[idx]] || [], LIMBS[limbOrder[idx]].color);
+      for (const c of activeConns) { c._beatIdx = idx; c._mode = 'intra'; }
+    }
+    setBeat('intra', limbOrder[idx], limbOrder[idx]);
+    // Near the END of each intra beat, kick off the accumulator fade-in for
+    // the limb that was highlighted. Bug history: the original code only
+    // checked the CURRENT beat each frame — a single wide `dt` (GC pause,
+    // shader cache churn after many replays) could jump localT past the
+    // narrow `within > 0.85` window (~0.21 s wide), leaving the beat
+    // un-triggered and the limb missing from aggregatorLimbState. That made
+    // random limbs render gray/white in 3.3 on later replays. We now scan
+    // every past beat up to the current one, retroactively firing any that
+    // weren't triggered yet.
+    for (let bi = 0; bi <= idx; bi++) {
+      const beatId = `intra-${bi}`;
+      if (aggregatorBeatsTriggered.has(beatId)) continue;
+      const beatWithin = (t - bi * INTRA_BEAT_DUR) / INTRA_BEAT_DUR;
+      if (beatWithin > 0.85) {
+        aggregatorBeatsTriggered.add(beatId);
+        flyLimbToAggregator(limbOrder[bi]);
+      }
+    }
+  } else {
+    const t2 = t - INTRA_DUR;
+    const idx = clamp(Math.floor(t2 / INTER_BEAT_DUR), 0, INTER_BEATS.length - 1);
+    const within = (t2 - idx * INTER_BEAT_DUR) / INTER_BEAT_DUR;
+    const beat = INTER_BEATS[idx];
+    // Per-beat torso color so it visibly changes each turn; other limbs keep
+    // their stable INTER_COLORS entries.
+    const colorFor = (l) => (l === 'torso')
+      ? (INTER_TORSO_COLORS[idx] || INTER_COLORS.torso)
+      : INTER_COLORS[l];
+    resetGraphTints();
+    for (const l of beat.limbs) tintGraphLimb(l, 1.0, colorFor(l));
+    if (within < 0.03 && (!activeConns.length || activeConns[0]._beatIdx !== idx || activeConns[0]._mode !== 'inter')) {
+      setConns(beat.conns, beat.color);
+      for (const c of activeConns) { c._beatIdx = idx; c._mode = 'inter'; }
+    }
+    setBeat('inter', beat.limbs[0], beat.limbs[1]);
+    // At end of each inter beat, both limbs fly to the accumulator. Same
+    // catch-up pattern as the intra branch: scan every past inter beat and
+    // retroactively fire any that escaped their ~0.24 s trigger window on
+    // a wide-`dt` frame.
+    for (let bi = 0; bi <= idx; bi++) {
+      const beatId = `inter-${bi}`;
+      if (aggregatorBeatsTriggered.has(beatId)) continue;
+      const beatWithin = (t2 - bi * INTER_BEAT_DUR) / INTER_BEAT_DUR;
+      if (beatWithin > 0.85) {
+        aggregatorBeatsTriggered.add(beatId);
+        const pastBeat = INTER_BEATS[bi];
+        const pastColorFor = (l) => (l === 'torso')
+          ? (INTER_TORSO_COLORS[bi] || INTER_COLORS.torso)
+          : INTER_COLORS[l];
+        for (const l of pastBeat.limbs) flyLimbToAggregator(l, pastColorFor(l));
+      }
+    }
+  }
+}
+
+// ─── Continuous temporal tick — runs in a loop ───────────────────────────
+// Cycle: (a) ghosts fade in & aggregate fades out → (b) hold + Σ icon →
+//        (c) ghosts collapse + aggregate fades in → (d) hold final → loop.
+const TEMPORAL_CYCLE_DUR = 8.0;
+function tickTemporalAnim(rawT) {
+  const C = TEMPORAL_CYCLE_DUR;
+  // Single non-wrapping pass: clamp instead of modulo so the final 2 s hold
+  // of the merged single robot actually sticks (was wrapping back to phase a).
+  const t = clamp(rawT, 0, C);
+
+  if (t < 1.0) {
+    // (a) Multiple consecutive frames — ghosts fade in fast (staggered)
+    g1Aggregate.setOpacity(Math.max(0, 1 - t / 0.5));
+    for (let k = 0; k < g1Ghosts.length; k++) {
+      const start = k * 0.15;
+      const u = clamp((t - start) / 0.45, 0, 1);
+      const decay = 0.85 - k * 0.10;
+      g1Ghosts[k].robot.setOpacity(u * decay);
+      g1Ghosts[k].robot.object3D.position.x = g1Ghosts[k].baseX;
+    }
+  } else if (t < 5.0) {
+    // (b) Hold strip — kernel sweeps across 4 joint groups during this window
+    //     (see tickKernelSweep; runs in parallel with this hold)
+    for (let k = 0; k < g1Ghosts.length; k++) {
+      const decay = 0.85 - k * 0.10;
+      g1Ghosts[k].robot.setOpacity(decay);
+      g1Ghosts[k].robot.object3D.position.x = g1Ghosts[k].baseX;
+    }
+    g1Aggregate.setOpacity(0);
+  } else if (t < 6.0) {
+    // (c) Merge — ghosts slide together + fade out; single aggregate fades in
+    const u = clamp((t - 5.0) / 1.0, 0, 1);
+    const eased = u * u;
+    for (let k = 0; k < g1Ghosts.length; k++) {
+      const decay = 0.85 - k * 0.10;
+      g1Ghosts[k].robot.object3D.position.x = lerp(g1Ghosts[k].baseX, SLOT_X.spatial, eased);
+      g1Ghosts[k].robot.setOpacity(Math.max(0, (1 - eased) * decay));
+    }
+    g1Aggregate.setOpacity(easeInOut(u));
+  } else {
+    // (d) Hold the single merged robot for 2 s, then 3.3 ends
+    for (const g of g1Ghosts) g.robot.setOpacity(0);
+    g1Aggregate.setOpacity(1.0);
+  }
+
+  // Aggregate icon visibility: ONLY when ≥2 robots are visible.
+  // Count any robot whose material opacity is meaningfully nonzero.
+  let visibleRobots = 0;
+  if (g1Aggregate.opacityRef.value > 0.1) visibleRobots++;
+  for (const g of g1Ghosts) if (g.robot.opacityRef.value > 0.1) visibleRobots++;
+  const aggIcon = document.getElementById('aggregate-icon');
+  aggIcon.style.opacity = '';   // clear any inline opacity from earlier logic
+  if (visibleRobots >= 2) aggIcon.classList.add('visible');
+  else                    aggIcon.classList.remove('visible');
+}
+
+// ─── 3.3 convolution kernel sweep ────────────────────────────────────────
+// During the ghost-strip hold, a "potato-shaped" highlighted blob sweeps
+// through four spatial joint groups across 3 consecutive ghost robots
+// (left arm → right arm → left leg+waist → right leg+waist). At merge,
+// the kernel fades into per-joint highlights on the final aggregate robot.
+const KERNEL_POSITIONS = [
+  { name:'L-arm',        joints:['left_shoulder_pitch_link','left_elbow_link','left_wrist_roll_link'] },
+  { name:'R-arm',        joints:['right_shoulder_pitch_link','right_elbow_link','right_wrist_roll_link'] },
+  { name:'L-leg+waist',  joints:['waist_yaw_link','left_hip_pitch_link','left_knee_link','left_ankle_pitch_link'] },
+  { name:'R-leg+waist',  joints:['waist_yaw_link','right_hip_pitch_link','right_knee_link','right_ankle_pitch_link'] },
+];
+const KERNEL_GHOST_IDX = [1, 2, 3];
+const KERNEL_COLOR       = '#e53935';                       // red
+const KERNEL_FILL_RGBA   = 'rgba(229, 57, 53, 0.20)';       // 80% transparent fill
+const KERNEL_STROKE_RGBA = 'rgba(229, 57, 53, 0.55)';       // softened outline
+const KERNEL_STROKE_W    = 1.4;
+const KERNEL_PAD         = 8;                               // tight around joints
+// Irregular asymmetric blob (6 cubic segments, intentionally not symmetric)
+// — matches the hand-drawn "potato outline" feel from the reference image.
+const KERNEL_PATH =
+  'M -0.30,-0.95 ' +
+  'C  0.20,-1.10  0.70,-0.95  0.92,-0.55 ' +
+  'C  1.12,-0.15  0.95, 0.30  0.62, 0.55 ' +
+  'C  0.38, 0.86  0.05, 1.08 -0.40, 0.96 ' +
+  'C -0.72, 0.86 -1.08, 0.52 -1.02, 0.10 ' +
+  'C -0.96,-0.26 -0.78,-0.66 -0.52,-0.84 ' +
+  'C -0.46,-0.90 -0.40,-0.94 -0.30,-0.95 Z';
+let _kernelInited = false;
+function ensureKernelDOM() {
+  if (_kernelInited) return;
+  const svg = document.getElementById('svg-overlay');
+  if (!svg) return;
+  const ns = 'http://www.w3.org/2000/svg';
+  const g = document.createElementNS(ns, 'g');
+  g.setAttribute('id', 'g-kernel');
+  g.setAttribute('opacity', '0');
+  g.style.pointerEvents = 'none';
+  const blob = document.createElementNS(ns, 'path');
+  blob.setAttribute('id', 'kernel-blob');
+  blob.setAttribute('d', KERNEL_PATH);
+  blob.setAttribute('fill', KERNEL_FILL_RGBA);
+  blob.setAttribute('stroke', KERNEL_STROKE_RGBA);
+  blob.setAttribute('stroke-width', String(KERNEL_STROKE_W));
+  blob.setAttribute('stroke-linejoin', 'round');
+  blob.setAttribute('stroke-dasharray', '5 2.5');     // dashed outline (matches reference)
+  blob.setAttribute('vector-effect', 'non-scaling-stroke');
+  g.appendChild(blob);
+  const dots = document.createElementNS(ns, 'g');
+  dots.setAttribute('id', 'kernel-dots');
+  g.appendChild(dots);
+  // "convolution kernel" label rendered at the blob's center
+  const label = document.createElementNS(ns, 'text');
+  label.setAttribute('id', 'kernel-label');
+  label.setAttribute('text-anchor', 'middle');
+  label.setAttribute('dominant-baseline', 'middle');
+  label.setAttribute('font-family', "'Source Sans 3', 'Inter', sans-serif");
+  label.setAttribute('font-size', '11');
+  label.setAttribute('font-weight', '600');
+  label.setAttribute('letter-spacing', '0.02em');
+  label.setAttribute('fill', KERNEL_COLOR);
+  label.setAttribute('fill-opacity', '0.95');
+  label.setAttribute('paint-order', 'stroke');
+  label.setAttribute('stroke', 'rgba(255,255,255,0.85)');
+  label.setAttribute('stroke-width', '2.4');
+  label.setAttribute('stroke-linejoin', 'round');
+  label.textContent = 'Temporal Convolution';
+  g.appendChild(label);
+  svg.appendChild(g);
+  const ag = document.createElementNS(ns, 'g');
+  ag.setAttribute('id', 'g-agg-highlights');
+  ag.setAttribute('opacity', '0');
+  ag.style.pointerEvents = 'none';
+  svg.appendChild(ag);
+  _kernelInited = true;
+}
+function setKernelOpacity(a) {
+  const g = document.getElementById('g-kernel');
+  if (g) g.setAttribute('opacity', String(clamp(a, 0, 1)));
+}
+function computeKernelBBox(joints, ghostIndices) {
+  let xMin=Infinity, yMin=Infinity, xMax=-Infinity, yMax=-Infinity;
+  const dots = [];
+  for (const gi of ghostIndices) {
+    const robot = g1Ghosts[gi] && g1Ghosts[gi].robot;
+    if (!robot) continue;
+    for (const jn of joints) {
+      const p = jointScreenOf(robot, jn);
+      if (!p || !isFinite(p.x) || !isFinite(p.y)) continue;
+      if (p.x < xMin) xMin = p.x;
+      if (p.x > xMax) xMax = p.x;
+      if (p.y < yMin) yMin = p.y;
+      if (p.y > yMax) yMax = p.y;
+      dots.push(p);
+    }
+  }
+  if (!isFinite(xMin)) return null;
+  return { xMin, yMin, xMax, yMax, dots };
+}
+function _renderKernelDots(dots) {
+  const dotsG = document.getElementById('kernel-dots');
+  if (!dotsG) return;
+  while (dotsG.firstChild) dotsG.removeChild(dotsG.firstChild);
+  const ns = 'http://www.w3.org/2000/svg';
+  for (const d of dots) {
+    const c = document.createElementNS(ns, 'circle');
+    c.setAttribute('cx', d.x.toFixed(1));
+    c.setAttribute('cy', d.y.toFixed(1));
+    c.setAttribute('r', '2.4');
+    c.setAttribute('fill', KERNEL_COLOR);
+    c.setAttribute('fill-opacity', '0.75');
+    c.setAttribute('stroke', 'rgba(255,255,255,0.7)');
+    c.setAttribute('stroke-width', '0.7');
+    dotsG.appendChild(c);
+  }
+}
+function _applyKernelBBox(b) {
+  const pad = KERNEL_PAD;
+  const cx = (b.xMin + b.xMax) / 2;
+  const cy = (b.yMin + b.yMax) / 2;
+  // Tighter min sizes so the blob hugs the joint set instead of looking like
+  // a giant balloon. The path is in [-1,1] space → rx/ry are half-extents.
+  const rx = Math.max(14, (b.xMax - b.xMin) / 2 + pad);
+  const ry = Math.max(14, (b.yMax - b.yMin) / 2 + pad);
+  const blob = document.getElementById('kernel-blob');
+  if (blob) blob.setAttribute('transform',
+    `translate(${cx.toFixed(1)} ${cy.toFixed(1)}) scale(${rx.toFixed(1)} ${ry.toFixed(1)})`);
+  // Label sits at the blob centre; hidden if the blob would be too narrow
+  // for the text to fit cleanly.
+  const label = document.getElementById('kernel-label');
+  if (label) {
+    label.setAttribute('x', cx.toFixed(1));
+    label.setAttribute('y', cy.toFixed(1));
+    label.style.display = (rx >= 40) ? '' : 'none';
+  }
+  _renderKernelDots(b.dots);
+}
+function tickKernelSweep(tt) {
+  ensureKernelDOM();
+  const SWEEP_START = 1.1;
+  const SWEEP_END   = 5.0;
+  const N = KERNEL_POSITIONS.length;
+  if (tt < SWEEP_START - 0.4 || tt > SWEEP_END + 0.6) {
+    setKernelOpacity(0);
+    return;
+  }
+  const span = SWEEP_END - SWEEP_START;
+  const perPos = span / N;
+  const local = clamp(tt - SWEEP_START, 0, span);
+  const idxF = local / perPos;
+  let idxA = Math.min(N - 1, Math.floor(idxF));
+  let idxB = Math.min(N - 1, idxA + 1);
+  let raw = idxF - idxA;
+  // Hold ~40% of each slot at position A, then FLY to B during the remaining
+  // 60% with eased motion (visible flight, not a snap).
+  const HOLD_FRAC = 0.40;
+  let mix;
+  let isFlying = false;
+  if (raw < HOLD_FRAC) {
+    mix = 0;
+  } else {
+    isFlying = true;
+    mix = easeInOut((raw - HOLD_FRAC) / (1 - HOLD_FRAC));
+  }
+  const bA = computeKernelBBox(KERNEL_POSITIONS[idxA].joints, KERNEL_GHOST_IDX);
+  if (!bA) { setKernelOpacity(0); return; }
+  let bbox = bA;
+  if (idxA !== idxB && mix > 0) {
+    const bB = computeKernelBBox(KERNEL_POSITIONS[idxB].joints, KERNEL_GHOST_IDX);
+    if (bB) {
+      bbox = {
+        xMin: bA.xMin*(1-mix) + bB.xMin*mix,
+        yMin: bA.yMin*(1-mix) + bB.yMin*mix,
+        xMax: bA.xMax*(1-mix) + bB.xMax*mix,
+        yMax: bA.yMax*(1-mix) + bB.yMax*mix,
+        // Dots: keep showing A's set in the first half of flight, B's in the
+        // second half — visually feels like the dots "arrive" with the blob.
+        dots: isFlying ? (mix < 0.5 ? bA.dots : bB.dots) : bA.dots,
+      };
+    }
+  }
+  _applyKernelBBox(bbox);
+  let alpha = 1.0;
+  if (tt < SWEEP_START)  alpha = clamp((tt - (SWEEP_START - 0.35)) / 0.35, 0, 1);
+  if (tt > SWEEP_END)    alpha = clamp(1 - (tt - SWEEP_END) / 0.5, 0, 1);
+  setKernelOpacity(alpha);
+}
+function tickAggregateHighlights(tt) {
+  ensureKernelDOM();
+  const g = document.getElementById('g-agg-highlights');
+  if (!g) return;
+  let alpha = 0;
+  if (tt > 5.5) alpha = clamp((tt - 5.5) / 0.7, 0, 1);
+  g.setAttribute('opacity', String(alpha));
+  while (g.firstChild) g.removeChild(g.firstChild);
+  if (alpha <= 0 || !g1Aggregate) return;
+  const ns = 'http://www.w3.org/2000/svg';
+  const all = new Set();
+  for (const p of KERNEL_POSITIONS) for (const j of p.joints) all.add(j);
+  for (const jn of all) {
+    const p = jointScreenOf(g1Aggregate, jn);
+    if (!p || !isFinite(p.x) || !isFinite(p.y)) continue;
+    const halo = document.createElementNS(ns, 'circle');
+    halo.setAttribute('cx', p.x.toFixed(1));
+    halo.setAttribute('cy', p.y.toFixed(1));
+    halo.setAttribute('r', '8.5');
+    halo.setAttribute('fill', 'rgba(229, 57, 53, 0.25)');
+    halo.setAttribute('stroke', 'none');
+    g.appendChild(halo);
+    const dot = document.createElementNS(ns, 'circle');
+    dot.setAttribute('cx', p.x.toFixed(1));
+    dot.setAttribute('cy', p.y.toFixed(1));
+    dot.setAttribute('r', '3.6');
+    dot.setAttribute('fill', KERNEL_COLOR);
+    dot.setAttribute('stroke', '#ffffff');
+    dot.setAttribute('stroke-width', '0.9');
+    g.appendChild(dot);
+  }
+}
+function hideKernelAndHighlights() {
+  setKernelOpacity(0);
+  const g = document.getElementById('g-agg-highlights');
+  if (g) {
+    g.setAttribute('opacity', '0');
+    while (g.firstChild) g.removeChild(g.firstChild);
+  }
+}
+
+function transitionToStage(i) {
+  if (i === stageIdx) return;
+  if (stageIdx >= 0 && stages[stageIdx] && stages[stageIdx].exit) stages[stageIdx].exit();
+  stageIdx = i;
+  stageStart = masterClock;
+  if (i >= 0 && i < stages.length) {
+    setBadge(i+1, stages.length);
+    if (stages[i].enter) stages[i].enter();
+  }
+}
+function endWalkthrough() {
+  walkthroughEnded = true;
+  document.getElementById('replay-btn').classList.add('visible');
+  // Auto-replay 20 s after the animation completes — gives the viewer time
+  // to read the final state (full pipeline with embedding, attributes, and
+  // human reveal all on screen) before the loop restarts.
+  setTimeout(() => {
+    if (walkthroughEnded) restartWalkthrough();
+  }, 20000);
+}
+function restartWalkthrough() {
+  masterClock = 0; stageIdx = -1; walkthroughEnded = false;
+  playing = true;             // Replay always starts in playing state
+  document.getElementById('replay-btn').classList.remove('visible');
+  hide('lbl-human');
+  hide('enc-label'); hide('graph-label'); hide('spatial-label');
+  hide('prediction-label');
+  hide('enc-output'); hide('graph-output');
+  hide('embedding-strip');
+  hide('attributes-card');
+  hide('aggregate-icon');
+  hide('retarget-label');
+  setRetargetVisible(false);
+  setGraphRectVisible(false);
+  setHumanRectVisible(false);
+  setEncRectVisible(false);
+  setSpatialRectVisible(false);
+  setFocusOpacity(0);
+  hideKernelAndHighlights();
+  for (const k of Object.keys(LIMBS)) setLimbEllipseVisible(k, false);
+  clearConns();
+  document.getElementById('beat-indicator').classList.remove('visible');
+  document.getElementById('beat-mode-tag').classList.remove('visible');
+  graphAnimStart = -1;
+  temporalAnimStart = -1;
+  kinematicAnimStart = -1;
+  encRectStuckVisible = false;
+  encRectLocked = false; encRectMaxBounds = null;
+  graphRectLocked = false; graphRectMaxBounds = null;
+  spatialRectLocked = false; spatialRectMaxBounds = null;
+  lockedModuleLabelTopY = null;   // re-latch after Replay
+  resetAggregatorTints();
+  accumulatorComplete = false;
+  accumulatorFlyStart = -1;
+  accumulatorTransferred = false;
+  if (g1LimbAcc) {
+    g1LimbAcc.setOpacity(0);                     // hidden until stage 3 fades it in
+    g1LimbAcc.object3D.position.x = SLOT_X.aggregator;
+  }
+  // Revert any transferred colors on g1Aggregate + ghosts back to their
+  // original gray so a Replay starts the temporal frames un-colored.
+  const _spatialRobots = [];
+  if (g1Aggregate) _spatialRobots.push(g1Aggregate);
+  for (const g of g1Ghosts) if (g && g.robot) _spatialRobots.push(g.robot);
+  for (const robot of _spatialRobots) {
+    if (!robot.bodyMeshes) continue;
+    for (const key of Object.keys(LIMBS)) {
+      for (const bn of LIMBS[key].bodies) {
+        const arr = robot.bodyMeshes[bn];
+        if (!arr) continue;
+        for (const m of arr) {
+          if (m.userData.origColor) m.material.color.copy(m.userData.origColor);
+          m.material.emissive.setScalar(0);
+          m.material.emissiveIntensity = 0;
+        }
+      }
+    }
+  }
+  if (g1Aggregate) g1Aggregate.setOpacity(0);
+  if (g1Graph)     g1Graph.setOpacity(0);
+  setEncRectVisible(false);
+  setFocusOpacity(0);
+  clearConns();
+  for (const k of Object.keys(LIMBS)) setLimbEllipseVisible(k, false);
+  document.getElementById('beat-indicator').classList.remove('visible');
+  g1Main.setOpacity(0.0);
+  // Reversed pipeline: SMPL human is revealed at stage 8 (the very end), not start.
+  smplGroup.setOpacity(0.0);
+  for (const g of g1Ghosts) g.robot.setOpacity(0);
+  transitionToStage(0);
+}
+
+// ─── Per-module timeline bars — seek + play/pause ────────────────────────
+// Three short scrubbers tracking the §3.1 / §3.2 / §3.3 module labels. The
+// bar surface is inert; only the play/pause button on the right is clickable.
+//   §3.1 → stage 0   (robot → kinematic → enc-output-pause)
+//   §3.2 → stage 3   (graph)
+//   §3.3 → stage 4   (temporal)
+// Click semantics: if the button is for the CURRENT module, toggle play/
+// pause; otherwise seek to that module's start AND resume playback.
+let playing = true;        // global play/pause state; loop respects this
+const TIMELINE_BARS = [
+  { id: 'mtl-31', label: 'enc-label',        stageStart: 0, rangeStages: [0, 1, 2] },
+  { id: 'mtl-32', label: 'graph-label',      stageStart: 3, rangeStages: [3] },
+  { id: 'mtl-33', label: 'spatial-label',    stageStart: 4, rangeStages: [4] },
+  // "Attribute Prediction" strip — covers embedding + attributes card + human-reveal.
+  { id: 'pt-bar', label: 'prediction-label', stageStart: 5, rangeStages: [5, 6, 7],
+    fillSel: '.pt-fill', btnSel: '.pt-btn' },
+];
+const TIMELINE_BAR_PAD_PX = 19;    // ≈ 0.5 cm at 38 px/cm
+function seekToStage(targetIdx) {
+  restartWalkthrough();                           // full reset; lands on stage 0
+  if (!stages || stages.length === 0) return;
+  if (targetIdx <= 0) return;                     // §3.1 — already at stage 0
+  // Replay stages 1..targetIdx-1 by firing their enter() callbacks in order.
+  let cum = stages[0].duration;
+  for (let i = 1; i < targetIdx; i++) {
+    stageIdx = i;
+    stageStart = cum;
+    if (stages[i].enter) stages[i].enter();
+    cum += stages[i].duration;
+  }
+  masterClock = cum;
+  // Park kinematic / graph cycles "in the past" so their continuous ticks
+  // see cycle-done state on the very next frame (plates locked, beats
+  // frozen at all-inter colors).
+  if (kinematicAnimStart >= 0) {
+    kinematicAnimStart = masterClock - KINEMATIC_CYCLE_DUR - 1;
+  }
+  if (graphAnimStart >= 0) {
+    graphAnimStart = masterClock - GRAPH_CYCLE_DUR - ACC_FLY_DURATION_S - 1;
+  }
+  // Seeking to 3.3 (or later): pre-populate aggregatorLimbState with the
+  // final inter colors so stage 4's transferAccumulatorColors() paints
+  // g1Aggregate + ghosts. Also color g1Graph as if 3.2 finished.
+  if (targetIdx >= 4) {
+    const limbOrder = ['torso','la','ra','ll','rl'];
+    for (const l of limbOrder) {
+      const c = (l === 'torso')
+        ? new THREE.Color(INTER_TORSO_COLORS[INTER_TORSO_COLORS.length - 1] || INTER_COLORS.torso)
+        : new THREE.Color(INTER_COLORS[l]);
+      aggregatorLimbState[l] = { color: c, startColor: null, progress: 1, pending: false };
+    }
+    if (g1Graph) g1Graph.setOpacity(1.0);
+    if (g1Graph && g1Graph.bodyMeshes) {
+      resetGraphTints();
+      for (const l of limbOrder) {
+        const c = (l === 'torso')
+          ? (INTER_TORSO_COLORS[INTER_TORSO_COLORS.length - 1] || INTER_COLORS.torso)
+          : INTER_COLORS[l];
+        tintGraphLimb(l, 1.0, c);
+      }
+    }
+  }
+  // 3.1 robot must be fully visible from stage 1 onward.
+  if (targetIdx >= 1 && g1Main) g1Main.setOpacity(1.0);
+  transitionToStage(targetIdx);
+}
+// Per-module fill (% of that module's duration) + per-button play/pause glyph.
+function updateModuleTimelines() {
+  if (!stages || stages.length === 0) return;
+  let cumByStage = [0];
+  for (let i = 0; i < stages.length; i++) cumByStage.push(cumByStage[i] + stages[i].duration);
+  const inStage = (stageIdx >= 0 && stages[stageIdx])
+    ? Math.max(0, Math.min(stages[stageIdx].duration, masterClock - stageStart))
+    : 0;
+  const cur = (stageIdx >= 0 ? cumByStage[stageIdx] : 0) + inStage;
+  for (const cfg of TIMELINE_BARS) {
+    const startT = cumByStage[cfg.rangeStages[0]];
+    const endT   = cumByStage[cfg.rangeStages[cfg.rangeStages.length - 1] + 1];
+    const el = document.getElementById(cfg.id);
+    if (!el) continue;
+    const fill = el.querySelector(cfg.fillSel || '.mtl-fill');
+    if (fill) {
+      let frac;
+      if (cur <= startT)      frac = 0;
+      else if (cur >= endT)   frac = 1;
+      else                    frac = (cur - startT) / Math.max(1e-6, endT - startT);
+      fill.style.width = (frac * 100).toFixed(2) + '%';
+    }
+    const btn = el.querySelector(cfg.btnSel || '.mtl-btn');
+    if (btn) {
+      // Show ⏸ on the bar of the currently playing module, ▶ on the others
+      // (or on the active module when paused).
+      const isActive = cfg.rangeStages.includes(stageIdx);
+      btn.textContent = (isActive && playing) ? '⏸' : '▶';
+    }
+  }
+}
+function wireTimelineClicks() {
+  document.querySelectorAll('.module-timeline .mtl-btn, #prediction-timeline .pt-btn').forEach(btn => {
+    btn.addEventListener('click', (ev) => {
+      ev.stopPropagation();
+      const target = parseInt(btn.getAttribute('data-seek'), 10);
+      const cfg = TIMELINE_BARS.find(c => c.stageStart === target);
+      const isActive = cfg && cfg.rangeStages.includes(stageIdx);
+      if (isActive) {
+        // Toggle play/pause on the currently playing module.
+        playing = !playing;
+      } else {
+        // Seek to this module's start and resume playback.
+        seekToStage(target);
+        playing = true;
+      }
+    });
+  });
+}
+
+// ─── Activity dropdown / demo switch ────────────────────────────────────────
+function buildActivityDropdown() {
+  const sel = document.getElementById('activity-dropdown');
+  if (!sel) return;     // dropdown removed from HTML — nothing to build
+  sel.innerHTML = '';
+  for (const d of demosConfig.demos) {
+    const o = document.createElement('option');
+    o.value = d.id; o.textContent = d.label;
+    if (d.id === currentDemo.id) o.selected = true;
+    sel.appendChild(o);
+  }
+  sel.addEventListener('change', async () => {
+    const newDemo = demosConfig.demos.find(x => x.id === sel.value);
+    if (!newDemo || newDemo.id === currentDemo.id) return;
+    await switchDemo(newDemo);
+  });
+}
+async function switchDemo(demo) {
+  showLoading(`Loading ${demo.label}…`);
+  try {
+    const [m, vd] = await Promise.all([
+      loadG1Motion(`./assets/demos/g1_csv/${demo.id}.csv`, 600),
+      loadVertsBin(withV(`./assets/demos/smpl/${demo.id}_gt.bin`)),
+    ]);
+    g1Motion = m;
+    smplGroup.object3D.parent.remove(smplGroup.object3D);
+    smplData = vd;
+    smplGroup = buildSMPL(vd, smplFaces);
+    smplGroup.object3D.position.set(SLOT_X.human, 0, 0);
+    scene.add(smplGroup.object3D);
+    currentDemo = demo;
+    computeROM();
+    restartWalkthrough();
+  } catch (err) {
+    console.error(err); showError(err.message);
+  } finally {
+    hideLoading();
+  }
+}
+function capitalize(s){return s ? s[0].toUpperCase()+s.slice(1) : s;}
+
+// ─── Main loop ──────────────────────────────────────────────────────────────
+function loop(ts) {
+  requestAnimationFrame(loop);
+  if (lastTS === null) lastTS = ts;
+  const dt = (ts - lastTS) * 0.001;
+  lastTS = ts;
+  // Only advance the master clock while playing — pausing freezes ALL
+  // stage transitions, continuous ticks (kinematic / graph / temporal)
+  // and the timeline fill.
+  if (playing) masterClock += dt;
+
+  try {
+  // SMPL human is shown as a STATIC snapshot — applied once at boot, no
+  // per-frame update here.
+  if (g1Motion) {
+    const fG1 = (masterClock * g1Motion.fps) % g1Motion.numFrames;
+    // Phase gating: when SINGLE_PHASE_ANIMATION is true, only the active
+    // phase's robot(s) get a frame update; older phases freeze on their
+    // last-applied frame.
+    //   stageIdx 0–2 → 3.1's g1Main is active
+    //   stageIdx 3   → 3.2's g1Graph is active
+    //   stageIdx ≥ 4 → 3.3's g1Aggregate + ghosts are active
+    const animMain  = !SINGLE_PHASE_ANIMATION || stageIdx <= 2;
+    const animGraph = !SINGLE_PHASE_ANIMATION || stageIdx === 3;
+    const animSpat  = !SINGLE_PHASE_ANIMATION || stageIdx === 4;
+    if (animMain)                     g1Main.applyFrame(g1Motion, fG1);
+    if (g1Graph     && animGraph)     g1Graph.applyFrame(g1Motion, fG1);
+    if (g1Aggregate && animSpat)      g1Aggregate.applyFrame(g1Motion, fG1);
+    if (animSpat) for (const g of g1Ghosts) g.robot.applyFrame(g1Motion, fG1 - g.lagFrames);
+
+    // Maintain sparkline buffers from kinematic stage onward (so the plates
+    // get positioned the moment they're created, BEFORE they're shown).
+    // The waveforms inside the plates scroll only DURING stage 1 (3.1 cycle).
+    // Once we leave stage 1, the buffer + rendered sparklines freeze at their
+    // last value — the boxes become a static representation of 3.1's output.
+    if (stageIdx >= 1) {
+      if (stageIdx === 1) {
+        tickSparkBuffers(fG1);
+        renderPlateSparklines();
+      }
+      renderROMFans(fG1);
+      updateFocusRings();
+      updateEncRect();
+    }
+    // Limb ellipses & connections: graph stage onward
+    if (stageIdx >= 2) {
+      updateLimbEllipses();
+      updateConns();
+    }
+    // Embedding strip: stage 6 or after end
+    if (stageIdx >= 5 || walkthroughEnded) {
+      drawEmbedding(fG1);
+    }
+  }
+
+  updateHumanRect();          // dynamic SMPL bounds — must run BEFORE arrow
+  positionSlotLabels();       // AFTER updateHumanRect so it can track the mesh
+  positionRetargetArrow();    // reads human-rect's right edge
+  updateGraphRect();
+  positionBeatIndicator();    // AFTER updateGraphRect so it can clamp inside it
+  updateSpatialRect();
+  positionAggregateIcon();    // AFTER spatial rect so it can clamp inside it
+  updateModuleTimelines();    // fill width + play/pause glyph per bar
+                              // (positioning is now pure CSS — see #module-timelines)
+  positionBeatModeTag();
+  positionEmbeddingStrip();   // AFTER enc rect so it mirrors its y/height
+  positionEncOutput();        // AFTER enc rect so text glues to its right edge
+  positionGraphOutput();      // AFTER graph rect so text glues to its right edge
+  positionModuleLabels();     // pin 3 module titles to fixed slot positions
+  positionAttributesCard();
+  positionHumanMesh();        // AFTER attributes card so human gap stays 1cm
+  positionSpatialEmbedArrow();// AFTER spatial rect + embedding strip
+  positionEmbedAttrArrow();   // AFTER embedding strip + attributes card
+  positionAttrHumanArrow();   // AFTER attributes card + human-rect
+  if (kinematicAnimStart >= 0) {
+    const kt = masterClock - kinematicAnimStart;
+    tickKinematicAnim(kt);
+    // Lock 3.1's rect AFTER one cycle — that's when the rect first appears,
+    // with its accumulated max-bounds. It stays fixed from then on.
+    if (kt >= KINEMATIC_CYCLE_DUR && !encRectLocked) {
+      encRectLocked = true;
+      setEncRectVisible(true);
+    }
+  }
+  if (graphAnimStart     >= 0) {
+    const gt = masterClock - graphAnimStart;
+    tickGraphBeats(gt);
+    if (gt >= GRAPH_CYCLE_DUR && !document.getElementById('graph-output').classList.contains('visible')) {
+      // graph-output replaced by the static accumulator robot — don't show.
+      // show('graph-output');
+    }
+    // Lock 3.2's rect after one full beat cycle.
+    if (gt >= GRAPH_CYCLE_DUR && !graphRectLocked) {
+      graphRectLocked = true;
+      setGraphRectVisible(true);
+    }
+  }
+  // Belt-and-suspenders: if we're already at the temporal stage (or later)
+  // but temporalAnimStart somehow got left at -1 on a Replay cycle, force the
+  // 3.3 cycle to start NOW. This guarantees 3.3 always plays on every replay.
+  if (stageIdx >= 4 && temporalAnimStart < 0) {
+    if (g1LimbAcc) g1LimbAcc.setOpacity(0);
+    transferAccumulatorColors();
+    show('spatial-label');
+    for (const g of g1Ghosts) g.robot.object3D.position.x = g.baseX;
+    temporalAnimStart = masterClock;
+    accumulatorComplete = true;
+    accumulatorTransferred = true;
+    accumulatorFlyStart = masterClock - ACC_FLY_DURATION_S;
+  }
+  if (temporalAnimStart  >= 0) {
+    const tt = masterClock - temporalAnimStart;
+    // In single-phase mode, after the temporal cycle finishes (stageIdx > 4),
+    // display 3.3 as a STATIC FLIPBOOK: g1Aggregate + 4 ghosts standing in a
+    // row, each posed at a different motion frame so the viewer reads the
+    // row as "what the temporal module outputs — a sequence of features over
+    // time". The rightmost ghost (g1Ghosts[4]) is hidden so the strip's right
+    // edge stops well before the arrow to the embedding layer.
+    if (SINGLE_PHASE_ANIMATION && stageIdx > 4) {
+      // After 3.3 has merged everything into a single representation, freeze
+      // the spatial slot as ONE static robot (the aggregate's mid-clip pose).
+      // Ghosts stay hidden so the post-3.3 view matches the "merged into one"
+      // narrative.
+      if (g1Motion && g1Aggregate) {
+        const N = g1Motion.numFrames;
+        const midFrame = clamp(Math.round(N * 0.5), 0, N - 1);
+        g1Aggregate.setOpacity(1.0);
+        g1Aggregate.applyFrame(g1Motion, midFrame);
+        g1Aggregate.object3D.position.x = SLOT_X.spatial;
+        for (const g of g1Ghosts) if (g && g.robot) g.robot.setOpacity(0);
+      }
+      const aggIcon = document.getElementById('aggregate-icon');
+      if (aggIcon) aggIcon.classList.remove('visible');
+      // Kernel gone post-3.3; aggregate joint highlights persist as the
+      // "what the temporal module produced" memento.
+      setKernelOpacity(0);
+      tickAggregateHighlights(TEMPORAL_CYCLE_DUR);
+    } else {
+      tickTemporalAnim(tt);
+      tickKernelSweep(tt);
+      tickAggregateHighlights(tt);
+    }
+    // Lock 3.3's rect after one full temporal cycle.
+    if (tt >= TEMPORAL_CYCLE_DUR && !spatialRectLocked) {
+      spatialRectLocked = true;
+      setSpatialRectVisible(true);
+    }
+  }
+  updateFlyParticles3D();        // animate cloned limb meshes drifting across
+  updateAggregatorTints(dt);     // smooth per-limb fade-in on the static robot
+  checkAccumulatorCompletion();  // detect when all limbs accumulated
+  updateAccumulatorFly();        // fly the static robot to 3.3 + transfer colors
+
+  if (stageIdx >= 0 && stageIdx < stages.length) {
+    const t = masterClock - stageStart;
+    const s = stages[stageIdx];
+    if (s.update) s.update(t);
+    if (t >= s.duration) {
+      if (stageIdx === stages.length - 1) { endWalkthrough(); stageIdx = stages.length; }
+      else transitionToStage(stageIdx + 1);
+    }
+  }
+  } catch (err) {
+    // Don't let one frame's exception break the renderer.
+    // Log distinct error messages so we can see all of them, but throttle to
+    // avoid console spam (3 distinct messages max).
+    window.__loopErrs = window.__loopErrs || new Set();
+    if (window.__loopErrs.size < 3 && !window.__loopErrs.has(err.message)) {
+      window.__loopErrs.add(err.message);
+      console.error('[unveil] loop tick error (stage ' + stageIdx + '):', err);
+    }
+  }
+
+  renderer.render(scene, camera);
+}
+
+// ─── Boot ───────────────────────────────────────────────────────────────────
+async function boot() {
+  showLoading('Loading config…');
+  demosConfig = await fetchJSON('./assets/demos/demos_config.json');
+  currentDemo = demosConfig.demos.find(d => d.id === DEFAULT_DEMO) || demosConfig.demos[0];
+
+  setStatus('Loading G1 model…');
+  modelData = await fetchJSON('./g1_engine/model/g1_model.json');
+
+  setStatus('Loading motion + mesh data…');
+  const [g1m, vd, faces] = await Promise.all([
+    loadG1Motion(`./assets/demos/g1_csv/${currentDemo.id}.csv`, 600),
+    loadVertsBin(withV(`./assets/demos/smpl/${currentDemo.id}_gt.bin`)),
+    loadFacesBin('./assets/demos/smpl/faces.bin'),
+  ]);
+  g1Motion = g1m; smplData = vd; smplFaces = faces;
+  computeROM();
+
+  setStatus('Building scene…');
+  setupScene();
+
+  setStatus('Building SMPL human…');
+  smplGroup = buildSMPL(vd, faces);
+  smplGroup.object3D.position.set(SLOT_X.human, 0, 0);
+  scene.add(smplGroup.object3D);
+  // Apply one representative frame ONCE — the human is shown as a static
+  // snapshot for the rest of the walkthrough. Frame 10 (or whatever's
+  // available on short clips) gives a clean early pose, before the body
+  // moves through anything too dynamic.
+  smplGroup.applyFrame(Math.min(10, Math.max(0, vd.numFrames - 1)));
+
+  setStatus('Building G1 robot (meshes)…');
+  g1Main = await buildG1Robot();
+  g1Main.object3D.position.set(SLOT_X.robot, 0, 0);
+  g1Main.object3D.scale.setScalar(1.3);   // scale up to roughly match SMPL height
+  scene.add(g1Main.object3D);
+
+  setStatus('Building aggregate G1 (right slot)…');
+  g1Aggregate = await buildG1Robot();
+  g1Aggregate.object3D.position.set(SLOT_X.spatial, 0, 0);
+  g1Aggregate.object3D.scale.setScalar(1.3);
+  g1Aggregate.setOpacity(0);
+  scene.add(g1Aggregate.object3D);
+
+  setStatus('Building graph-conv G1 (middle slot)…');
+  g1Graph = await buildG1Robot();
+  g1Graph.object3D.position.set(SLOT_X.graph, 0, 0);
+  g1Graph.object3D.scale.setScalar(1.3);   // same scale as 3.1 / 3.3 robots
+  g1Graph.setOpacity(0);
+  scene.add(g1Graph.object3D);
+
+  setStatus('Building limb-accumulator G1 (static, between 3.2 and 3.3)…');
+  g1LimbAcc = await buildG1Robot();
+  g1LimbAcc.object3D.position.set(SLOT_X.aggregator, 0, 0);
+  g1LimbAcc.object3D.scale.setScalar(1.3);
+  g1LimbAcc.applyFrame(g1m, 0);             // static frame-0 pose
+  g1LimbAcc.setOpacity(0);    // hidden initially — fades in during graph stage
+  scene.add(g1LimbAcc.object3D);
+
+  setStatus('Building ghost stack…');
+  await buildGhosts(5);
+
+  setStatus('Wiring overlays…');
+  setupFocusRingsAndPlates();
+  setupLimbEllipses();
+  buildActivityDropdown();
+
+  document.getElementById('replay-btn').addEventListener('click', restartWalkthrough);
+  wireTimelineClicks();
+
+  defineStages();
+  hideLoading();
+  restartWalkthrough();
+  // ?seekStage=N — jump to a specific stage at boot. Add &pause=1 to freeze
+  // the visual on arrival (useful for static screenshot inspection); without
+  // it the walkthrough continues playing from the seeked stage.
+  const _qs = new URLSearchParams(location.search);
+  const _seekStage = parseInt(_qs.get('seekStage'), 10);
+  if (Number.isFinite(_seekStage) && _seekStage > 0) {
+    seekToStage(_seekStage);
+    if (_qs.get('pause') === '1') playing = false;
+  }
+  requestAnimationFrame(loop);
+}
+
+boot().catch(err => {
+  hideLoading();
+  console.error(err);
+  showError(err.message);
+});
+</script>
+</body>
+</html>

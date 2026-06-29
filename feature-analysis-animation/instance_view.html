@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="robots" content="noindex, nofollow"/>
+<title>UNVEIL · instance view</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    width: 100%; height: 100%;
+    background: #f5f7fa; color: #1c232e;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    overflow: hidden;
+  }
+  #wrap { display: grid; grid-template-rows: 1fr; height: 100%; }
+
+  #stage {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    background: #eef2f7;
+    padding: 6px;
+    overflow: hidden;
+  }
+  .view-cell {
+    position: relative;
+    background: #ffffff;
+    border: 1px solid #d6dde6;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .view-cell iframe {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    border: 0;
+    background: #ffffff;
+  }
+  .view-cell .cell-tag {
+    position: absolute;
+    top: 8px; left: 0; right: 0;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: #1c232e;
+    z-index: 2;
+    pointer-events: none;
+    text-shadow: 0 1px 2px rgba(255,255,255,0.9);
+  }
+  #err {
+    color: #c0394b;
+    font-size: 12px;
+    padding: 20px;
+    white-space: pre-wrap;
+  }
+</style>
+</head>
+<body>
+<div id="wrap">
+  <div id="stage">
+    <div class="view-cell" id="g1-cell">
+      <span class="cell-tag">retargeted humanoid</span>
+    </div>
+    <div class="view-cell" id="smpl-cell">
+      <span class="cell-tag" id="smpl-tag">—</span>
+    </div>
+  </div>
+</div>
+
+<script>
+const params = new URLSearchParams(location.search);
+const instanceId = params.get('instance_id');
+const CONFIG_URL = 'data/feature_matrix_config_instances.json';
+
+// SMPL bins live behind a Cloudflare Worker reverse proxy so the upstream
+// dataset host stays invisible to browser DevTools (required for anonymous
+// submission). Worker source: anonymized/cloudflare-worker-smpl.js.
+const SMPL_PROXY_BASE = 'https://smpl.unveil2000.workers.dev/file';
+
+async function boot() {
+  if (!instanceId) throw new Error('Missing ?instance_id=…');
+  const cfg = await fetch(`${CONFIG_URL}?_=${Date.now()}`).then(r => r.json());
+  const row = cfg.rows.find(r => r.row_id === instanceId);
+  if (!row) throw new Error(`Unknown instance_id: ${instanceId}`);
+
+  const blk = row.high;   // single-side instance in this config
+
+  // SMPL label: one phrase, attribute-specific.
+  const a = row.attribute_short;
+  let smplLabel;
+  if      (a === 'age')    smplLabel = `${blk.label} old human operator`;
+  else if (a === 'weight') smplLabel = `${blk.label} human operator`;
+  else if (a === 'height') smplLabel = `${blk.label} human operator`;
+  else if (a === 'gender') smplLabel = `${blk.label} human operator`;
+  else                     smplLabel = `human operator`;
+  document.getElementById('smpl-tag').textContent = smplLabel;
+
+  // G1 iframe — point it at the instance's copied CSV with a default config
+  // (white bg, no floor, side view).
+  const csvAbsForViewer = '../' + blk.g1_csv.replace(/^\.\//,'feature-analysis-animation/');
+  const g1Src = `../g1_engine/viewer.html?embed=1&nozoom=1&csv_url=${encodeURIComponent(csvAbsForViewer)}`;
+  const g1Iframe = document.createElement('iframe');
+  g1Iframe.src = g1Src;
+  document.getElementById('g1-cell').appendChild(g1Iframe);
+
+  // SMPL iframe — pass bin_url + faces_url override. Bins are served via a
+  // Cloudflare Worker proxy; the SMPL viewer fetches them by absolute URL.
+  const binUrlForSmpl   = `${SMPL_PROXY_BASE}/${row.row_id}_high.bin`;
+  const facesUrlForSmpl = `${SMPL_PROXY_BASE}/faces.bin`;
+  const smplSrc = `../smpl_engine/viewer.html?embed=1&bin_url=${encodeURIComponent(binUrlForSmpl)}&faces_url=${encodeURIComponent(facesUrlForSmpl)}`;
+  const smplIframe = document.createElement('iframe');
+  smplIframe.src = smplSrc;
+  document.getElementById('smpl-cell').appendChild(smplIframe);
+
+  // Drive both iframes with a shared SYNC clock — the SMPL viewer (and the
+  // G1 viewer in embed mode) won't advance their own playback otherwise.
+  const t0 = performance.now();
+  function tick(nowMs) {
+    const t = (nowMs - t0) / 1000;
+    const msg = { type: 'SYNC', time: t, playing: true, speed: 1 };
+    if (g1Iframe.contentWindow)   g1Iframe.contentWindow.postMessage(msg, '*');
+    if (smplIframe.contentWindow) smplIframe.contentWindow.postMessage(msg, '*');
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+}
+
+boot().catch(err => {
+  document.body.innerHTML = `<pre id="err">${err.stack || err}</pre>`;
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,2447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="robots" content="noindex, nofollow"/>
+<meta name="build" content="2026-06-17T20:38:00Z"/>
+<title>UNVEIL · per-feature operator gap</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: #f5f7fa;
+    color: #1c232e;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    font-size: 16px;
+    line-height: 1.55;
+  }
+  .wrap { max-width: 1160px; margin: 0 auto; padding: 32px 24px 64px; }
+
+  header.intro h1 {
+    font-family: 'Noto Serif', Georgia, serif;
+    font-size: 36px;
+    font-weight: 700;
+    margin: 0 0 8px;
+    letter-spacing: 0.005em;
+  }
+  header.intro p {
+    margin: 0 0 6px;
+    color: #45556c;
+    max-width: 880px;
+  }
+  header.intro .tag {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 3px 10px;
+    background: #e7eef7;
+    border-radius: 999px;
+    font-size: 14px;
+    color: #45556c;
+  }
+
+  .panels { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 24px; }
+  @media (max-width: 760px) { .panels { grid-template-columns: 1fr; } }
+
+  .panel {
+    background: #f3eedf;  /* warm cream — contrasts with cool page bg + white iframe + colored dots */
+    border: 1px solid #d3cbb4;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(20,30,50,0.06), 0 1px 3px rgba(20,30,50,0.04);
+    padding: 20px 22px 16px;
+  }
+  .panel-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 10px;
+    gap: 18px;
+    flex-wrap: wrap;
+  }
+  .panel-head h2 {
+    font-family: 'Noto Serif', Georgia, serif;
+    font-size: 26px;
+    font-weight: 700;
+    margin: 0;
+    letter-spacing: 0.01em;
+  }
+  .panel-head .feat {
+    color: #45556c;
+    font-size: 15px;
+  }
+  .panel-head .feat b { color: #1c232e; }
+  .panel-head .meta {
+    color: #6e7382;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+
+  svg.plot { display: block; width: 100%; height: auto; user-select: none; }
+
+  /* ── Panel body: selector + robot strip on top, plot full-width below ── */
+  .panel-body {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .panel-top-row {
+    display: flex;
+    align-items: stretch;
+    gap: 10px;
+    min-height: 240px;
+  }
+
+  /* Feature selector column — 3 rectangular options with flowing shimmer */
+  .feature-selector {
+    width: 105px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 4px 0;
+  }
+  .feature-option {
+    position: relative;
+    flex: 1;
+    /* Real CSS dotted border — browsers render this as round dots, not
+       hyphen-shaped dashes, which is the "attracts a click" feel. */
+    border: 3.5px dotted #45556c;
+    border-radius: 8px;
+    padding: 10px 8px;
+    cursor: pointer;
+    color: #45556c;
+    font-size: 12.5px;
+    font-weight: 600;
+    text-align: center;
+    user-select: none;
+    overflow: hidden;
+    background: linear-gradient(110deg,
+      #f0f4fa 30%, #ffffff 45%, #d6dde6 55%, #f0f4fa 70%);
+    background-size: 250% 100%;
+    animation: feature-shimmer 4s ease-in-out infinite;
+    transition: border-color 0.18s ease, color 0.18s ease,
+                transform 0.15s ease, box-shadow 0.18s ease;
+  }
+  .feature-option:hover {
+    border-color: #f5b942;
+    color: #1c232e;
+    transform: translateX(-2px);
+    box-shadow: 0 2px 8px rgba(245, 185, 66, 0.25);
+  }
+  .feature-option.selected {
+    background: linear-gradient(110deg,
+      #f5b942 0%, #fbcf72 50%, #f5b942 100%);
+    background-size: 250% 100%;
+    border-color: #a37210;
+    color: #1c232e;
+    box-shadow: 0 2px 10px rgba(245, 185, 66, 0.40);
+  }
+  @keyframes feature-shimmer {
+    0%   { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+  .feature-option:hover,
+  .feature-option.selected {
+    border-color: #a37210;
+  }
+
+  /* ── Bar-plot-as-centerpiece pattern — applies to ALL panels ── */
+  .panel .panel-body {
+    flex-direction: column;
+    gap: 8px;
+  }
+  .panel .panel-top-row {
+    flex-direction: column;
+    gap: 6px;
+    min-height: 0;
+  }
+  .panel .feature-selector {
+    flex-direction: row;
+    width: 100%;
+    max-width: 540px;
+    margin: 0 auto;
+    height: 170px;     /* room for the embedded G1 explainer below the label */
+    padding: 0;
+    gap: 10px;
+  }
+  .panel .feature-option {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 6px 4px 4px;
+    border-radius: 10px;
+    /* Calmer shimmer — slower, gentler gradient so the selector stops competing
+       with the bar plot for the eye. */
+    background: linear-gradient(110deg,
+      #f4f7fb 35%, #ffffff 50%, #e9eef5 65%, #f4f7fb 80%);
+    background-size: 220% 100%;
+    animation: feature-shimmer 9s ease-in-out infinite;
+  }
+  .panel .feature-option.selected {
+    background: linear-gradient(110deg,
+      #f5b942 0%, #fbcf72 50%, #f5b942 100%);
+    background-size: 220% 100%;
+    animation: feature-shimmer 9s ease-in-out infinite;
+  }
+  .panel .selector-heading {
+    text-align: center;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: #45556c;
+    margin: 0 auto 6px;
+  }
+  .panel .activity-caption {
+    text-align: center;
+    font-size: 13px;
+    color: #45556c;
+    margin: 4px auto 2px;
+    letter-spacing: 0.02em;
+  }
+  .panel .activity-caption b {
+    font-weight: 700;
+    color: #1c232e;
+    text-transform: capitalize;
+  }
+  /* The old free-standing .left-strip row was merged into each .feature-option
+     dashed box. Per-pill .feat-explainer below carries those styles. */
+  .panel .feat-label {
+    text-align: center;
+    padding: 2px 0 4px;
+    flex-shrink: 0;
+  }
+  .panel .feat-explainer {
+    position: relative;
+    width: 100%;
+    flex: 1;
+    min-height: 0;
+    border-radius: 6px;
+    overflow: hidden;
+    background: #ffffff;
+  }
+  .panel .feat-explainer iframe {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    border: 0;
+    background: #ffffff;
+    pointer-events: none;
+  }
+  .panel .feat-explainer svg.arc-overlay {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+  }
+  /* Two-line option labels: joint + metric. white-space:nowrap keeps "Range of
+     motion" on one line; we shrink the font enough that it always fits. */
+  .feature-option .feat-joint  { font-weight: 700; font-size: 15px; line-height: 1.15; white-space: nowrap; }
+  .feature-option .feat-metric { font-weight: 600; font-size: 15px; line-height: 1.15; color: #6e7382; margin-top: 4px; white-space: nowrap; }
+  .feature-option.selected .feat-metric { color: #6b4d10; }
+  .panel .plot-wrap {
+    width: 100%;
+    max-width: 430px;
+    margin: 0 auto;
+    transform: translateX(-38px);  /* shift ~1 cm left for visual alignment */
+  }
+
+  .left-strip {
+    position: relative;
+    width: 175px;
+    flex-shrink: 0;
+    border: 1px solid #e7eef7;
+    border-radius: 8px;
+    background: #ffffff;
+    overflow: hidden;
+  }
+  .left-strip iframe {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    border: 0;
+    background: #ffffff;
+    pointer-events: none; /* arc overlay should stay readable; user can't accidentally grab the camera */
+  }
+  .left-strip svg.arc-overlay {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+  }
+  .left-strip .strip-caption {
+    position: absolute;
+    top: 6px; left: 0; right: 0;
+    text-align: center;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    color: #45556c;
+    text-shadow: 0 1px 0 #ffffff;
+    pointer-events: none;
+  }
+  .left-strip .strip-footer {
+    position: absolute;
+    bottom: 6px; left: 0; right: 0;
+    text-align: center;
+    font-size: 11px;
+    font-weight: 700;
+    color: #1c232e;
+    text-shadow: 0 1px 0 #ffffff;
+    pointer-events: none;
+  }
+  .left-strip .strip-footer .sub {
+    display: block;
+    font-size: 10px;
+    font-weight: 500;
+    color: #45556c;
+    margin-top: 1px;
+  }
+  .plot-wrap {
+    flex: 1;
+    min-width: 0;
+  }
+
+  /* Bar fills + outlines */
+  .bar-rect-low  { fill: rgba(43, 177, 169, 0.13); stroke: rgba(43, 177, 169, 0.55); stroke-width: 1.2; }
+  .bar-rect-high { fill: rgba(239, 108, 97, 0.13); stroke: rgba(239, 108, 97, 0.55); stroke-width: 1.2; }
+  .bar-label {
+    font-size: 46px;
+    fill: #1c232e;
+    text-anchor: middle;
+    font-weight: 800;
+  }
+  .bar-mean { stroke: rgba(20, 30, 50, 0.55); stroke-width: 1.5; stroke-dasharray: 4 3; }
+  .bar-mean-tag {
+    font-size: 10.5px;
+    fill: #45556c;
+    text-anchor: end;
+  }
+
+  /* Dots — slightly larger + a constantly pulsing halo so they read as
+     "hover me" targets, not passive scatter ticks. */
+  .dot {
+    cursor: pointer;
+    transition: r 0.15s ease, fill 0.15s ease, stroke 0.15s ease, stroke-width 0.15s ease;
+    filter: drop-shadow(0 1px 2px rgba(20, 30, 50, 0.18));
+  }
+  .dot-low  { fill: #2bb1a9; stroke: #ffffff; stroke-width: 1.6; }
+  .dot-high { fill: #ef6c61; stroke: #ffffff; stroke-width: 1.6; }
+  /* Hover/selected: bright gold, larger, dark stroke */
+  .dot.active {
+    fill: #f5b942 !important;
+    stroke: #1c232e;
+    stroke-width: 2.5;
+    filter: drop-shadow(0 0 8px rgba(245, 185, 66, 0.75));
+  }
+
+  /* Pulsing halo ring behind each dot — radiates outward and fades, like a
+     soft ping. transform-box:fill-box anchors the scale to the dot's center. */
+  .dot-halo {
+    pointer-events: none;
+    fill: none;
+    stroke-width: 2;
+    transform-origin: center;
+    transform-box: fill-box;
+    animation: dot-pulse 2.6s cubic-bezier(0.42, 0, 0.58, 1) infinite;
+  }
+  .dot-halo-low  { stroke: rgba(43, 177, 169, 0.65); }
+  .dot-halo-high { stroke: rgba(239, 108, 97, 0.65); }
+  @keyframes dot-pulse {
+    0%   { transform: scale(0.85); opacity: 0.55; }
+    60%  { transform: scale(1.9);  opacity: 0;    }
+    100% { transform: scale(0.85); opacity: 0.55; }
+  }
+
+  /* Axis */
+  .axis-line  { stroke: #45556c; stroke-width: 1.4; }
+  .axis-tick  { stroke: #45556c; stroke-width: 1.2; }
+  .axis-text  { font-size: 18px; font-weight: 700; fill: #1c232e; }
+  .axis-label { font-size: 46px; font-weight: 800; fill: #1c232e; }
+
+  /* Popup */
+  #popup {
+    position: fixed;
+    width: 280px;
+    background: rgba(255, 255, 255, 0.94);    /* slight transparency so the
+                                                  bars stay readable through */
+    backdrop-filter: blur(2px);
+    border: 1px solid #c6cfdb;
+    border-radius: 10px;
+    box-shadow: 0 12px 32px rgba(20,30,50,0.18), 0 4px 10px rgba(20,30,50,0.10);
+    overflow: hidden;
+    z-index: 50;
+    transition: opacity 120ms ease;
+    /* Cursor passes straight through the popup to dots beneath, so the user
+       can swipe between dots without having to navigate around the popup. */
+    pointer-events: none;
+  }
+  #popup .iframe-host iframe { opacity: 0.96; }
+  #popup.hidden { opacity: 0; pointer-events: none; }
+  #popup .popup-head {
+    padding: 8px 12px;
+    border-bottom: 1px solid #e7eef7;
+    font-size: 14px;
+    color: #1c232e;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+  }
+  #popup .popup-head b { font-weight: 600; }
+  #popup .popup-head .r { color: #6e7382; font-variant-numeric: tabular-nums; }
+  #popup .iframe-host {
+    position: relative;
+    width: 100%;
+    height: 220px;
+    background: #f5f7fa;
+  }
+  #popup iframe {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    border: 0;
+    display: block;
+  }
+  #popup iframe.idle { display: none; }
+  #popup .loading-stub {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    color: #6e7382;
+    font-size: 14px;
+  }
+
+  /* Tooltip hint at top */
+  .panel .hint {
+    font-size: 13px;
+    color: #8089a0;
+    margin: 2px 0 0;
+  }
+
+  /* SMPL warning banner */
+  .smpl-status {
+    margin: 8px 0 0;
+    font-size: 14px;
+    color: #6e7382;
+    background: #fef9e7;
+    border: 1px solid #f0d97b;
+    padding: 6px 10px;
+    border-radius: 6px;
+    display: none;
+  }
+  .smpl-status.show { display: block; }
+
+  /* `only=…` query param mode — used by the main page's embedded iframe
+     to drop the surrounding chrome (header, intro, footer) so just the
+     panel renders, full-width, with no internal scrollbar. */
+  body.only-mode               { overflow: hidden; }
+  body.only-mode header.intro  { display: none; }
+  body.only-mode .wrap         { max-width: none; padding: 0; }
+  body.only-mode .panels       { grid-template-columns: 1fr; gap: 0; margin: 0; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="intro">
+    <h1>Interpretable features</h1>
+    <p class="smpl-status" id="smpl-status">SMPL meshes for the hover popups are still being fit — the human side of the popup may stay blank for a few minutes.</p>
+  </header>
+
+  <div class="panels" id="panels"></div>
+</div>
+
+<div id="popup" class="hidden">
+  <div class="popup-head">
+    <b id="popup-task">—</b>
+  </div>
+  <div class="iframe-host">
+    <div class="loading-stub" id="popup-stub">loading…</div>
+  </div>
+</div>
+
+<script>
+const DATA_URL          = 'feature-analysis-animation/data/fixed_feature_instances_multi.json';
+const SINGLE_TASK_URL   = 'feature-analysis-animation/data/single_activity_pool.json';
+const BLOCKLIST_URL = 'visualization_blocklist.json';
+const POPUP_URL_FOR = id => `feature-analysis-animation/instance_view.html?instance_id=${encodeURIComponent(id)}`;
+
+// Forbidden tasks / instances — never show their SMPL fits anywhere.
+// Loaded from visualization_blocklist.json at boot. Until the fetch resolves
+// we treat the blocklist as empty (the network probe is cheap and same-origin).
+let VIZ_BLOCKLIST = { blocked_tasks: [], blocked_per_attr_feature: {}, blocked_instance_ids: [] };
+function isBlockedInstance(inst) {
+  if (!inst) return false;
+  if (VIZ_BLOCKLIST.blocked_instance_ids.includes(inst.instance_id)) return true;
+  if (VIZ_BLOCKLIST.blocked_tasks.includes(inst.task)) return true;
+  const perAF = VIZ_BLOCKLIST.blocked_per_attr_feature || {};
+  const key = `${inst.attribute_short}|${inst.feature}`;
+  const taskList = perAF[key];
+  if (Array.isArray(taskList) && taskList.includes(inst.task)) return true;
+  return false;
+}
+
+// Top-3 features per attribute (default first). Mirrors ATTR_FEATURE_OPTIONS
+// in select_fixed_feature_instances.py.
+const ATTR_FEATURE_OPTIONS = {
+  age:    ['waist_rom',          'waist_mean_vel',          'ankle_rom'],
+  weight: ['ankle_peak_vel',     'ankle_rom',               'root_translate_peak_vel'],
+  height: ['root_translate_rom', 'root_translate_peak_vel', 'ankle_rom'],
+  gender: ['ankle_rom',          'shoulder_rom',            'shoulder_mean_vel'],
+};
+const FEATURE_LABEL = {
+  waist_rom:               'Waist ROM',
+  waist_mean_vel:          'Waist mean vel',
+  ankle_rom:               'Ankle ROM',
+  ankle_peak_vel:          'Ankle peak vel',
+  shoulder_rom:            'Shoulder ROM',
+  shoulder_mean_vel:       'Shoulder mean vel',
+  root_translate_rom:      'Root transl. ROM',
+  root_translate_peak_vel: 'Root transl. peak vel',
+};
+// Two-line label parts: joint name on top, metric below.
+const FEATURE_PARTS = {
+  waist_rom:               { joint: 'Waist',    metric: 'Range of motion' },
+  waist_mean_vel:          { joint: 'Waist',    metric: 'Mean velocity' },
+  ankle_rom:               { joint: 'Ankle',    metric: 'Range of motion' },
+  ankle_peak_vel:          { joint: 'Ankle',    metric: 'Peak velocity' },
+  shoulder_rom:            { joint: 'Shoulder', metric: 'Range of motion' },
+  shoulder_mean_vel:       { joint: 'Shoulder', metric: 'Mean velocity' },
+  root_translate_rom:      { joint: 'Root',     metric: 'Range of motion' },
+  root_translate_peak_vel: { joint: 'Root',     metric: 'Peak velocity' },
+};
+const FEATURE_PRETTY = {
+  waist_rom:               'Waist range of motion',
+  waist_mean_vel:          'Waist mean velocity',
+  ankle_rom:               'Ankle range of motion',
+  ankle_peak_vel:          'Ankle peak velocity',
+  shoulder_rom:            'Shoulder range of motion',
+  shoulder_mean_vel:       'Shoulder mean velocity',
+  root_translate_rom:      'Root translate range of motion',
+  root_translate_peak_vel: 'Root translate peak velocity',
+};
+function featureUnit(feat) {
+  if (feat.startsWith('root_translate')) return feat.endsWith('vel') ? 'cm/s' : 'cm';
+  return feat.endsWith('vel') ? 'deg/s' : 'deg';
+}
+
+// Per-feature illustration dispatcher (function declarations are hoisted,
+// so referencing them here is safe even though they're defined below).
+const MOUNT_FOR_FEATURE = {
+  ankle_rom:               mountAnkleRomIframe,
+  ankle_peak_vel:          mountAnklePeakVelIframe,
+  waist_rom:               mountWaistRomIframe,
+  waist_mean_vel:          mountWaistMeanVelIframe,
+  root_translate_rom:      mountRootRomIframe,
+  root_translate_peak_vel: mountRootPeakVelIframe,
+  shoulder_rom:            mountShoulderRomIframe,
+  shoulder_mean_vel:       mountShoulderMeanVelIframe,
+};
+
+// Globals shared between init and switchFeature.
+let byAttrFeat = {};
+let PANEL_ACTIVITY = {};   // "attr|feature" → task name (when using single-activity pool)
+
+// ─── Attribute presentation data ───────────────────────────────────────
+const ATTR_ORDER = ['age', 'weight', 'height', 'gender'];
+const ATTR_PRESET = {
+  age:    { title: 'Age',    feature_pretty: 'Waist range of motion',         unit: 'deg',   low: 'Younger', high: 'Older',   low_suf: 'yr', high_suf: 'yr' },
+  weight: { title: 'Weight', feature_pretty: 'Ankle peak velocity',           unit: 'deg/s', low: 'Lighter', high: 'Heavier', low_suf: 'kg', high_suf: 'kg' },
+  height: { title: 'Height', feature_pretty: 'Root range of motion',           unit: 'cm',   low: 'Shorter', high: 'Taller',  low_suf: 'cm', high_suf: 'cm' },
+  gender: { title: 'Gender', feature_pretty: 'Ankle range of motion',         unit: 'deg',   low: 'Female',  high: 'Male',    low_suf: '',   high_suf: '' },
+};
+
+const NS = 'http://www.w3.org/2000/svg';
+function svg(tag, attrs = {}, parent = null) {
+  const el = document.createElementNS(NS, tag);
+  for (const [k, v] of Object.entries(attrs)) el.setAttribute(k, v);
+  if (parent) parent.appendChild(el);
+  return el;
+}
+
+// Hash → deterministic [-1, 1] for dot jitter
+function jitterSeed(s) {
+  let h = 0;
+  for (let i = 0; i < s.length; i++) h = ((h << 5) - h + s.charCodeAt(i)) | 0;
+  // map to (-1, 1)
+  return ((h & 0xffff) / 0xffff) * 2 - 1;
+}
+
+function fmtAttr(inst, suf) {
+  if (suf === '') return inst.actor_gender === 'M' ? 'male' : 'female';
+  return `${Math.round(inst.attr_value)} ${suf}`;
+}
+
+const DOTS_PER_SIDE = 10;
+
+function pickRandom(sideAll, k) {
+  // Pure random k-sample from the side's pool (decile-filtered upstream).
+  // No top-N or extreme-F sub-filter, no ceiling constraint — bars reflect
+  // the actual F distribution of each attribute decile for the chosen task.
+  if (sideAll.length <= k) return sideAll.slice();
+  const pool = [...sideAll];
+  for (let i = pool.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [pool[i], pool[j]] = [pool[j], pool[i]];
+  }
+  return pool.slice(0, k);
+}
+
+function pickPanelInstances(lowAll, highAll, k) {
+  return [...pickRandom(lowAll, k), ...pickRandom(highAll, k)];
+}
+function renderPanel(attr, feat, opts) {
+  // opts.skipMounts → don't create iframes / promote, used by applyFeatureChange
+  // when it only needs the freshly-rendered bar-plot SVG and will throw away
+  // the rest. Avoids wasted G1 viewer loads on every pill click.
+  const skipMounts = !!(opts && opts.skipMounts);
+  const preset = ATTR_PRESET[attr];
+  const all = byAttrFeat[`${attr}|${feat}`] || [];
+  const lowAll  = all.filter(i => i.side === 'low');
+  const highAll = all.filter(i => i.side === 'high');
+  const instances = pickPanelInstances(lowAll, highAll, DOTS_PER_SIDE);
+
+  const panel = document.createElement('div');
+  panel.className = 'panel';
+  panel.dataset.attr = attr;
+  panel.dataset.feature = feat;
+
+  // Head
+  const head = document.createElement('div');
+  head.className = 'panel-head';
+  head.innerHTML = `
+    <div>
+      <h2>${preset.title}</h2>
+    </div>
+  `;
+  panel.appendChild(head);
+
+  // panel body: top-row (selector + left-strip) then full-width plot below.
+  const body = document.createElement('div');
+  body.className = 'panel-body';
+  panel.appendChild(body);
+
+  const topRow = document.createElement('div');
+  topRow.className = 'panel-top-row';
+  body.appendChild(topRow);
+
+  // Small heading above the 3 feature dashed-boxes — names what the row is
+  // showing so a reader scanning the panel knows the dynamic features are
+  // the diagnostic, not the attribute itself.
+  const selHead = document.createElement('div');
+  selHead.className = 'selector-heading';
+  selHead.textContent = 'Features of Movement Dynamics';
+  topRow.appendChild(selHead);
+
+  // Feature selector — 3 dashed boxes. Each box now bundles its label AND
+  // its own G1 robot explainer animation (the explainer used to live in a
+  // separate strip below the selector; merging them gives the bar plot more
+  // vertical room and lets the user compare three explainer animations at
+  // a glance instead of swapping them on click).
+  const selector = document.createElement('div');
+  selector.className = 'feature-selector';
+  const pillExplainers = []; // [{ pill, explainer, feat }]
+  for (const f of ATTR_FEATURE_OPTIONS[attr]) {
+    const opt = document.createElement('div');
+    opt.className = 'feature-option' + (f === feat ? ' selected' : '');
+    opt.dataset.feature = f;
+    const parts = FEATURE_PARTS[f] || { joint: FEATURE_LABEL[f] || f, metric: '' };
+    opt.innerHTML =
+      `<div class="feat-label">` +
+        `<div class="feat-joint">${parts.joint}</div>` +
+        `<div class="feat-metric">${parts.metric}</div>` +
+      `</div>` +
+      `<div class="feat-explainer" data-attr="${attr}"></div>`;
+    opt.addEventListener('click', () => applyFeatureChange(panel, attr, f));
+    selector.appendChild(opt);
+    pillExplainers.push({ pill: opt, explainer: opt.querySelector('.feat-explainer'), feat: f });
+  }
+  topRow.appendChild(selector);
+
+  // Plot wrapper — full panel width below the top row.
+  const plotWrap = document.createElement('div');
+  plotWrap.className = 'plot-wrap';
+  body.appendChild(plotWrap);
+
+  // SVG plot — taller viewBox so the bar plot dominates as the centerpiece
+  // (the bar-plot-as-centerpiece pattern, applied to every panel).
+  const W = 900, H = 720;
+  const PAD = { top: 20, right: 24, bottom: 110, left: 200 };
+  const plotW = W - PAD.left - PAD.right;
+  const plotH = H - PAD.top - PAD.bottom;
+
+  const root = svg('svg', {
+    class: 'plot',
+    viewBox: `0 0 ${W} ${H}`,
+    preserveAspectRatio: 'xMidYMid meet',
+  });
+  plotWrap.appendChild(root);
+
+  // Build point list — each instance becomes one point. side='low' goes in
+  // the left bar (low-attribute side), 'high' goes in the right bar.
+  const points = instances.map(inst => ({
+    bar: inst.side === 'low' ? 'left' : 'right',
+    instance: inst,
+    F: inst.per_clip_F,
+  }));
+
+  const leftPts = points.filter(p => p.bar === 'left');
+  const rightPts = points.filter(p => p.bar === 'right');
+
+  const allF = points.map(p => p.F);
+  const yMax = Math.max(...allF) * 1.08;
+  // Reserve a small baseline gap at the bottom of the plot so a bar whose
+  // lowest dot sits at F≈0 doesn't drag its rounded-rect bottom past the
+  // x-axis line. The gap is just large enough to absorb BAR_DOT_PAD (26)
+  // plus a few px of visual breathing room above the x-axis.
+  const Y_BASELINE_GAP = 32;
+  const yScale = v => PAD.top + plotH - Y_BASELINE_GAP - (v / yMax) * (plotH - Y_BASELINE_GAP);
+
+  // X bar centers — spread enough that the (now-large) bottom labels don't collide.
+  const leftCenter  = PAD.left + plotW * 0.25;
+  const rightCenter = PAD.left + plotW * 0.65;
+  const barWidth    = plotW * 0.16;
+
+  // ── plot-area background: tinted base + subtle dot grid for texture ──
+  // The pale blue-gray base reads cool against the warm-cream panel and gives
+  // the teal/coral bars something to pop against. The dot grid adds a quiet
+  // "graph paper" feel without competing with the data.
+  const patId = `plot-dots-${attr}`;
+  const defs = svg('defs', {}, root);
+  const pat = svg('pattern', {
+    id: patId,
+    width: 14, height: 14,
+    patternUnits: 'userSpaceOnUse',
+  }, defs);
+  svg('circle', { cx: 7, cy: 7, r: 1.2, fill: 'rgba(20, 30, 50, 0.07)' }, pat);
+  svg('rect', {
+    x: PAD.left, y: PAD.top,
+    width: plotW, height: plotH,
+    fill: '#eaf0f6',
+  }, root);
+  svg('rect', {
+    x: PAD.left, y: PAD.top,
+    width: plotW, height: plotH,
+    fill: `url(#${patId})`,
+  }, root);
+
+  // ── axes ──
+  // Y axis line
+  svg('line', { class: 'axis-line', x1: PAD.left, x2: PAD.left, y1: PAD.top, y2: PAD.top + plotH }, root);
+  // X axis baseline
+  svg('line', { class: 'axis-line', x1: PAD.left, x2: W - PAD.right, y1: PAD.top + plotH, y2: PAD.top + plotH }, root);
+
+  // Y ticks (5 ticks)
+  const N_TICKS = 5;
+  for (let i = 0; i <= N_TICKS; i++) {
+    const v = (yMax * i) / N_TICKS;
+    const y = yScale(v);
+    svg('line', { class: 'axis-tick', x1: PAD.left - 5, x2: PAD.left, y1: y, y2: y }, root);
+    const t = svg('text', { class: 'axis-text', x: PAD.left - 9, y: y + 4, 'text-anchor': 'end' }, root);
+    t.textContent = niceNum(v);
+  }
+  // Y axis label — two lines: joint on top, metric below (matches the pill
+  // labels and the strip caption). Rendered as a single rotated <text> with
+  // two <tspan>s so SVG handles the rotation cleanly.
+  const yParts = FEATURE_PARTS[feat] || { joint: '', metric: '' };
+  const yJoint  = yParts.joint || preset.feature_pretty.split(' ')[0];
+  const yMetric = yParts.metric || 'Range of motion';
+  const yLabel = svg('text', {
+    class: 'axis-label',
+    transform: `translate(${PAD.left - 110}, ${PAD.top + plotH / 2}) rotate(-90)`,
+    'text-anchor': 'middle',
+  }, root);
+  const yLine1 = svg('tspan', { x: 0, dy: '-0.55em' }, yLabel);
+  yLine1.textContent = yJoint;
+  const yLine2 = svg('tspan', { x: 0, dy: '1.1em' }, yLabel);
+  // Append the unit glyph (deg → °, deg/s → °/s, cm stays cm) so the y-axis
+  // reads e.g. "Range of motion (°)" — without it the tick numbers were
+  // unitless.
+  const unitGlyph = featureUnit(feat).replace(/deg/g, '°');
+  yLine2.textContent = `${yMetric} (${unitGlyph})`;
+
+  // ── bars ──
+  // Vertical breathing room between dots and the bar's top/bottom edge —
+  // ~3.5 mm at default zoom. Without it the most-extreme dots sit ON the bar
+  // border, which reads as clipping.
+  const BAR_DOT_PAD = 26;
+  function drawBar(center, pts, kind /*'low'|'high'*/, labelText) {
+    // Bar spans the actual range of points on this side: top edge at the
+    // highest F, bottom edge at the lowest. Acts as a range indicator
+    // (the gap between min and max F for this attribute group).
+    const localMax = Math.max(...pts.map(p => p.F));
+    const localMin = Math.min(...pts.map(p => p.F));
+    const yTop = yScale(localMax) - BAR_DOT_PAD;
+    const yBot = yScale(localMin) + BAR_DOT_PAD;
+    const x0 = center - barWidth / 2;
+
+    svg('rect', {
+      x: x0,
+      y: yTop,
+      width: barWidth,
+      height: yBot - yTop,
+      class: `bar-rect-${kind}`,
+      rx: 4, ry: 4,
+    }, root);
+
+    // X-axis bar label
+    const lbl = svg('text', {
+      class: 'bar-label',
+      x: center,
+      y: PAD.top + plotH + 70,
+    }, root);
+    lbl.textContent = labelText;
+  }
+
+  drawBar(leftCenter, leftPts, 'low', preset.low);
+  drawBar(rightCenter, rightPts, 'high', preset.high);
+
+  // ── dots ──
+  // Group element so we can put dots above bar fills
+  const dotGroup = svg('g', {}, root);
+  const linkGroup = svg('g', {}, root);
+
+  function drawDots(pts, center, kind) {
+    const DOT_R = 7;
+    const MIN_DIST = DOT_R * 2.3;            // ~3 px breathing room between centers
+    const halfWidth = barWidth / 2 - 4;       // keep dots inside the bar fill
+    const yClampLo = PAD.top + 4;
+    const yClampHi = PAD.top + plotH - 4;
+
+    // Initial positions: x at bar center, y from per-clip F. We then dodge in
+    // 2D with horizontal-priority weighting so the bee-swarm spreads out
+    // sideways first and only nudges Y when horizontal space runs out.
+    const items = pts.map(p => ({
+      p,
+      cx: center + 1e-3 * (Math.random() - 0.5),  // tiny tie-break so identical points separate
+      cy: yScale(p.F),
+    }));
+
+    // Iterative pairwise repulsion (deterministic — re-runs the same loop on
+    // every render). 60 iters is more than enough for ~10 dots per bar.
+    const hWeight = 0.85, vWeight = 0.15;
+    for (let iter = 0; iter < 60; iter++) {
+      let moved = false;
+      for (let i = 0; i < items.length; i++) {
+        for (let j = i + 1; j < items.length; j++) {
+          const a = items[i], b = items[j];
+          let dx = b.cx - a.cx;
+          let dy = b.cy - a.cy;
+          let d = Math.hypot(dx, dy);
+          if (d < 1e-4) {
+            // Same coords — deterministically push apart along x.
+            a.cx -= DOT_R * 0.5;
+            b.cx += DOT_R * 0.5;
+            moved = true;
+            continue;
+          }
+          if (d < MIN_DIST) {
+            const push = (MIN_DIST - d) / 2;
+            const ux = dx / d, uy = dy / d;
+            a.cx -= ux * push * hWeight;
+            a.cy -= uy * push * vWeight;
+            b.cx += ux * push * hWeight;
+            b.cy += uy * push * vWeight;
+            moved = true;
+          }
+        }
+        // Clamp each dot into the bar's playable area.
+        items[i].cx = Math.max(center - halfWidth, Math.min(center + halfWidth, items[i].cx));
+        items[i].cy = Math.max(yClampLo, Math.min(yClampHi, items[i].cy));
+      }
+      if (!moved) break;
+    }
+
+    // Draw each dot at its dodged position.
+    for (const { p, cx, cy } of items) {
+      const delay = (jitterSeed(p.instance.instance_id + '|d') + 1) * 1.3;
+      svg('circle', {
+        class: `dot-halo dot-halo-${kind}`,
+        cx, cy, r: 12,
+        style: `animation-delay: ${delay.toFixed(2)}s;`,
+      }, dotGroup);
+      const c = svg('circle', {
+        class: `dot dot-${kind}`,
+        cx, cy, r: DOT_R,
+      }, dotGroup);
+      c.dataset.instanceId = p.instance.instance_id;
+      c.dataset.bar = p.bar;
+      c.dataset.cx = cx;
+      c.dataset.cy = cy;
+      c.addEventListener('mouseenter', () => onDotEnter(p, c, root));
+      c.addEventListener('mouseleave', () => onDotLeave(p, c, root));
+      c.addEventListener('click',      () => onDotEnter(p, c, root, true));
+    }
+  }
+  drawDots(leftPts, leftCenter, 'low');
+  drawDots(rightPts, rightCenter, 'high');
+
+  // ── per-pill feature explainer ──
+  // Mount a static (paused) G1 iframe for EVERY pill once, then promote the
+  // selected pill to a live mount that REUSES that iframe (no reload). On
+  // pill click we just stop the active mount and promote the new one — the
+  // iframes never get torn down, so switching feels instant after first load.
+  const flatF  = points.map(p => p.F);
+  const meanRom = flatF.reduce((a, b) => a + b, 0) / flatF.length;
+  if (!skipMounts) {
+    const pillIframes = new Map();     // feat → static iframe element
+    for (const { explainer, feat: pillFeat } of pillExplainers) {
+      const f = mountStaticG1(explainer, pillFeat);
+      if (f) pillIframes.set(pillFeat, f);
+    }
+    // Promote the initially-selected pill.
+    let liveHandle = null;
+    function promote(toFeat) {
+      if (liveHandle && liveHandle.stop) liveHandle.stop();
+      const mount = MOUNT_FOR_FEATURE[toFeat];
+      if (!mount) { liveHandle = null; return; }
+      const targetExplainer = pillExplainers.find(p => p.feat === toFeat).explainer;
+      liveHandle = mount(targetExplainer, { meanRom }, pillIframes.get(toFeat));
+    }
+    promote(feat);
+    // Stash so applyFeatureChange (called from the pill click handler below)
+    // can stop the active mount before promoting a new one. Tracking on the
+    // panel itself keeps the API clean.
+    panel._promote = promote;
+  }
+
+  // ── Activity legend (top-right of plot) ──
+  // Renders inside the plot SVG so it scales with the chart and sits over
+  // the bars without affecting layout. Dark-slate fill against the cool
+  // pale-blue plot area for strong contrast.
+  const activityName = PANEL_ACTIVITY[`${attr}|${feat}`];
+  if (activityName) {
+    const LEG_PAD_X = 16, LEG_PAD_Y = 10, LEG_GAP = 2;
+    // "Activity:" label and the activity name share the same styling now.
+    const LEG_FS_LBL = 34, LEG_FS_NAME = 34;
+    // approximate text widths (no measureText in SVG init); pad generously
+    const nameCap = activityName.charAt(0).toUpperCase() + activityName.slice(1);
+    const lblW    = 'Activity'.length    * LEG_FS_LBL * 0.55;
+    const nameW   = nameCap.length       * LEG_FS_NAME * 0.6;
+    const boxW    = lblW + LEG_GAP + nameW + LEG_PAD_X * 2;
+    const boxH    = LEG_FS_NAME + LEG_PAD_Y * 2;
+    const x0      = W - PAD.right - boxW - 8;   // inside the plot, 8 px from right edge
+    const y0      = PAD.top + 8;
+    const g = svg('g', { class: 'activity-legend' }, root);
+    // Border + background removed — text-only legend sits cleanly over the
+    // plot's dotted background.
+    // "Activity:" label and the activity name share the same styling —
+    // same size, same dark-slate colour, regular (non-bold) weight.
+    const sharedAttrs = {
+      'font-size': LEG_FS_LBL,
+      'font-weight': 500,
+      fill: '#1c232e',
+      'letter-spacing': '0.01em',
+    };
+    const lblT = svg('text', {
+      ...sharedAttrs,
+      x: x0 + LEG_PAD_X,
+      y: y0 + boxH / 2 + LEG_FS_LBL * 0.35,
+    }, g);
+    lblT.textContent = 'Activity:';
+    const nameT = svg('text', {
+      ...sharedAttrs,
+      x: x0 + LEG_PAD_X + lblW + LEG_GAP,
+      y: y0 + boxH / 2 + LEG_FS_NAME * 0.35,
+    }, g);
+    nameT.textContent = nameCap;
+  }
+
+  return panel;
+}
+
+// Map: feature → (demo, config) used by both the live and static mounts.
+// Mirrors the iframe URLs in each mountXxxIframe function (single source of
+// truth — when adding a feature, register it here too).
+const G1_VIEWER_SRC = {
+  waist_rom:               { demo: 'waist_only_demo',    config: 'config_waist_joint.json' },
+  waist_mean_vel:          { demo: 'waist_only_demo',    config: 'config_waist_joint.json' },
+  ankle_rom:               { demo: 'ankle_only_demo',    config: 'config_leg_joint.json'   },
+  ankle_peak_vel:          { demo: 'ankle_ramp_demo',    config: 'config_ankle_vel.json'   },
+  shoulder_rom:            { demo: 'shoulder_only_demo', config: 'config_shoulder_joint.json' },
+  shoulder_mean_vel:       { demo: 'shoulder_only_demo', config: 'config_shoulder_joint.json' },
+  root_translate_rom:      { demo: 'root_squat_demo',    config: 'config_root_joint.json'  },
+  root_translate_peak_vel: { demo: 'root_squat_demo',    config: 'config_root_joint.json'  },
+};
+
+function mountStaticG1(container, feat) {
+  // Render a non-animated robot for a pill. `paused=1` makes the viewer
+  // override its autoPlay default so the internal loop boots with
+  // playing=false — no post-load SYNC race window.
+  // Returns the iframe element so callers can later promote it to live by
+  // passing it back into one of the mountXxxIframe(..., existingIframe)
+  // functions — that avoids reloading the heavy synthetic G1 viewer on
+  // every pill click.
+  const src = G1_VIEWER_SRC[feat];
+  if (!src) return null;
+  const iframe = document.createElement('iframe');
+  iframe.loading = 'lazy';
+  iframe.src = `g1_engine/viewer.html?embed=1&nozoom=1&paused=1&demo=${src.demo}&config=${src.config}&v=2026-06-25c`;
+  container.appendChild(iframe);
+  return iframe;
+}
+
+// Helper: live-mount functions call this to either reuse an existing
+// (paused) iframe from a previous pill activation, or create a fresh one.
+// When reusing we send one SYNC playing:true to unfreeze it.
+function _liveIframe(stripEl, src, existingIframe) {
+  if (existingIframe) {
+    try {
+      existingIframe.contentWindow.postMessage(
+        { type: 'SYNC', time: 0, playing: true, speed: 1 }, '*');
+    } catch {}
+    return existingIframe;
+  }
+  const f = document.createElement('iframe');
+  f.loading = 'lazy';
+  f.src = src;
+  stripEl.appendChild(f);
+  return f;
+}
+
+// ─── Feature illustrations ────────────────────────────────────────────
+// Tiny 3-vector helpers used by the camera-projection math below.
+const v3 = {
+  sub:   (a, b) => [a[0]-b[0], a[1]-b[1], a[2]-b[2]],
+  add:   (a, b) => [a[0]+b[0], a[1]+b[1], a[2]+b[2]],
+  dot:   (a, b) => a[0]*b[0] + a[1]*b[1] + a[2]*b[2],
+  cross: (a, b) => [a[1]*b[2]-a[2]*b[1], a[2]*b[0]-a[0]*b[2], a[0]*b[1]-a[1]*b[0]],
+  norm:  v   => { const n = Math.hypot(...v); return [v[0]/n, v[1]/n, v[2]/n]; },
+};
+
+function mountAnkleRomIframe(stripEl, stats, existingIframe) {
+  // Live G1 viewer + an SVG overlay that traces the exact arc the foot tip
+  // sweeps through on screen. Landscape strip with tight joint-only crop
+  // (config_leg_joint.json) so the wedge dominates the small banner.
+  const iframe = _liveIframe(stripEl,
+    'g1_engine/viewer.html?embed=1&nozoom=1&demo=ankle_only_demo&config=config_leg_joint.json&v=2026-06-25c',
+    existingIframe);
+
+  // ── Scene parameters — must mirror config_leg_joint.json + viewer.html ──
+  const W = 290, H = 110;
+  const CAM_POS = [0.00, 0.10, 0.40];
+  const CAM_TGT = [0.00, 0.10, 0.00];
+  const FOV_DEG = 42;
+
+  // Right-ankle geometry in Three.js world coords. Derived via FK with the
+  // synthetic CSV's frame-0 joint angles applied (hip pitch +2°, hip roll
+  // -15.6°, knee +12.4°, etc.) so the values reflect the actual standing
+  // pose, not MJCF zero-rest. ANKLE_WORLD is the right_ankle_pitch_link
+  // pivot, FOOT_REST is the toe-tip offset from that pivot at pitch=0, and
+  // PITCH_AXIS is the world-frame ankle-pitch hinge axis (no longer pure -Z
+  // — knee and hip roll tilt it slightly).
+  const ANKLE_WORLD = [-0.06927, +0.05275, +0.16094];
+  const FOOT_REST   = [+0.11487, -0.07320, +0.02450];
+  const PITCH_AXIS  = [+0.17713, -0.09665, -0.97943];
+  // Synthetic CSV's right_ankle_pitch oscillates around this base by ±25°.
+  const BASE_PITCH_DEG = -10.75;
+  const HALF_DEG       = 25;
+
+  // Camera basis in world coords (Three.js lookAt convention).
+  const F_world = v3.norm(v3.sub(CAM_TGT, CAM_POS));        // looking direction
+  const R_world = v3.norm(v3.cross(F_world, [0, 1, 0]));     // camera right
+  const U_world = v3.cross(R_world, F_world);                // camera up
+
+  function project(wp) {
+    const rel = v3.sub(wp, CAM_POS);
+    const cx = v3.dot(rel, R_world);
+    const cy = v3.dot(rel, U_world);
+    const cz = v3.dot(rel, F_world);  // positive forward
+    const halfH = Math.tan(FOV_DEG * Math.PI / 360);
+    const halfW = halfH * (W / H);
+    const ndcX = cx / (cz * halfW);
+    const ndcY = cy / (cz * halfH);
+    return {
+      x: (ndcX + 1) * 0.5 * W,
+      y: (1 - ndcY) * 0.5 * H,
+    };
+  }
+
+  // Rotate a vector around the ankle pitch axis by jointDeg (Rodrigues).
+  // PITCH_AXIS is in world coords and may be tilted from -Z due to the
+  // bent knee + hip roll in the rest pose.
+  function rotPitch(v, jointDeg) {
+    const t = jointDeg * Math.PI / 180;
+    const c = Math.cos(t), s = Math.sin(t);
+    const k = PITCH_AXIS;
+    const kCrossV = v3.cross(k, v);
+    const kDotV   = v3.dot(k, v);
+    return [
+      v[0]*c + kCrossV[0]*s + k[0]*kDotV*(1-c),
+      v[1]*c + kCrossV[1]*s + k[1]*kDotV*(1-c),
+      v[2]*c + kCrossV[2]*s + k[2]*kDotV*(1-c),
+    ];
+  }
+
+  function toeWorld(jointDeg) {
+    return v3.add(ANKLE_WORLD, rotPitch(FOOT_REST, jointDeg));
+  }
+
+  // ── Build the overlay ──
+  const overlay = svg('svg', {
+    class: 'arc-overlay',
+    viewBox: `0 0 ${W} ${H}`,
+    preserveAspectRatio: 'xMidYMid meet',
+  });
+
+  const pivot = project(ANKLE_WORLD);
+
+  // ── Static reference layer (painted once) ──
+
+  // Dashed rest-direction line from pivot to the toe at base pitch.
+  const restProj = project(toeWorld(BASE_PITCH_DEG));
+  svg('line', {
+    x1: pivot.x, y1: pivot.y, x2: restProj.x, y2: restProj.y,
+    stroke: 'rgba(245, 185, 66, 0.45)', 'stroke-width': 1, 'stroke-dasharray': '3 3',
+  }, overlay);
+
+  // Live wedge — its `d` is updated every frame in the rAF loop below.
+  const wedgePath = svg('path', {
+    d: '',
+    fill: 'rgba(245, 185, 66, 0.36)',
+    stroke: 'rgba(245, 185, 66, 0.95)',
+    'stroke-width': 1.4,
+    'stroke-linejoin': 'round',
+  }, overlay);
+
+  // Pivot pin + ring at the ankle joint (painted on top of the wedge).
+  svg('circle', { cx: pivot.x, cy: pivot.y, r: 4, fill: '#1c232e' }, overlay);
+  svg('circle', { cx: pivot.x, cy: pivot.y, r: 7, fill: 'none', stroke: '#f5b942', 'stroke-width': 1.6 }, overlay);
+
+  // Live foot-tip dot — also updated every frame.
+  const liveToeDot = svg('circle', {
+    cx: pivot.x, cy: pivot.y, r: 6,
+    fill: '#1c232e', stroke: '#f5b942', 'stroke-width': 2.4,
+  }, overlay);
+
+  stripEl.appendChild(overlay);
+
+  // ── Animation loop — master clock for both overlay and iframe ──
+  // We drive the iframe by postMessage SYNC every frame. The viewer's SYNC
+  // handler snaps frameIdx + accumTime to msg.time, so the rendered foot
+  // pose follows our clock exactly. We use the SAME `t` to compute the arc's
+  // joint angle, so the wedge / live toe dot can't drift from the rendered
+  // foot — both share one source of truth.
+  //
+  // CSV motion: ±HALF_DEG sine, period 1.5 s (CYCLES=2 over 3 s in the
+  // generator script). The viewer wraps msg.time by (numFrames * frameTime)
+  // internally so we can let `t` grow unbounded.
+  const N_SAMPLES = 18;
+  const CYCLE_S = 1.5;
+  const TWO_PI = Math.PI * 2;
+  const t0 = performance.now();
+
+  function tick(nowMs) {
+    const t = (nowMs - t0) / 1000;
+    const jointDeg = BASE_PITCH_DEG + HALF_DEG * Math.sin((t / CYCLE_S) * TWO_PI);
+
+    // Slave the iframe's playback to this clock. Sent every frame so even
+    // after the iframe's model finishes loading mid-page-life it snaps onto
+    // our schedule. postMessage no-ops silently until the iframe content
+    // window is alive.
+    if (iframe.contentWindow) {
+      iframe.contentWindow.postMessage({
+        type: 'SYNC', time: t, playing: true, speed: 1,
+      }, '*');
+    }
+
+    // Build a wedge from BASE → current joint angle. Empty area when at rest.
+    let d = `M ${pivot.x.toFixed(2)} ${pivot.y.toFixed(2)}`;
+    for (let i = 0; i <= N_SAMPLES; i++) {
+      const a = BASE_PITCH_DEG + (jointDeg - BASE_PITCH_DEG) * (i / N_SAMPLES);
+      const p = project(toeWorld(a));
+      d += ` L ${p.x.toFixed(2)} ${p.y.toFixed(2)}`;
+    }
+    d += ' Z';
+    wedgePath.setAttribute('d', d);
+
+    // Move the live foot-tip dot to the toe's current screen position.
+    const toeNow = project(toeWorld(jointDeg));
+    liveToeDot.setAttribute('cx', toeNow.x.toFixed(2));
+    liveToeDot.setAttribute('cy', toeNow.y.toFixed(2));
+
+    rafId = requestAnimationFrame(tick);
+  }
+  let rafId = requestAnimationFrame(tick);
+
+  addStripCaption(overlay, 'Ankle', 'Range of motion');
+  return {
+    stop() {
+      cancelAnimationFrame(rafId);
+      overlay.remove();
+      try {
+        iframe.contentWindow.postMessage(
+          { type: 'SYNC', time: 0, playing: false, speed: 1 }, '*');
+      } catch {}
+    },
+    iframe,
+  };
+}
+
+// ─── Shared helpers for the per-axis arc illustrations ────────────────
+function makeProjector(camPos, camTgt, fovDeg, W, H) {
+  const F = v3.norm(v3.sub(camTgt, camPos));
+  const R = v3.norm(v3.cross(F, [0, 1, 0]));
+  const U = v3.cross(R, F);
+  const halfH = Math.tan(fovDeg * Math.PI / 360);
+  const halfW = halfH * (W / H);
+  return function project(wp) {
+    const rel = v3.sub(wp, camPos);
+    const cx = v3.dot(rel, R);
+    const cy = v3.dot(rel, U);
+    const cz = v3.dot(rel, F);
+    return {
+      x: ((cx / (cz * halfW)) + 1) * 0.5 * W,
+      y: (1 - (cy / (cz * halfH))) * 0.5 * H,
+    };
+  };
+}
+function rodrigues(v, axis, deg) {
+  const t = deg * Math.PI / 180;
+  const c = Math.cos(t), s = Math.sin(t);
+  const cr = v3.cross(axis, v);
+  const k  = v3.dot(axis, v);
+  return [
+    v[0]*c + cr[0]*s + axis[0]*k*(1-c),
+    v[1]*c + cr[1]*s + axis[1]*k*(1-c),
+    v[2]*c + cr[2]*s + axis[2]*k*(1-c),
+  ];
+}
+
+// Two-line caption for the landscape G1 strip: joint name on top, metric below.
+// Echoes the selector pill format (Ankle / ROM, Waist / Mean vel, ...).
+function addStripCaption(overlay, joint, metric) {
+  // No-op since the explainer was merged into the pill dashed-box and the
+  // pill's "Joint / Metric" label already sits right above the animation.
+  // Kept as a function shell so existing callsites need no edits.
+  return;
+  const j = svg('text', {
+    x: 8, y: 16,
+    'font-size': 13, 'font-weight': 800,
+    'letter-spacing': '0.04em', fill: '#1c232e',
+  }, overlay);
+  j.textContent = joint;
+  const m = svg('text', {
+    x: 8, y: 30,
+    'font-size': 11, 'font-weight': 600,
+    'letter-spacing': '0.04em', fill: '#6e7382',
+  }, overlay);
+  m.textContent = metric;
+}
+
+function mountWaistRomIframe(stripEl, stats, existingIframe) {
+  // Waist YAW twist around the vertical axis — torso rotates above the
+  // pelvis. The marker is the right shoulder tracing a horizontal circle at
+  // chest height. Same arc vocabulary as the ankle panel, just a vertical
+  // pivot axis instead of a hinge.
+  // Reuses existingIframe (from a previous pill activation) when provided
+  // so we don't reload the heavy G1 viewer on pill switches.
+  const iframe = _liveIframe(stripEl,
+    'g1_engine/viewer.html?embed=1&nozoom=1&demo=waist_only_demo&config=config_waist_joint.json&v=2026-06-25c',
+    existingIframe);
+
+  const W = 290, H = 110;
+  const CAM_POS = [0.45, 1.05, 0.20];
+  const CAM_TGT = [0.00, 1.00, 0.00];
+  const FOV_DEG = 42;
+
+  // Waist pivot (= pelvis position) and chest-right marker.
+  // CHEST_REST_REL is a point on the right edge of the chest at sternum
+  // height — closer to the body than the shoulder, so the arc fans across
+  // the chest area instead of all the way out to the arm. Yaw axis is +Y.
+  const WAIST_WORLD       = [0.0, 0.783, 0.0];
+  const CHEST_REST_REL    = [0.0, 0.20, -0.14];
+  const YAW_AXIS          = [0.0, 1.0, 0.0];
+  const BASE_YAW_DEG      = -1.0;
+  const HALF_DEG          = 45;
+
+  const project = makeProjector(CAM_POS, CAM_TGT, FOV_DEG, W, H);
+  const markerWorld = (jointDeg) =>
+    v3.add(WAIST_WORLD, rodrigues(CHEST_REST_REL, YAW_AXIS, jointDeg));
+
+  const overlay = svg('svg', {
+    class: 'arc-overlay',
+    viewBox: `0 0 ${W} ${H}`,
+    preserveAspectRatio: 'xMidYMid meet',
+  });
+
+  const pivot   = project(WAIST_WORLD);
+  const restMrk = project(markerWorld(BASE_YAW_DEG));
+
+  svg('line', {
+    x1: pivot.x, y1: pivot.y, x2: restMrk.x, y2: restMrk.y,
+    stroke: 'rgba(245, 185, 66, 0.45)', 'stroke-width': 1, 'stroke-dasharray': '3 3',
+  }, overlay);
+
+  const wedgePath = svg('path', {
+    d: '',
+    fill: 'rgba(245, 185, 66, 0.36)',
+    stroke: 'rgba(245, 185, 66, 0.95)',
+    'stroke-width': 1.4,
+    'stroke-linejoin': 'round',
+  }, overlay);
+
+  svg('circle', { cx: pivot.x, cy: pivot.y, r: 4, fill: '#1c232e' }, overlay);
+  svg('circle', { cx: pivot.x, cy: pivot.y, r: 7, fill: 'none', stroke: '#f5b942', 'stroke-width': 1.6 }, overlay);
+
+  const liveMarker = svg('circle', {
+    cx: pivot.x, cy: pivot.y, r: 6,
+    fill: '#1c232e', stroke: '#f5b942', 'stroke-width': 2.4,
+  }, overlay);
+
+  // Live angle readout — floats just to the side of the moving marker.
+  const angleTag = svg('text', {
+    x: pivot.x, y: pivot.y,
+    'text-anchor': 'middle',
+    'font-size': 13, 'font-weight': 700,
+    fill: '#7a5a16',
+    'paint-order': 'stroke',
+    stroke: 'rgba(255, 255, 255, 0.85)', 'stroke-width': 3,
+  }, overlay);
+  angleTag.textContent = '0°';
+
+  stripEl.appendChild(overlay);
+
+  const N_SAMPLES = 18;
+  const CYCLE_S = 1.5;
+  const TWO_PI = Math.PI * 2;
+  const t0 = performance.now();
+  function tick(nowMs) {
+    const t = (nowMs - t0) / 1000;
+    const jointDeg = BASE_YAW_DEG + HALF_DEG * Math.sin((t / CYCLE_S) * TWO_PI);
+    if (iframe.contentWindow) iframe.contentWindow.postMessage({ type: 'SYNC', time: t, playing: true, speed: 1 }, '*');
+    let d = `M ${pivot.x.toFixed(2)} ${pivot.y.toFixed(2)}`;
+    for (let i = 0; i <= N_SAMPLES; i++) {
+      const a = BASE_YAW_DEG + (jointDeg - BASE_YAW_DEG) * (i / N_SAMPLES);
+      const p = project(markerWorld(a));
+      d += ` L ${p.x.toFixed(2)} ${p.y.toFixed(2)}`;
+    }
+    d += ' Z';
+    wedgePath.setAttribute('d', d);
+    const m = project(markerWorld(jointDeg));
+    liveMarker.setAttribute('cx', m.x.toFixed(2));
+    liveMarker.setAttribute('cy', m.y.toFixed(2));
+    // Angle text follows the marker, offset to the right so it doesn't sit on it.
+    angleTag.setAttribute('x', (m.x + 16).toFixed(2));
+    angleTag.setAttribute('y', (m.y + 4).toFixed(2));
+    angleTag.textContent = `${(jointDeg - BASE_YAW_DEG > 0 ? '+' : '')}${Math.round(jointDeg - BASE_YAW_DEG)}°`;
+    rafId = requestAnimationFrame(tick);
+  }
+  let rafId = requestAnimationFrame(tick);
+
+  addStripCaption(overlay, 'Waist', 'Range of motion (yaw)');
+  return {
+    stop() {
+      cancelAnimationFrame(rafId);
+      overlay.remove();
+      try { iframe.contentWindow.postMessage({ type: 'SYNC', time: 0, playing: false, speed: 1 }, '*'); } catch {}
+    },
+    iframe,
+  };
+}
+
+function mountRootRomIframe(stripEl, stats, existingIframe) {
+  // Root translateZ squat — the whole body floats up/down as a rigid block.
+  // Overlay is a vertical ruler on the right with tick lines at the two
+  // extreme pelvis heights and a live horizontal marker tracking current
+  // pelvis Y.
+  // Reuses existingIframe (from a previous pill activation) when provided
+  // so we don't reload the heavy G1 viewer on pill switches.
+  const iframe = _liveIframe(stripEl,
+    'g1_engine/viewer.html?embed=1&nozoom=1&demo=root_squat_demo&config=config_root_joint.json&v=2026-06-25c',
+    existingIframe);
+
+  const W = 290, H = 110;
+  const CAM_POS = [0.55, 0.80, 0.00];
+  const CAM_TGT = [0.00, 0.78, 0.00];
+  const FOV_DEG = 42;
+
+  const BASE_PELVIS_Y_M = 0.783;
+  const AMP_M           = 0.10;        // ±10 cm — matches generate_root_squat_demo.py
+
+  const project = makeProjector(CAM_POS, CAM_TGT, FOV_DEG, W, H);
+
+  const overlay = svg('svg', {
+    class: 'arc-overlay',
+    viewBox: `0 0 ${W} ${H}`,
+    preserveAspectRatio: 'xMidYMid meet',
+  });
+
+  // Project the pelvis position at its two extremes. With camera target X=0
+  // and pelvis at world X=0, pelvis sx is constant (the body centerline);
+  // only sy changes.
+  const restProj = project([0, BASE_PELVIS_Y_M,           0]);
+  const yTopScreen = project([0, BASE_PELVIS_Y_M + AMP_M, 0]).y;
+  const yBotScreen = project([0, BASE_PELVIS_Y_M - AMP_M, 0]).y;
+  const pelvisX = restProj.x;
+
+  // Translucent gold band spanning the swept Y range, centered on the pelvis
+  // x-coord — the "this is the volume the root sweeps" zone.
+  const BAND_W = 28;
+  svg('rect', {
+    x: pelvisX - BAND_W / 2, y: yTopScreen,
+    width: BAND_W, height: yBotScreen - yTopScreen,
+    fill: 'rgba(245, 185, 66, 0.18)',
+    stroke: 'rgba(245, 185, 66, 0.55)', 'stroke-width': 1,
+    rx: 3, ry: 3,
+  }, overlay);
+
+  // Dashed extreme markers — short caps centered on the pelvis x-coord.
+  for (const yy of [yTopScreen, yBotScreen]) {
+    svg('line', {
+      x1: pelvisX - BAND_W / 2 - 6, y1: yy,
+      x2: pelvisX + BAND_W / 2 + 6, y2: yy,
+      stroke: 'rgba(245, 185, 66, 0.95)', 'stroke-width': 1.4,
+      'stroke-dasharray': '4 3',
+    }, overlay);
+  }
+
+  // Live pelvis marker — gold-ringed dot that highlights the root joint as
+  // the body bobs up and down. Same vocabulary as the pivot pin elsewhere.
+  const markerDot = svg('circle', {
+    cx: pelvisX, cy: restProj.y, r: 6,
+    fill: '#1c232e', stroke: '#f5b942', 'stroke-width': 2.4,
+  }, overlay);
+  // Halo ring for emphasis.
+  const markerHalo = svg('circle', {
+    cx: pelvisX, cy: restProj.y, r: 11,
+    fill: 'none', stroke: 'rgba(245, 185, 66, 0.55)', 'stroke-width': 1.4,
+  }, overlay);
+
+  stripEl.appendChild(overlay);
+
+  const CYCLE_S = 1.5;
+  const TWO_PI  = Math.PI * 2;
+  const t0 = performance.now();
+  function tick(nowMs) {
+    const t = (nowMs - t0) / 1000;
+    const dz = AMP_M * Math.sin((t / CYCLE_S) * TWO_PI);
+    const pelvisY = BASE_PELVIS_Y_M + dz;
+    if (iframe.contentWindow) iframe.contentWindow.postMessage({ type: 'SYNC', time: t, playing: true, speed: 1 }, '*');
+    const proj = project([0, pelvisY, 0]);
+    markerDot.setAttribute('cy',  proj.y.toFixed(2));
+    markerHalo.setAttribute('cy', proj.y.toFixed(2));
+    rafId = requestAnimationFrame(tick);
+  }
+  let rafId = requestAnimationFrame(tick);
+
+  addStripCaption(overlay, 'Root', 'Range of motion (Z)');
+  return {
+    stop() {
+      cancelAnimationFrame(rafId);
+      overlay.remove();
+      try { iframe.contentWindow.postMessage({ type: 'SYNC', time: 0, playing: false, speed: 1 }, '*'); } catch {}
+    },
+    iframe,
+  };
+}
+
+function mountAnklePeakVelIframe(stripEl, stats, existingIframe) {
+  // Ankle pitch with TIME-VARYING amplitude (sin² envelope, 5° → 30° → 5°
+  // over each 3-s loop). The chart at the bottom of the strip shows the
+  // running |dθ/dt| trace; a horizontal "peak so far" line ratchets up to
+  // whatever the highest sample in the rolling window has been.
+  // Reuses existingIframe (from a previous pill activation) when provided
+  // so we don't reload the heavy G1 viewer on pill switches.
+  const iframe = _liveIframe(stripEl,
+    'g1_engine/viewer.html?embed=1&nozoom=1&demo=ankle_ramp_demo&config=config_ankle_vel.json&v=2026-06-25c',
+    existingIframe);
+
+  const W = 290, H = 110;
+
+  // Joint formula (must mirror generate_ankle_ramp_demo.py):
+  //   amp(t)   = AMP_MIN + (AMP_MAX − AMP_MIN) · sin²(π t / DURATION)
+  //   joint(t) = BASE + amp(t) · sin(2π · t · CYCLES / DURATION)
+  const BASE_PITCH_DEG = -10.75;
+  const AMP_MIN = 5, AMP_MAX = 30;
+  const DURATION_S = 3.0;
+  const CYCLES = 2;
+  const omega = (2 * Math.PI * CYCLES) / DURATION_S;            // rad/s
+  function ampAt(t) {
+    const e = Math.sin(Math.PI * t / DURATION_S);
+    return AMP_MIN + (AMP_MAX - AMP_MIN) * e * e;
+  }
+  function jointAt(t) {
+    return BASE_PITCH_DEG + ampAt(t) * Math.sin(omega * t);
+  }
+  function velAt(t) {
+    // d/dt [amp(t)·sin(ω t)] = amp'(t)·sin(ω t) + amp(t)·ω·cos(ω t)
+    const tau = Math.PI * t / DURATION_S;
+    const env = Math.sin(tau);
+    const envDot = (Math.PI / DURATION_S) * 2 * env * Math.cos(tau);
+    const ampDot = (AMP_MAX - AMP_MIN) * envDot;
+    const s = Math.sin(omega * t), c = Math.cos(omega * t);
+    return ampDot * s + ampAt(t) * omega * c;                    // deg/s
+  }
+
+  // ── Overlay ──
+  const overlay = svg('svg', {
+    class: 'arc-overlay',
+    viewBox: `0 0 ${W} ${H}`,
+    preserveAspectRatio: 'xMidYMid meet',
+  });
+
+  // Small top-right inset so the robot's lower leg + foot stay visible.
+  const CHART_X0 = W - 188, CHART_X1 = W - 8;
+  const CHART_Y0 = 8,       CHART_Y1 = 64;
+  const CHART_W  = CHART_X1 - CHART_X0;
+  const CHART_H  = CHART_Y1 - CHART_Y0;
+
+  // Peak we plot is the cycle-peak: amp_max * omega in deg/s = 30 * (4π/3) ≈ 125
+  // Give the y-axis 1.3× headroom so the trace never clips the top.
+  const Y_MAX = (AMP_MAX + 5) * omega;          // deg/s
+
+  svg('rect', {
+    x: CHART_X0 - 4, y: CHART_Y0 - 6,
+    width:  CHART_W + 8, height: CHART_H + 10,
+    rx: 5, ry: 5,
+    fill: 'rgba(255, 255, 255, 0.85)',
+    stroke: 'rgba(122, 90, 22, 0.35)', 'stroke-width': 1,
+  }, overlay);
+
+  // Tiny y-axis with two ticks (0 and Y_MAX/2 for reference).
+  svg('line', {
+    x1: CHART_X0, y1: CHART_Y0, x2: CHART_X0, y2: CHART_Y1,
+    stroke: '#8089a0', 'stroke-width': 1,
+  }, overlay);
+  svg('line', {
+    x1: CHART_X0, y1: CHART_Y1, x2: CHART_X1, y2: CHART_Y1,
+    stroke: '#8089a0', 'stroke-width': 1,
+  }, overlay);
+
+  // Trace polyline (filled in every frame).
+  const tracePath = svg('path', {
+    d: '',
+    fill: 'none',
+    stroke: '#2bb1a9', 'stroke-width': 2.2,
+    'stroke-linejoin': 'round',
+    'stroke-linecap': 'round',
+  }, overlay);
+
+  // Peak-so-far horizontal line + label.
+  const peakLine = svg('line', {
+    x1: CHART_X0, y1: CHART_Y1, x2: CHART_X1, y2: CHART_Y1,
+    stroke: '#ef6c61', 'stroke-width': 2.4, 'stroke-dasharray': '5 4',
+  }, overlay);
+  const peakLabel = svg('text', {
+    x: CHART_X1 - 2, y: CHART_Y1 - 2,
+    'text-anchor': 'end',
+    'font-size': 13, 'font-weight': 700, fill: '#a8423b',
+  }, overlay);
+  peakLabel.textContent = 'peak — °/s';
+
+  addStripCaption(overlay, 'Ankle', 'Peak velocity');
+
+  stripEl.appendChild(overlay);
+
+  // ── rAF loop: trace velocity, ratchet peak ──
+  const WIN_S = 1.5;             // visible time window in the chart
+  const buf = [];                // {t, v} samples
+  let peak = 0;                  // running max in the visible window
+  const t0 = performance.now();
+
+  function tick(nowMs) {
+    const t = (nowMs - t0) / 1000;
+    if (iframe.contentWindow) iframe.contentWindow.postMessage({ type: 'SYNC', time: t, playing: true, speed: 1 }, '*');
+
+    // Push current velocity sample and drop anything past the window.
+    const vAbs = Math.abs(velAt(t));
+    buf.push({ t, v: vAbs });
+    const cutoff = t - WIN_S;
+    while (buf.length && buf[0].t < cutoff) buf.shift();
+
+    // Recompute peak across the visible buffer (handles natural decay).
+    peak = 0;
+    for (const s of buf) if (s.v > peak) peak = s.v;
+
+    // Build trace polyline.
+    let d = '';
+    for (let i = 0; i < buf.length; i++) {
+      const s = buf[i];
+      const sx = CHART_X0 + ((s.t - cutoff) / WIN_S) * CHART_W;
+      const sy = CHART_Y1 - (s.v / Y_MAX) * CHART_H;
+      d += (i ? ' L ' : 'M ') + sx.toFixed(2) + ' ' + sy.toFixed(2);
+    }
+    tracePath.setAttribute('d', d);
+
+    // Peak line.
+    const py = CHART_Y1 - (peak / Y_MAX) * CHART_H;
+    peakLine.setAttribute('y1', py.toFixed(2));
+    peakLine.setAttribute('y2', py.toFixed(2));
+    peakLabel.setAttribute('y', (py - 4).toFixed(2));
+    peakLabel.textContent = `peak  ${Math.round(peak)} °/s`;
+
+    rafId = requestAnimationFrame(tick);
+  }
+  let rafId = requestAnimationFrame(tick);
+
+  return {
+    stop() {
+      cancelAnimationFrame(rafId);
+      overlay.remove();
+      try { iframe.contentWindow.postMessage({ type: 'SYNC', time: 0, playing: false, speed: 1 }, '*'); } catch {}
+    },
+    iframe,
+  };
+}
+
+// ─── Mount stubs for the alternate features ──────────────────────────
+// Each loads the matching synthetic-G1 iframe; an OVERLAY shows a simple
+// label so the strip reads as "this feature's view" — proper arcs / charts
+// are added incrementally.
+function _simpleMount(stripEl, src, parts /* {joint, metric} */) {
+  const iframe = document.createElement('iframe');
+  iframe.loading = 'lazy';
+  iframe.src = src;
+  stripEl.appendChild(iframe);
+
+  const W = 290, H = 110;
+  const overlay = svg('svg', {
+    class: 'arc-overlay',
+    viewBox: `0 0 ${W} ${H}`,
+    preserveAspectRatio: 'xMidYMid meet',
+  });
+  stripEl.appendChild(overlay);
+
+  addStripCaption(overlay, parts.joint, parts.metric);
+
+  const t0 = performance.now();
+  function tick(nowMs) {
+    const t = (nowMs - t0) / 1000;
+    if (iframe.contentWindow) iframe.contentWindow.postMessage(
+      { type: 'SYNC', time: t, playing: true, speed: 1 }, '*'
+    );
+    rafId = requestAnimationFrame(tick);
+  }
+  let rafId = requestAnimationFrame(tick);
+  return {
+    stop() {
+      cancelAnimationFrame(rafId);
+      overlay.remove();
+      try {
+        iframe.contentWindow.postMessage(
+          { type: 'SYNC', time: 0, playing: false, speed: 1 }, '*');
+      } catch {}
+    },
+    iframe,
+  };
+}
+
+function mountWaistMeanVelIframe(stripEl, stats, existingIframe) {
+  // Waist yaw oscillation + mean-|v| line in a top-right inset chart.
+  // Reuses existingIframe (from a previous pill activation) when provided
+  // so we don't reload the heavy G1 viewer on pill switches.
+  const iframe = _liveIframe(stripEl,
+    'g1_engine/viewer.html?embed=1&nozoom=1&demo=waist_only_demo&config=config_waist_joint.json&v=2026-06-25c',
+    existingIframe);
+
+  const W = 290, H = 110;
+  const CYCLE_S = 2.0;
+  const HALF_DEG = 45;
+  const omega = (2 * Math.PI) / CYCLE_S;
+  const velAt = t => HALF_DEG * omega * Math.cos(omega * t);   // deg/s, signed
+
+  const overlay = svg('svg', {
+    class: 'arc-overlay',
+    viewBox: `0 0 ${W} ${H}`,
+    preserveAspectRatio: 'xMidYMid meet',
+  });
+
+  const CHART_X0 = W - 188, CHART_X1 = W - 8;
+  const CHART_Y0 = 8,       CHART_Y1 = 64;
+  const CHART_W  = CHART_X1 - CHART_X0;
+  const CHART_H  = CHART_Y1 - CHART_Y0;
+  const Y_MAX = HALF_DEG * omega * 1.15;
+
+  svg('rect', {
+    x: CHART_X0 - 4, y: CHART_Y0 - 6,
+    width: CHART_W + 8, height: CHART_H + 10,
+    rx: 5, ry: 5,
+    fill: 'rgba(255,255,255,0.85)',
+    stroke: 'rgba(122,90,22,0.35)', 'stroke-width': 1,
+  }, overlay);
+  svg('line', { x1: CHART_X0, y1: CHART_Y1, x2: CHART_X1, y2: CHART_Y1, stroke: '#8089a0', 'stroke-width': 1 }, overlay);
+  svg('line', { x1: CHART_X0, y1: CHART_Y0, x2: CHART_X0, y2: CHART_Y1, stroke: '#8089a0', 'stroke-width': 1 }, overlay);
+
+  const tracePath = svg('path', {
+    d: '', fill: 'none',
+    stroke: '#2bb1a9', 'stroke-width': 2.0,
+    'stroke-linejoin': 'round', 'stroke-linecap': 'round',
+  }, overlay);
+  const meanLine = svg('line', {
+    x1: CHART_X0, y1: CHART_Y1, x2: CHART_X1, y2: CHART_Y1,
+    stroke: '#ef6c61', 'stroke-width': 2.0, 'stroke-dasharray': '5 4',
+  }, overlay);
+  const meanLabel = svg('text', {
+    x: CHART_X1 - 2, y: CHART_Y1 - 2,
+    'text-anchor': 'end',
+    'font-size': 13, 'font-weight': 700, fill: '#a8423b',
+  }, overlay);
+  meanLabel.textContent = 'mean — °/s';
+
+  addStripCaption(overlay, 'Waist', 'Mean velocity');
+
+  stripEl.appendChild(overlay);
+
+  const WIN_S = 1.5;
+  const buf = [];
+  const t0 = performance.now();
+  function tick(nowMs) {
+    const t = (nowMs - t0) / 1000;
+    if (iframe.contentWindow) iframe.contentWindow.postMessage(
+      { type: 'SYNC', time: t, playing: true, speed: 1 }, '*'
+    );
+    buf.push({ t, v: Math.abs(velAt(t)) });
+    const cutoff = t - WIN_S;
+    while (buf.length && buf[0].t < cutoff) buf.shift();
+
+    const mean = buf.reduce((a, s) => a + s.v, 0) / Math.max(1, buf.length);
+
+    let d = '';
+    for (let i = 0; i < buf.length; i++) {
+      const s = buf[i];
+      const sx = CHART_X0 + ((s.t - cutoff) / WIN_S) * CHART_W;
+      const sy = CHART_Y1 - (s.v / Y_MAX) * CHART_H;
+      d += (i ? ' L ' : 'M ') + sx.toFixed(2) + ' ' + sy.toFixed(2);
+    }
+    tracePath.setAttribute('d', d);
+
+    const my = CHART_Y1 - (mean / Y_MAX) * CHART_H;
+    meanLine.setAttribute('y1', my.toFixed(2));
+    meanLine.setAttribute('y2', my.toFixed(2));
+    meanLabel.setAttribute('y', (my - 3).toFixed(2));
+    meanLabel.textContent = `mean  ${Math.round(mean)} °/s`;
+
+    rafId = requestAnimationFrame(tick);
+  }
+  let rafId = requestAnimationFrame(tick);
+  return {
+    stop() {
+      cancelAnimationFrame(rafId);
+      overlay.remove();
+      try {
+        iframe.contentWindow.postMessage(
+          { type: 'SYNC', time: 0, playing: false, speed: 1 }, '*');
+      } catch {}
+    },
+    iframe,
+  };
+}
+
+function mountRootPeakVelIframe(stripEl, stats, existingIframe) {
+  // Root vertical-translation (squat) with TIME-VARYING amplitude (sin² envelope)
+  // and a "peak so far" line ratcheting up in a top-right inset chart.
+  // Reuses existingIframe (from a previous pill activation) when provided
+  // so we don't reload the heavy G1 viewer on pill switches.
+  const iframe = _liveIframe(stripEl,
+    'g1_engine/viewer.html?embed=1&nozoom=1&demo=root_squat_demo&config=config_root_joint.json&v=2026-06-25c',
+    existingIframe);
+
+  const W = 290, H = 110;
+
+  // Squat amplitude envelope (cm), oscillation 2 cycles per 3s.
+  const AMP_MIN = 2, AMP_MAX = 14;        // cm
+  const DURATION_S = 3.0;
+  const CYCLES = 2;
+  const omega = (2 * Math.PI * CYCLES) / DURATION_S;
+  function ampAt(t) {
+    const e = Math.sin(Math.PI * t / DURATION_S);
+    return AMP_MIN + (AMP_MAX - AMP_MIN) * e * e;
+  }
+  function velAt(t) {
+    const tau = Math.PI * t / DURATION_S;
+    const env = Math.sin(tau);
+    const envDot = (Math.PI / DURATION_S) * 2 * env * Math.cos(tau);
+    const ampDot = (AMP_MAX - AMP_MIN) * envDot;
+    const s = Math.sin(omega * t), c = Math.cos(omega * t);
+    return ampDot * s + ampAt(t) * omega * c;      // cm/s
+  }
+
+  const overlay = svg('svg', {
+    class: 'arc-overlay',
+    viewBox: `0 0 ${W} ${H}`,
+    preserveAspectRatio: 'xMidYMid meet',
+  });
+
+  const CHART_X0 = W - 188, CHART_X1 = W - 8;
+  const CHART_Y0 = 8,       CHART_Y1 = 64;
+  const CHART_W  = CHART_X1 - CHART_X0;
+  const CHART_H  = CHART_Y1 - CHART_Y0;
+  const Y_MAX = (AMP_MAX + 3) * omega;      // cm/s, with headroom
+
+  svg('rect', {
+    x: CHART_X0 - 4, y: CHART_Y0 - 6,
+    width:  CHART_W + 8, height: CHART_H + 10,
+    rx: 5, ry: 5,
+    fill: 'rgba(255, 255, 255, 0.85)',
+    stroke: 'rgba(122, 90, 22, 0.35)', 'stroke-width': 1,
+  }, overlay);
+  svg('line', { x1: CHART_X0, y1: CHART_Y1, x2: CHART_X1, y2: CHART_Y1, stroke: '#8089a0', 'stroke-width': 1 }, overlay);
+  svg('line', { x1: CHART_X0, y1: CHART_Y0, x2: CHART_X0, y2: CHART_Y1, stroke: '#8089a0', 'stroke-width': 1 }, overlay);
+
+  const tracePath = svg('path', {
+    d: '', fill: 'none',
+    stroke: '#2bb1a9', 'stroke-width': 2.2,
+    'stroke-linejoin': 'round', 'stroke-linecap': 'round',
+  }, overlay);
+  const peakLine = svg('line', {
+    x1: CHART_X0, y1: CHART_Y1, x2: CHART_X1, y2: CHART_Y1,
+    stroke: '#ef6c61', 'stroke-width': 2.4, 'stroke-dasharray': '5 4',
+  }, overlay);
+  const peakLabel = svg('text', {
+    x: CHART_X1 - 2, y: CHART_Y1 - 2,
+    'text-anchor': 'end',
+    'font-size': 13, 'font-weight': 700, fill: '#a8423b',
+  }, overlay);
+  peakLabel.textContent = 'peak — cm/s';
+
+  addStripCaption(overlay, 'Root', 'Peak velocity');
+
+  stripEl.appendChild(overlay);
+
+  const WIN_S = 1.5;
+  const buf = [];
+  let peak = 0;
+  const t0 = performance.now();
+  function tick(nowMs) {
+    const t = (nowMs - t0) / 1000;
+    if (iframe.contentWindow) iframe.contentWindow.postMessage(
+      { type: 'SYNC', time: t, playing: true, speed: 1 }, '*'
+    );
+    const vAbs = Math.abs(velAt(t));
+    buf.push({ t, v: vAbs });
+    const cutoff = t - WIN_S;
+    while (buf.length && buf[0].t < cutoff) buf.shift();
+
+    peak = 0;
+    for (const s of buf) if (s.v > peak) peak = s.v;
+
+    let d = '';
+    for (let i = 0; i < buf.length; i++) {
+      const s = buf[i];
+      const sx = CHART_X0 + ((s.t - cutoff) / WIN_S) * CHART_W;
+      const sy = CHART_Y1 - (s.v / Y_MAX) * CHART_H;
+      d += (i ? ' L ' : 'M ') + sx.toFixed(2) + ' ' + sy.toFixed(2);
+    }
+    tracePath.setAttribute('d', d);
+
+    const py = CHART_Y1 - (peak / Y_MAX) * CHART_H;
+    peakLine.setAttribute('y1', py.toFixed(2));
+    peakLine.setAttribute('y2', py.toFixed(2));
+    peakLabel.setAttribute('y', (py - 4).toFixed(2));
+    peakLabel.textContent = `peak  ${peak.toFixed(1)} cm/s`;
+
+    rafId = requestAnimationFrame(tick);
+  }
+  let rafId = requestAnimationFrame(tick);
+  return {
+    stop() {
+      cancelAnimationFrame(rafId);
+      overlay.remove();
+      try {
+        iframe.contentWindow.postMessage(
+          { type: 'SYNC', time: 0, playing: false, speed: 1 }, '*');
+      } catch {}
+    },
+    iframe,
+  };
+}
+
+// Shared shoulder scene parameters (gender panel only uses these).
+const SHOULDER_SCENE = {
+  CAM_POS: [0.55, 1.07, 0.30],
+  CAM_TGT: [0.03, 1.00, 0.10],
+  FOV_DEG: 42,
+  // FK constants from Python (right_shoulder_pitch_link in Three.js coords,
+  // standing pose using exercising frame-0 joint angles).
+  SHOULDER_WORLD: [0.03013, 1.07477, 0.09373],
+  ARM_REST:       [-0.01325, -0.17826, 0.09132],   // shoulder → elbow at pitch=0
+  PITCH_AXIS:     [-0.02036, -0.29949, -0.95388],
+  BASE_PITCH_DEG: -5.9,
+  HALF_DEG:       55,
+  CYCLE_S:        1.5,
+};
+
+function mountShoulderRomIframe(stripEl, stats, existingIframe) {
+  // Right shoulder pitch oscillation + live arc tracing the elbow's swept path.
+  // Reuses existingIframe (from a previous pill activation) when provided
+  // so we don't reload the heavy G1 viewer on pill switches.
+  const iframe = _liveIframe(stripEl,
+    'g1_engine/viewer.html?embed=1&nozoom=1&demo=shoulder_only_demo&config=config_shoulder_joint.json&v=2026-06-25c',
+    existingIframe);
+
+  const W = 290, H = 110;
+  const S = SHOULDER_SCENE;
+  const project = makeProjector(S.CAM_POS, S.CAM_TGT, S.FOV_DEG, W, H);
+  const armWorld = jointDeg => v3.add(S.SHOULDER_WORLD,
+    rodriguesAxis(S.ARM_REST, S.PITCH_AXIS, jointDeg));
+
+  const overlay = svg('svg', {
+    class: 'arc-overlay',
+    viewBox: `0 0 ${W} ${H}`,
+    preserveAspectRatio: 'xMidYMid meet',
+  });
+
+  const pivot   = project(S.SHOULDER_WORLD);
+  const restMrk = project(armWorld(S.BASE_PITCH_DEG));
+
+  svg('line', {
+    x1: pivot.x, y1: pivot.y, x2: restMrk.x, y2: restMrk.y,
+    stroke: 'rgba(245, 185, 66, 0.45)', 'stroke-width': 1, 'stroke-dasharray': '3 3',
+  }, overlay);
+  const wedgePath = svg('path', {
+    d: '',
+    fill: 'rgba(245, 185, 66, 0.36)',
+    stroke: 'rgba(245, 185, 66, 0.95)',
+    'stroke-width': 1.4, 'stroke-linejoin': 'round',
+  }, overlay);
+  svg('circle', { cx: pivot.x, cy: pivot.y, r: 4, fill: '#1c232e' }, overlay);
+  svg('circle', { cx: pivot.x, cy: pivot.y, r: 7, fill: 'none', stroke: '#f5b942', 'stroke-width': 1.6 }, overlay);
+  const liveMarker = svg('circle', {
+    cx: pivot.x, cy: pivot.y, r: 6,
+    fill: '#1c232e', stroke: '#f5b942', 'stroke-width': 2.4,
+  }, overlay);
+
+  addStripCaption(overlay, 'Shoulder', 'Range of motion');
+
+  stripEl.appendChild(overlay);
+
+  const N_SAMPLES = 18;
+  const TWO_PI = Math.PI * 2;
+  const t0 = performance.now();
+  function tick(nowMs) {
+    const t = (nowMs - t0) / 1000;
+    const jointDeg = S.BASE_PITCH_DEG + S.HALF_DEG * Math.sin((t / S.CYCLE_S) * TWO_PI);
+    if (iframe.contentWindow) iframe.contentWindow.postMessage(
+      { type: 'SYNC', time: t, playing: true, speed: 1 }, '*'
+    );
+    let d = `M ${pivot.x.toFixed(2)} ${pivot.y.toFixed(2)}`;
+    for (let i = 0; i <= N_SAMPLES; i++) {
+      const a = S.BASE_PITCH_DEG + (jointDeg - S.BASE_PITCH_DEG) * (i / N_SAMPLES);
+      const p = project(armWorld(a));
+      d += ` L ${p.x.toFixed(2)} ${p.y.toFixed(2)}`;
+    }
+    d += ' Z';
+    wedgePath.setAttribute('d', d);
+    const m = project(armWorld(jointDeg));
+    liveMarker.setAttribute('cx', m.x.toFixed(2));
+    liveMarker.setAttribute('cy', m.y.toFixed(2));
+    rafId = requestAnimationFrame(tick);
+  }
+  let rafId = requestAnimationFrame(tick);
+  return {
+    stop() {
+      cancelAnimationFrame(rafId);
+      overlay.remove();
+      try {
+        iframe.contentWindow.postMessage(
+          { type: 'SYNC', time: 0, playing: false, speed: 1 }, '*');
+      } catch {}
+    },
+    iframe,
+  };
+}
+
+function mountShoulderMeanVelIframe(stripEl, stats, existingIframe) {
+  // Same shoulder motion clip + velocity chart sweeping across the bottom.
+  // Reuses existingIframe (from a previous pill activation) when provided
+  // so we don't reload the heavy G1 viewer on pill switches.
+  const iframe = _liveIframe(stripEl,
+    'g1_engine/viewer.html?embed=1&nozoom=1&demo=shoulder_only_demo&config=config_shoulder_joint.json&v=2026-06-25c',
+    existingIframe);
+
+  const W = 290, H = 110;
+  const S = SHOULDER_SCENE;
+  const omega = (2 * Math.PI) / S.CYCLE_S;
+  const jointAt = t => S.BASE_PITCH_DEG + S.HALF_DEG * Math.sin(omega * t);
+  const velAt   = t => S.HALF_DEG * omega * Math.cos(omega * t);   // deg/s, signed
+
+  const overlay = svg('svg', {
+    class: 'arc-overlay',
+    viewBox: `0 0 ${W} ${H}`,
+    preserveAspectRatio: 'xMidYMid meet',
+  });
+
+  // Small top-right inset so the robot's arm stays visible.
+  const CHART_X0 = W - 188, CHART_X1 = W - 8;
+  const CHART_Y0 = 8,       CHART_Y1 = 64;
+  const CHART_W  = CHART_X1 - CHART_X0;
+  const CHART_H  = CHART_Y1 - CHART_Y0;
+  const Y_MAX = S.HALF_DEG * omega * 1.15;     // peak |v| plus headroom
+
+  svg('rect', {
+    x: CHART_X0 - 4, y: CHART_Y0 - 6,
+    width: CHART_W + 8, height: CHART_H + 10,
+    rx: 5, ry: 5,
+    fill: 'rgba(255,255,255,0.85)',
+    stroke: 'rgba(122,90,22,0.35)', 'stroke-width': 1,
+  }, overlay);
+  svg('line', { x1: CHART_X0, y1: CHART_Y1, x2: CHART_X1, y2: CHART_Y1, stroke: '#8089a0', 'stroke-width': 1 }, overlay);
+  svg('line', { x1: CHART_X0, y1: CHART_Y0, x2: CHART_X0, y2: CHART_Y1, stroke: '#8089a0', 'stroke-width': 1 }, overlay);
+
+  const tracePath = svg('path', {
+    d: '', fill: 'none',
+    stroke: '#2bb1a9', 'stroke-width': 2.0,
+    'stroke-linejoin': 'round', 'stroke-linecap': 'round',
+  }, overlay);
+  const meanLine = svg('line', {
+    x1: CHART_X0, y1: CHART_Y1, x2: CHART_X1, y2: CHART_Y1,
+    stroke: '#ef6c61', 'stroke-width': 2.0, 'stroke-dasharray': '5 4',
+  }, overlay);
+  const meanLabel = svg('text', {
+    x: CHART_X1 - 2, y: CHART_Y1 - 2,
+    'text-anchor': 'end',
+    'font-size': 13, 'font-weight': 700, fill: '#a8423b',
+  }, overlay);
+  meanLabel.textContent = 'mean — °/s';
+
+  addStripCaption(overlay, 'Shoulder', 'Mean velocity');
+
+  stripEl.appendChild(overlay);
+
+  const WIN_S = 1.5;
+  const buf = [];        // {t, v}
+  const t0 = performance.now();
+  function tick(nowMs) {
+    const t = (nowMs - t0) / 1000;
+    if (iframe.contentWindow) iframe.contentWindow.postMessage(
+      { type: 'SYNC', time: t, playing: true, speed: 1 }, '*'
+    );
+    buf.push({ t, v: Math.abs(velAt(t)) });
+    const cutoff = t - WIN_S;
+    while (buf.length && buf[0].t < cutoff) buf.shift();
+
+    const mean = buf.reduce((a, s) => a + s.v, 0) / Math.max(1, buf.length);
+
+    let d = '';
+    for (let i = 0; i < buf.length; i++) {
+      const s = buf[i];
+      const sx = CHART_X0 + ((s.t - cutoff) / WIN_S) * CHART_W;
+      const sy = CHART_Y1 - (s.v / Y_MAX) * CHART_H;
+      d += (i ? ' L ' : 'M ') + sx.toFixed(2) + ' ' + sy.toFixed(2);
+    }
+    tracePath.setAttribute('d', d);
+
+    const my = CHART_Y1 - (mean / Y_MAX) * CHART_H;
+    meanLine.setAttribute('y1', my.toFixed(2));
+    meanLine.setAttribute('y2', my.toFixed(2));
+    meanLabel.setAttribute('y', (my - 3).toFixed(2));
+    meanLabel.textContent = `mean  ${Math.round(mean)} °/s`;
+
+    rafId = requestAnimationFrame(tick);
+  }
+  let rafId = requestAnimationFrame(tick);
+  return {
+    stop() {
+      cancelAnimationFrame(rafId);
+      overlay.remove();
+      try {
+        iframe.contentWindow.postMessage(
+          { type: 'SYNC', time: 0, playing: false, speed: 1 }, '*');
+      } catch {}
+    },
+    iframe,
+  };
+}
+
+// Reusable Rodrigues rotation around an arbitrary axis (mountAnkleRomIframe
+// has an inline copy; this shoulder-side version keeps the math local).
+function rodriguesAxis(v, axis, deg) {
+  const t = deg * Math.PI / 180;
+  const c = Math.cos(t), s = Math.sin(t);
+  const cr = v3.cross(axis, v);
+  const k  = v3.dot(axis, v);
+  return [
+    v[0]*c + cr[0]*s + axis[0]*k*(1-c),
+    v[1]*c + cr[1]*s + axis[1]*k*(1-c),
+    v[2]*c + cr[2]*s + axis[2]*k*(1-c),
+  ];
+}
+
+function _UNUSED_renderAnkleRomIllustration(root, box, stats) {
+  // Stylized G1 lower leg: thigh stub → knee cylinder → shin tube → ankle
+  // cylinder → foot plate. Foot rotates back and forth across the mean
+  // ankle-ROM sweep; a translucent gold wedge shows the swept range.
+  const cx = box.x0 + box.w * 0.50;
+  const cy = box.y0 + box.h * 0.62;
+  const shinLen = box.h * 0.30;
+  const footLen = Math.min(box.w * 0.46, 60);
+  const sweep   = Math.max(20, Math.min(stats.meanRom, 90));
+  const half    = sweep / 2;
+
+  // Caption at top of the strip
+  const cap = svg('text', {
+    x: box.x0 + box.w / 2,
+    y: box.y0 + 14,
+    'text-anchor': 'middle',
+    'font-size': 10, 'font-weight': 700,
+    'letter-spacing': '0.08em', fill: '#8089a0',
+  }, root);
+  cap.textContent = 'G1 ANKLE · RANGE OF MOTION';
+
+  // ── leg geometry ──
+  const shinW   = 22;                       // shin tube width
+  const shinTop = cy - shinLen;
+  const kneeY   = shinTop - 4;
+
+  // Thigh stub (top) — just a hint above the knee, gives the leg a "cropped"
+  // industrial look like a zoomed photo of a real G1 leg.
+  svg('rect', {
+    x: cx - shinW / 2 - 2, y: kneeY - 18,
+    width: shinW + 4, height: 16,
+    rx: 4, ry: 4,
+    fill: G1_LIGHT, stroke: G1_EDGE, 'stroke-width': 1,
+  }, root);
+
+  // Knee joint — short dark horizontal cylinder
+  svg('ellipse', {
+    cx, cy: kneeY,
+    rx: shinW / 2 + 4, ry: 5,
+    fill: G1_DARK,
+  }, root);
+  svg('ellipse', {
+    cx, cy: kneeY - 1.2,
+    rx: shinW / 2 + 1, ry: 1.6,
+    fill: 'rgba(255,255,255,0.18)',
+  }, root);
+
+  // Shin tube — rounded rectangle with center channel for "panel" feel
+  svg('rect', {
+    x: cx - shinW / 2, y: shinTop,
+    width: shinW, height: shinLen - 6,
+    rx: 5, ry: 5,
+    fill: G1_LIGHT, stroke: G1_EDGE, 'stroke-width': 1.1,
+  }, root);
+  // Center groove
+  svg('line', {
+    x1: cx, y1: shinTop + 6, x2: cx, y2: shinTop + shinLen - 12,
+    stroke: G1_EDGE, 'stroke-width': 1, opacity: 0.6,
+  }, root);
+  // Subtle bolt details
+  svg('circle', { cx: cx - 5.5, cy: shinTop + 6, r: 1.2, fill: G1_DARK }, root);
+  svg('circle', { cx: cx + 5.5, cy: shinTop + 6, r: 1.2, fill: G1_DARK }, root);
+  svg('circle', { cx: cx - 5.5, cy: shinTop + shinLen - 12, r: 1.2, fill: G1_DARK }, root);
+  svg('circle', { cx: cx + 5.5, cy: shinTop + shinLen - 12, r: 1.2, fill: G1_DARK }, root);
+
+  // ── ROM wedge (drawn BEFORE the foot so it sits behind) ──
+  const wedgeR = footLen * 0.95;
+  const wedgeStart = polarPt(cx, cy, wedgeR,  half);
+  const wedgeEnd   = polarPt(cx, cy, wedgeR, -half);
+  svg('path', {
+    d: `M ${cx} ${cy} L ${wedgeStart.x} ${wedgeStart.y} ` +
+       `A ${wedgeR} ${wedgeR} 0 0 0 ${wedgeEnd.x} ${wedgeEnd.y} Z`,
+    fill: 'rgba(245, 185, 66, 0.22)',
+    stroke: 'rgba(245, 185, 66, 0.75)',
+    'stroke-width': 1.2,
+  }, root);
+
+  // Rest-line tick (bisector)
+  svg('line', {
+    x1: cx + wedgeR * 0.04, y1: cy,
+    x2: cx + wedgeR * 1.05, y2: cy,
+    stroke: 'rgba(245, 185, 66, 0.55)', 'stroke-width': 1, 'stroke-dasharray': '2 3',
+  }, root);
+
+  // ── ankle cylinder (just above the moving foot, behind it visually) ──
+  svg('ellipse', {
+    cx, cy,
+    rx: shinW / 2 + 5, ry: 6,
+    fill: G1_DARK,
+  }, root);
+  svg('ellipse', {
+    cx, cy: cy - 1.4,
+    rx: shinW / 2 + 1, ry: 1.6,
+    fill: 'rgba(255,255,255,0.20)',
+  }, root);
+
+  // ── Foot — rotating group around the ankle pivot ──
+  const footG = svg('g', {}, root);
+  // Sole plate (the main foot)
+  svg('rect', {
+    x: cx - 4, y: cy + 4,
+    width: footLen, height: 7,
+    rx: 3, ry: 3,
+    fill: G1_LIGHT, stroke: G1_EDGE, 'stroke-width': 1,
+  }, footG);
+  // Sole dark underline
+  svg('rect', {
+    x: cx - 4, y: cy + 10,
+    width: footLen, height: 1.5,
+    fill: G1_DARK,
+  }, footG);
+  // Toe cap — slight dark wedge at the front
+  svg('rect', {
+    x: cx + footLen - 8, y: cy + 4,
+    width: 8, height: 7,
+    rx: 3, ry: 3,
+    fill: G1_EDGE, opacity: 0.7,
+  }, footG);
+  // Heel block — small block behind the ankle for visual balance
+  svg('rect', {
+    x: cx - 10, y: cy + 3.5,
+    width: 8, height: 8,
+    rx: 2, ry: 2,
+    fill: G1_LIGHT, stroke: G1_EDGE, 'stroke-width': 1,
+  }, footG);
+
+  // Animate the foot oscillating across the mean ankle ROM
+  const anim = svg('animateTransform', {
+    attributeName: 'transform',
+    attributeType: 'XML',
+    type: 'rotate',
+    values: `${half} ${cx} ${cy}; ${-half} ${cx} ${cy}; ${half} ${cx} ${cy}`,
+    keyTimes: '0; 0.5; 1',
+    keySplines: '0.42 0 0.58 1; 0.42 0 0.58 1',
+    calcMode: 'spline',
+    dur: '2.4s',
+    repeatCount: 'indefinite',
+  });
+  footG.appendChild(anim);
+
+  // Pivot pin in the center of the ankle (drawn on top of everything)
+  svg('circle', { cx, cy, r: 2.2, fill: G1_ACCENT }, root);
+
+  // Angle annotations at the wedge extremes
+  const labelR = wedgeR * 0.55;
+  const upPt   = polarPt(cx, cy, labelR, -half);
+  const downPt = polarPt(cx, cy, labelR,  half);
+  const tagUp = svg('text', {
+    x: upPt.x + 4, y: upPt.y - 2,
+    'font-size': 10, fill: '#7a5a16', 'font-weight': 600,
+  }, root);
+  tagUp.textContent = `+${Math.round(half)}°`;
+  const tagDown = svg('text', {
+    x: downPt.x + 4, y: downPt.y + 10,
+    'font-size': 10, fill: '#7a5a16', 'font-weight': 600,
+  }, root);
+  tagDown.textContent = `-${Math.round(half)}°`;
+
+  // Bottom caption with the panel-mean value
+  const cap2 = svg('text', {
+    x: box.x0 + box.w / 2,
+    y: box.y0 + box.h - 8,
+    'text-anchor': 'middle',
+    'font-size': 12, 'font-weight': 700,
+    fill: '#1c232e',
+  }, root);
+  cap2.textContent = `mean ROM ≈ ${Math.round(stats.meanRom)}°`;
+
+  // Sub-caption: female vs male means side-by-side
+  const cap3 = svg('text', {
+    x: box.x0 + box.w / 2,
+    y: box.y0 + box.h + 8,
+    'text-anchor': 'middle',
+    'font-size': 10.5, fill: '#45556c',
+  }, root);
+  cap3.textContent = `F ${Math.round(stats.highMean)}° · M ${Math.round(stats.lowMean)}°`;
+}
+
+function polarPt(cx, cy, r, deg) {
+  // SVG y points down; positive deg rotates clockwise from +x.
+  const a = deg * Math.PI / 180;
+  return { x: cx + r * Math.cos(a), y: cy + r * Math.sin(a) };
+}
+
+function niceNum(v) {
+  if (v >= 1000) return Math.round(v).toLocaleString();
+  if (v >= 100) return Math.round(v).toString();
+  if (v >= 10) return v.toFixed(1);
+  return v.toFixed(2);
+}
+
+// ─── Popup logic ──────────────────────────────────────────────────────
+const popup = document.getElementById('popup');
+const popupHead = document.getElementById('popup-task');
+const iframeHost = popup.querySelector('.iframe-host');
+const iframeCache = new Map(); // instance_id → iframe element
+
+function getOrCreateIframe(instance_id) {
+  if (iframeCache.has(instance_id)) return iframeCache.get(instance_id);
+  const f = document.createElement('iframe');
+  f.loading = 'eager';
+  f.src = POPUP_URL_FOR(instance_id) + `&t=${Date.now()}`;
+  iframeCache.set(instance_id, f);
+  iframeHost.appendChild(f);
+  return f;
+}
+
+function showPopupForInstance(inst, dotScreen) {
+  if (isBlockedInstance(inst)) { hidePopup(); return; }   // safety net — should already be filtered upstream
+  popupHead.innerHTML = `${inst.task} · <b>${inst.feature}</b>`;
+
+  for (const f of iframeCache.values()) f.classList.add('idle');
+  const f = getOrCreateIframe(inst.instance_id);
+  f.classList.remove('idle');
+
+  // Popup actual size (match CSS — see #popup width + .iframe-host height + head)
+  const popW = 300, popH = 260 + 40;   // iframe-host 260 + popup-head ~40
+  const margin = 12, gutter = 16;
+
+  // Prefer SIDE placement so the bars and other dots in the same column stay
+  // accessible. Order tried: right → left → below → above. Each candidate
+  // gets vertically centred on the dot but clamped inside the viewport.
+  const VW = window.innerWidth, VH = window.innerHeight;
+  function clampY(y) { return Math.max(margin, Math.min(VH - popH - margin, y)); }
+  let left, top;
+  if (dotScreen.x + gutter + popW <= VW - margin) {
+    left = dotScreen.x + gutter;
+    top  = clampY(dotScreen.y - popH / 2);
+  } else if (dotScreen.x - gutter - popW >= margin) {
+    left = dotScreen.x - gutter - popW;
+    top  = clampY(dotScreen.y - popH / 2);
+  } else if (dotScreen.y + gutter + popH <= VH - margin) {
+    left = Math.max(margin, Math.min(VW - popW - margin, dotScreen.x - popW / 2));
+    top  = dotScreen.y + gutter;
+  } else {
+    left = Math.max(margin, Math.min(VW - popW - margin, dotScreen.x - popW / 2));
+    top  = Math.max(margin, dotScreen.y - gutter - popH);
+  }
+
+  popup.style.left = `${left}px`;
+  popup.style.top  = `${top}px`;
+  popup.style.width = `${popW}px`;
+  popup.classList.remove('hidden');
+}
+
+function hidePopup() { popup.classList.add('hidden'); }
+
+// Popup is pointer-events:none so no need to track hovers over it.
+let popupHover = false;
+
+let hideTimer = null;
+function scheduleHide() {
+  clearTimeout(hideTimer);
+  hideTimer = setTimeout(() => {
+    hidePopup();
+    clearAllHighlights();
+  }, 120);
+}
+
+function onDotEnter(p, dotEl, svgEl, sticky=false) {
+  clearTimeout(hideTimer);
+  clearAllHighlights();
+
+  dotEl.classList.add('active');
+  dotEl.setAttribute('r', '12');
+
+  // Convert the dot's SVG coords to page coords for popup placement.
+  const ctm = svgEl.getScreenCTM();
+  const pt = svgEl.createSVGPoint();
+  pt.x = +dotEl.getAttribute('cx'); pt.y = +dotEl.getAttribute('cy');
+  const screen = ctm ? pt.matrixTransform(ctm) : { x: pt.x, y: pt.y };
+
+  showPopupForInstance(p.instance, { x: screen.x, y: screen.y });
+}
+
+function onDotLeave(p, dotEl, svgEl) { scheduleHide(); }
+
+function clearAllHighlights() {
+  document.querySelectorAll('circle.dot.active').forEach(d => {
+    d.classList.remove('active');
+    d.setAttribute('r', '7');
+  });
+}
+
+// ─── SMPL availability probe ──────────────────────────────────────────
+// Bins are served via a Cloudflare Worker proxy; probe shared faces.bin.
+async function checkSmplReady() {
+  try {
+    const r = await fetch('https://smpl.unveil2000.workers.dev/file/faces.bin', { method: 'HEAD' });
+    if (!r.ok) document.getElementById('smpl-status').classList.add('show');
+  } catch {
+    document.getElementById('smpl-status').classList.add('show');
+  }
+}
+
+// Replace a panel with one rendered for a new feature. Preserves position.
+// Used as the fallback when applyFeatureChange can't do an in-place update.
+function switchFeature(oldPanel, attr, newFeat) {
+  const panelsContainer = oldPanel.parentNode;
+  oldPanel.querySelectorAll('iframe').forEach(f => f.src = 'about:blank');
+  const newPanel = renderPanel(attr, newFeat);
+  panelsContainer.replaceChild(newPanel, oldPanel);
+}
+
+// In-place feature change: ONLY update pill selection, promote the new
+// active explainer (reusing its already-loaded iframe), and re-render the
+// bar plot SVG. The heavy G1 viewer iframes don't reload, so the pill
+// switch feels instant after the first paint.
+function applyFeatureChange(panel, attr, newFeat) {
+  if (panel.dataset.feature === newFeat) return;
+  // 1. Toggle .selected on the pills.
+  panel.querySelectorAll('.feature-option').forEach(opt => {
+    opt.classList.toggle('selected', opt.dataset.feature === newFeat);
+  });
+  // 2. Promote the newly-selected pill (closure captured by renderPanel).
+  if (panel._promote) panel._promote(newFeat);
+  // 3. Re-render only the bar plot section. Pass skipMounts so the ghost
+  // panel doesn't waste cycles creating G1 iframes we'd just throw away.
+  const plotWrap = panel.querySelector('.plot-wrap');
+  if (plotWrap) {
+    const ghost = renderPanel(attr, newFeat, { skipMounts: true });
+    const newPlotWrap = ghost.querySelector('.plot-wrap');
+    if (newPlotWrap) plotWrap.replaceWith(newPlotWrap);
+  }
+  panel.dataset.feature = newFeat;
+}
+
+// ─── Boot ─────────────────────────────────────────────────────────────
+async function init() {
+  await checkSmplReady();
+  try {
+    const bl = await fetch(BLOCKLIST_URL).then(r => r.ok ? r.json() : null);
+    if (bl) {
+      VIZ_BLOCKLIST = {
+        blocked_tasks:           bl.blocked_tasks           || [],
+        blocked_per_attr_feature: bl.blocked_per_attr_feature || {},
+        blocked_instance_ids:    bl.blocked_instance_ids    || [],
+      };
+    }
+  } catch {}
+  // Load the single-activity pool (per-panel: one chosen activity, ~100
+  // candidate clips per side). Falls back to the original cross-activity
+  // mix if the new pool file isn't available.
+  let usedSinglePool = false;
+  PANEL_ACTIVITY = {};
+  byAttrFeat = {};
+  try {
+    const pool = await fetch(SINGLE_TASK_URL).then(r => r.ok ? r.json() : null);
+    if (pool && pool.panels) {
+      for (const [key, panel] of Object.entries(pool.panels)) {
+        PANEL_ACTIVITY[key] = panel.task;
+        byAttrFeat[key] = panel.instances.filter(i => !isBlockedInstance(i));
+      }
+      usedSinglePool = true;
+      console.log(`[bar-plot] using single-activity pool — ${Object.keys(pool.panels).length} panels`);
+    }
+  } catch (e) {
+    console.warn('[bar-plot] single-activity pool fetch failed, falling back:', e);
+  }
+  if (!usedSinglePool) {
+    const data = await fetch(DATA_URL).then(r => r.json());
+    let dropped = 0;
+    for (const inst of data.instances) {
+      if (isBlockedInstance(inst)) { dropped++; continue; }
+      const key = `${inst.attribute_short}|${inst.feature}`;
+      (byAttrFeat[key] ||= []).push(inst);
+    }
+    if (dropped) console.log(`[blocklist] dropped ${dropped} instances`);
+  }
+  // ?only=age,gender   →  render only those panels (used by the main page's
+  // embedded iframe to show a single attribute alongside the demo viewer).
+  const urlParams = new URLSearchParams(location.search);
+  const only      = urlParams.get('only');
+  const attrFilter = only
+    ? new Set(only.split(',').map(s => s.trim()).filter(Boolean))
+    : null;
+  if (attrFilter) document.body.classList.add('only-mode');
+  const panelsContainer = document.getElementById('panels');
+  for (const attr of ATTR_ORDER) {
+    if (attrFilter && !attrFilter.has(attr)) continue;
+    const defaultFeat = ATTR_FEATURE_OPTIONS[attr][0];
+    if (!byAttrFeat[`${attr}|${defaultFeat}`]) continue;
+    panelsContainer.appendChild(renderPanel(attr, defaultFeat));
+  }
+}
+
+try { init(); }
+catch (err) {
+  document.body.innerHTML = `<pre style="color:#c0394b;padding:30px">${err.stack || err}</pre>`;
+}
+</script>
+</body>
+</html>
+  <!-- rebuild trigger 2026-06-17 -->

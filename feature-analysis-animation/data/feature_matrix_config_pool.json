@@ -1,0 +1,5528 @@
+{
+  "version": 1,
+  "schema": "feature_matrix_v1",
+  "chrome": "minimal",
+  "smpl_dir": "./data/smpl_feature_matrix_instances",
+  "rows": [
+    {
+      "row_id": "age_waist_rom_jogging_A268_jog_ff_loop_180_R_002__A268",
+      "attribute_short": "age",
+      "task": "jogging",
+      "feature": "waist_rom",
+      "side": "high",
+      "r": -0.3981,
+      "predicted_sign": -1,
+      "high": {
+        "label": "66 yr",
+        "actor_uid": "A268",
+        "source_bvh": "dataset/soma_uniform/bvh/230313/jog_ff_loop_180_R_002__A268.bvh",
+        "g1_csv": "./data/feature_matrix_instances/age_waist_rom_jogging_A268_jog_ff_loop_180_R_002__A268.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 173,
+          "weight_kg": 93
+        },
+        "per_clip_F": 23.17,
+        "n_frames": 343
+      },
+      "low": {}
+    },
+    {
+      "row_id": "age_waist_rom_jogging_A042_jog_sideway_090_start_002__A042",
+      "attribute_short": "age",
+      "task": "jogging",
+      "feature": "waist_rom",
+      "side": "high",
+      "r": -0.3981,
+      "predicted_sign": -1,
+      "high": {
+        "label": "63 yr",
+        "actor_uid": "A042",
+        "source_bvh": "dataset/soma_uniform/bvh/220728/jog_sideway_090_start_002__A042.bvh",
+        "g1_csv": "./data/feature_matrix_instances/age_waist_rom_jogging_A042_jog_sideway_090_start_002__A042.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 178,
+          "weight_kg": 86
+        },
+        "per_clip_F": 20.0,
+        "n_frames": 544
+      },
+      "low": {}
+    },
+    {
+      "row_id": "age_waist_rom_jogging_A268_jog_ff_loop_180_R_003__A268",
+      "attribute_short": "age",
+      "task": "jogging",
+      "feature": "waist_rom",
+      "side": "high",
+      "r": -0.3981,
+      "predicted_sign": -1,
+      "high": {
+        "label": "66 yr",
+        "actor_uid": "A268",
+        "source_bvh": "dataset/soma_uniform/bvh/230313/jog_ff_loop_180_R_003__A268.bvh",
+        "g1_csv": "./data/feature_matrix_instances/age_waist_rom_jogging_A268_jog_ff_loop_180_R_003__A268.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 173,
+          "weight_kg": 93
+        },
+        "per_clip_F": 22.63,
+        "n_frames": 423
+      },
+      "low": {}
+    },
+    {
+      "row_id": "age_waist_rom_jogging_A041_arc_jog_left_stop_004__A041",
+      "attribute_short": "age",
+      "task": "jogging",
+      "feature": "waist_rom",
+      "side": "high",
+      "r": -0.3981,
+      "predicted_sign": -1,
+      "high": {
+        "label": "59 yr",
+        "actor_uid": "A041",
+        "source_bvh": "dataset/soma_uniform/bvh/220728/arc_jog_left_stop_004__A041.bvh",
+        "g1_csv": "./data/feature_matrix_instances/age_waist_rom_jogging_A041_arc_jog_left_stop_004__A041.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 157,
+          "weight_kg": 65
+        },
+        "per_clip_F": 33.3,
+        "n_frames": 513
+      },
+      "low": {}
+    },
+    {
+      "row_id": "age_waist_rom_jogging_A072_jog_ff_loop_360_001__A072",
+      "attribute_short": "age",
+      "task": "jogging",
+      "feature": "waist_rom",
+      "side": "high",
+      "r": -0.3981,
+      "predicted_sign": -1,
+      "high": {
+        "label": "49 yr",
+        "actor_uid": "A072",
+        "source_bvh": "dataset/soma_uniform/bvh/221118/jog_ff_loop_360_001__A072.bvh",
+        "g1_csv": "./data/feature_matrix_instances/age_waist_rom_jogging_A072_jog_ff_loop_360_001__A072.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 191,
+          "weight_kg": 97
+        },
+        "per_clip_F": 31.73,
+        "n_frames": 303
+      },
+      "low": {}
+    },
+    {
+      "row_id": "age_waist_rom_jogging_A069_jog_ff_loop_315_002__A069",
+      "attribute_short": "age",
+      "task": "jogging",
+      "feature": "waist_rom",
+      "side": "high",
+      "r": -0.3981,
+      "predicted_sign": -1,
+      "high": {
+        "label": "63 yr",
+        "actor_uid": "A069",
+        "source_bvh": "dataset/soma_uniform/bvh/221118/jog_ff_loop_315_002__A069.bvh",
+        "g1_csv": "./data/feature_matrix_instances/age_waist_rom_jogging_A069_jog_ff_loop_315_002__A069.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 162,
+          "weight_kg": 90
+        },
+        "per_clip_F": 21.59,
+        "n_frames": 273
+      },
+      "low": {}
+    },
+    {
+      "row_id": "age_waist_rom_jogging_A044_jog_forward_loop_001__A044",
+      "attribute_short": "age",
+      "task": "jogging",
+      "feature": "waist_rom",
+      "side": "high",
+      "r": -0.3981,
+      "predicted_sign": -1,
+      "high": {
+        "label": "65 yr",
+        "actor_uid": "A044",
+        "source_bvh": "dataset/soma_uniform/bvh/220728/jog_forward_loop_001__A044.bvh",
+        "g1_csv": "./data/feature_matrix_instances/age_waist_rom_jogging_A044_jog_forward_loop_001__A044.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 167,
+          "weight_kg": 75
+        },
+        "per_clip_F": 19.65,
+        "n_frames": 1063
+      },
+      "low": {}
+    },
+    {
+      "row_id": "age_waist_rom_jogging_A268_jog_ff_loop_225_R_003__A268",
+      "attribute_short": "age",
+      "task": "jogging",
+      "feature": "waist_rom",
+      "side": "high",
+      "r": -0.3981,
+      "predicted_sign": -1,
+      "high": {
+        "label": "66 yr",
+        "actor_uid": "A268",
+        "source_bvh": "dataset/soma_uniform/bvh/230313/jog_ff_loop_225_R_003__A268.bvh",
+        "g1_csv": "./data/feature_matrix_instances/age_waist_rom_jogging_A268_jog_ff_loop_225_R_003__A268.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 173,
+          "weight_kg": 93
+        },
+        "per_clip_F": 21.86,
+        "n_frames": 433
+      },
+      "low": {}
+    },
+    {
+      "row_id": "age_waist_rom_jogging_A260_jog_ff_loop_180_R_002__A260",
+      "attribute_short": "age",
+      "task": "jogging",
+      "feature": "waist_rom",
+      "side": "high",
+      "r": -0.3981,
+      "predicted_sign": -1,
+      "high": {
+        "label": "66 yr",
+        "actor_uid": "A260",
+        "source_bvh": "dataset/soma_uniform/bvh/230309/jog_ff_loop_180_R_002__A260.bvh",
+        "g1_csv": "./data/feature_matrix_instances/age_waist_rom_jogging_A260_jog_ff_loop_180_R_002__A260.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 182,
+          "weight_kg": 95
+        },
+        "per_clip_F": 28.42,
+        "n_frames": 413
+      },
+      "low": {}
+    },
+    {
+      "row_id": "age_waist_rom_jogging_A038_jog_backward_stop_002__A038",
+      "attribute_short": "age",
+      "task": "jogging",
+      "feature": "waist_rom",
+      "side": "high",
+      "r": -0.3981,
+      "predicted_sign": -1,
+      "high": {
+        "label": "59 yr",
+        "actor_uid": "A038",
+        "source_bvh": "dataset/soma_uniform/bvh/220727/jog_backward_stop_002__A038.bvh",
+        "g1_csv": "./data/feature_matrix_instances/age_waist_rom_jogging_A038_jog_backward_stop_002__A038.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 178,
+          "weight_kg": 65
+        },
+        "per_clip_F": 26.24,
+        "n_frames": 562
+      },
+      "low": {}
+    },
+    {
+      "row_id": "age_waist_rom_jogging_A051_jog_ff_stop_315_005__A051",
+      "attribute_short": "age",
+      "task": "jogging",
+      "feature": "waist_rom",
+      "side": "low",
+      "r": -0.3981,
+      "predicted_sign": -1,
+      "high": {
+        "label": "19 yr",
+        "actor_uid": "A051",
+        "source_bvh": "dataset/soma_uniform/bvh/221011/jog_ff_stop_315_005__A051.bvh",
+        "g1_csv": "./data/feature_matrix_instances/age_waist_rom_jogging_A051_jog_ff_stop_315_005__A051.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 189,
+          "weight_kg": 62
+        },
+        "per_clip_F": 37.53,
+        "n_frames": 555
+      },
+      "low": {}
+    },
+    {
+      "row_id": "age_waist_rom_jogging_A138_jog_ff_loop_180_R_001__A138",
+      "attribute_short": "age",
+      "task": "jogging",
+      "feature": "waist_rom",
+      "side": "low",
+      "r": -0.3981,
+      "predicted_sign": -1,
+      "high": {
+        "label": "24 yr",
+        "actor_uid": "A138",
+        "source_bvh": "dataset/soma_uniform/bvh/230123/jog_ff_loop_180_R_001__A138.bvh",
+        "g1_csv": "./data/feature_matrix_instances/age_waist_rom_jogging_A138_jog_ff_loop_180_R_001__A138.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 196,
+          "weight_kg": 82
+        },
+        "per_clip_F": 40.64,
+        "n_frames": 299
+      },
+      "low": {}
+    },
+    {
+      "row_id": "age_waist_rom_jogging_A193_jog_ff_stop_180_R_004__A193",
+      "attribute_short": "age",
+      "task": "jogging",
+      "feature": "waist_rom",
+      "side": "low",
+      "r": -0.3981,
+      "predicted_sign": -1,
+      "high": {
+        "label": "23 yr",
+        "actor_uid": "A193",
+        "source_bvh": "dataset/soma_uniform/bvh/230214/jog_ff_stop_180_R_004__A193.bvh",
+        "g1_csv": "./data/feature_matrix_instances/age_waist_rom_jogging_A193_jog_ff_stop_180_R_004__A193.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 168,
+          "weight_kg": 57
+        },
+        "per_clip_F": 36.15,
+        "n_frames": 964
+      },
+      "low": {}
+    },
+    {
+      "row_id": "age_waist_rom_jogging_A060_jog_arc_cw_start_001__A060",
+      "attribute_short": "age",
+      "task": "jogging",
+      "feature": "waist_rom",
+      "side": "low",
+      "r": -0.3981,
+      "predicted_sign": -1,
+      "high": {
+        "label": "21 yr",
+        "actor_uid": "A060",
+        "source_bvh": "dataset/soma_uniform/bvh/221115/jog_arc_cw_start_001__A060.bvh",
+        "g1_csv": "./data/feature_matrix_instances/age_waist_rom_jogging_A060_jog_arc_cw_start_001__A060.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 192,
+          "weight_kg": 97
+        },
+        "per_clip_F": 43.93,
+        "n_frames": 683
+      },
+      "low": {}
+    },
+    {
+      "row_id": "age_waist_rom_jogging_A046_jog_ff_stop_180_R_003__A046",
+      "attribute_short": "age",
+      "task": "jogging",
+      "feature": "waist_rom",
+      "side": "low",
+      "r": -0.3981,
+      "predicted_sign": -1,
+      "high": {
+        "label": "18 yr",
+        "actor_uid": "A046",
+        "source_bvh": "dataset/soma_uniform/bvh/221010/jog_ff_stop_180_R_003__A046.bvh",
+        "g1_csv": "./data/feature_matrix_instances/age_waist_rom_jogging_A046_jog_ff_stop_180_R_003__A046.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 181,
+          "weight_kg": 77
+        },
+        "per_clip_F": 43.3,
+        "n_frames": 996
+      },
+      "low": {}
+    },
+    {
+      "row_id": "age_waist_rom_jogging_A321_jog_ff_loop_180_R_003__A321",
+      "attribute_short": "age",
+      "task": "jogging",
+      "feature": "waist_rom",
+      "side": "low",
+      "r": -0.3981,
+      "predicted_sign": -1,
+      "high": {
+        "label": "23 yr",
+        "actor_uid": "A321",
+        "source_bvh": "dataset/soma_uniform/bvh/230414/jog_ff_loop_180_R_003__A321.bvh",
+        "g1_csv": "./data/feature_matrix_instances/age_waist_rom_jogging_A321_jog_ff_loop_180_R_003__A321.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 170,
+          "weight_kg": 69
+        },
+        "per_clip_F": 39.16,
+        "n_frames": 268
+      },
+      "low": {}
+    },
+    {
+      "row_id": "age_waist_rom_jogging_A110_jog_ff_stop_180_R_002__A110",
+      "attribute_short": "age",
+      "task": "jogging",
+      "feature": "waist_rom",
+      "side": "low",
+      "r": -0.3981,
+      "predicted_sign": -1,
+      "high": {
+        "label": "24 yr",
+        "actor_uid": "A110",
+        "source_bvh": "dataset/soma_uniform/bvh/230105/jog_ff_stop_180_R_002__A110.bvh",
+        "g1_csv": "./data/feature_matrix_instances/age_waist_rom_jogging_A110_jog_ff_stop_180_R_002__A110.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 177,
+          "weight_kg": 74
+        },
+        "per_clip_F": 41.24,
+        "n_frames": 344
+      },
+      "low": {}
+    },
+    {
+      "row_id": "age_waist_rom_jogging_A093_jog_arc_cw_stop_001__A093",
+      "attribute_short": "age",
+      "task": "jogging",
+      "feature": "waist_rom",
+      "side": "low",
+      "r": -0.3981,
+      "predicted_sign": -1,
+      "high": {
+        "label": "24 yr",
+        "actor_uid": "A093",
+        "source_bvh": "dataset/soma_uniform/bvh/230102/jog_arc_cw_stop_001__A093.bvh",
+        "g1_csv": "./data/feature_matrix_instances/age_waist_rom_jogging_A093_jog_arc_cw_stop_001__A093.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 188,
+          "weight_kg": 89
+        },
+        "per_clip_F": 34.03,
+        "n_frames": 390
+      },
+      "low": {}
+    },
+    {
+      "row_id": "age_waist_rom_jogging_A093_jog_ff_stop_270_002__A093",
+      "attribute_short": "age",
+      "task": "jogging",
+      "feature": "waist_rom",
+      "side": "low",
+      "r": -0.3981,
+      "predicted_sign": -1,
+      "high": {
+        "label": "24 yr",
+        "actor_uid": "A093",
+        "source_bvh": "dataset/soma_uniform/bvh/230102/jog_ff_stop_270_002__A093.bvh",
+        "g1_csv": "./data/feature_matrix_instances/age_waist_rom_jogging_A093_jog_ff_stop_270_002__A093.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 188,
+          "weight_kg": 89
+        },
+        "per_clip_F": 36.22,
+        "n_frames": 600
+      },
+      "low": {}
+    },
+    {
+      "row_id": "age_waist_rom_jogging_A031_jog_sideway_135_loop_001__A031",
+      "attribute_short": "age",
+      "task": "jogging",
+      "feature": "waist_rom",
+      "side": "low",
+      "r": -0.3981,
+      "predicted_sign": -1,
+      "high": {
+        "label": "22 yr",
+        "actor_uid": "A031",
+        "source_bvh": "dataset/soma_uniform/bvh/220720/jog_sideway_135_loop_001__A031.bvh",
+        "g1_csv": "./data/feature_matrix_instances/age_waist_rom_jogging_A031_jog_sideway_135_loop_001__A031.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 192,
+          "weight_kg": 85
+        },
+        "per_clip_F": 48.0,
+        "n_frames": 1041
+      },
+      "low": {}
+    },
+    {
+      "row_id": "age_waist_mean_vel_jogging_A266_jog_ff_start_270_R_001__A266",
+      "attribute_short": "age",
+      "task": "jogging",
+      "feature": "waist_mean_vel",
+      "side": "high",
+      "r": -0.3637,
+      "predicted_sign": -1,
+      "high": {
+        "label": "60 yr",
+        "actor_uid": "A266",
+        "source_bvh": "dataset/soma_uniform/bvh/230313/jog_ff_start_270_R_001__A266.bvh",
+        "g1_csv": "./data/feature_matrix_instances/age_waist_mean_vel_jogging_A266_jog_ff_start_270_R_001__A266.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 174,
+          "weight_kg": 120
+        },
+        "per_clip_F": 37.77,
+        "n_frames": 716
+      },
+      "low": {}
+    },
+    {
+      "row_id": "age_waist_mean_vel_jogging_A038_jog_backward_start_002__A038",
+      "attribute_short": "age",
+      "task": "jogging",
+      "feature": "waist_mean_vel",
+      "side": "high",
+      "r": -0.3637,
+      "predicted_sign": -1,
+      "high": {
+        "label": "59 yr",
+        "actor_uid": "A038",
+        "source_bvh": "dataset/soma_uniform/bvh/220727/jog_backward_start_002__A038.bvh",
+        "g1_csv": "./data/feature_matrix_instances/age_waist_mean_vel_jogging_A038_jog_backward_start_002__A038.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 178,
+          "weight_kg": 65
+        },
+        "per_clip_F": 60.55,
+        "n_frames": 770
+      },
+      "low": {}
+    },
+    {
+      "row_id": "age_waist_mean_vel_jogging_A266_jog_ff_start_270_R_002__A266",
+      "attribute_short": "age",
+      "task": "jogging",
+      "feature": "waist_mean_vel",
+      "side": "high",
+      "r": -0.3637,
+      "predicted_sign": -1,
+      "high": {
+        "label": "60 yr",
+        "actor_uid": "A266",
+        "source_bvh": "dataset/soma_uniform/bvh/230313/jog_ff_start_270_R_002__A266.bvh",
+        "g1_csv": "./data/feature_matrix_instances/age_waist_mean_vel_jogging_A266_jog_ff_start_270_R_002__A266.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 174,
+          "weight_kg": 120
+        },
+        "per_clip_F": 41.94,
+        "n_frames": 651
+      },
+      "low": {}
+    },
+    {
+      "row_id": "age_waist_mean_vel_jogging_A044_jog_sideway_045_stop_003__A044",
+      "attribute_short": "age",
+      "task": "jogging",
+      "feature": "waist_mean_vel",
+      "side": "high",
+      "r": -0.3637,
+      "predicted_sign": -1,
+      "high": {
+        "label": "65 yr",
+        "actor_uid": "A044",
+        "source_bvh": "dataset/soma_uniform/bvh/220728/jog_sideway_045_stop_003__A044.bvh",
+        "g1_csv": "./data/feature_matrix_instances/age_waist_mean_vel_jogging_A044_jog_sideway_045_stop_003__A044.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 167,
+          "weight_kg": 75
+        },
+        "per_clip_F": 30.95,
+        "n_frames": 634
+      },
+      "low": {}
+    },
+    {
+      "row_id": "age_waist_mean_vel_jogging_A068_jog_arc_cw_start_003__A068",
+      "attribute_short": "age",
+      "task": "jogging",
+      "feature": "waist_mean_vel",
+      "side": "high",
+      "r": -0.3637,
+      "predicted_sign": -1,
+      "high": {
+        "label": "65 yr",
+        "actor_uid": "A068",
+        "source_bvh": "dataset/soma_uniform/bvh/221117/jog_arc_cw_start_003__A068.bvh",
+        "g1_csv": "./data/feature_matrix_instances/age_waist_mean_vel_jogging_A068_jog_arc_cw_start_003__A068.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 164,
+          "weight_kg": 69
+        },
+        "per_clip_F": 64.14,
+        "n_frames": 530
+      },
+      "low": {}
+    },
+    {
+      "row_id": "age_waist_mean_vel_jogging_A066_jog_arc_cw_start_002__A066",
+      "attribute_short": "age",
+      "task": "jogging",
+      "feature": "waist_mean_vel",
+      "side": "high",
+      "r": -0.3637,
+      "predicted_sign": -1,
+      "high": {
+        "label": "56 yr",
+        "actor_uid": "A066",
+        "source_bvh": "dataset/soma_uniform/bvh/221117/jog_arc_cw_start_002__A066.bvh",
+        "g1_csv": "./data/feature_matrix_instances/age_waist_mean_vel_jogging_A066_jog_arc_cw_start_002__A066.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 180,
+          "weight_kg": 98
+        },
+        "per_clip_F": 51.17,
+        "n_frames": 410
+      },
+      "low": {}
+    },
+    {
+      "row_id": "age_waist_mean_vel_jogging_A042_jog_sideway_135_start_001__A042",
+      "attribute_short": "age",
+      "task": "jogging",
+      "feature": "waist_mean_vel",
+      "side": "high",
+      "r": -0.3637,
+      "predicted_sign": -1,
+      "high": {
+        "label": "63 yr",
+        "actor_uid": "A042",
+        "source_bvh": "dataset/soma_uniform/bvh/220728/jog_sideway_135_start_001__A042.bvh",
+        "g1_csv": "./data/feature_matrix_instances/age_waist_mean_vel_jogging_A042_jog_sideway_135_start_001__A042.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 178,
+          "weight_kg": 86
+        },
+        "per_clip_F": 51.73,
+        "n_frames": 518
+      },
+      "low": {}
+    },
+    {
+      "row_id": "age_waist_mean_vel_jogging_A266_jog_ff_start_315_R_002__A266",
+      "attribute_short": "age",
+      "task": "jogging",
+      "feature": "waist_mean_vel",
+      "side": "high",
+      "r": -0.3637,
+      "predicted_sign": -1,
+      "high": {
+        "label": "60 yr",
+        "actor_uid": "A266",
+        "source_bvh": "dataset/soma_uniform/bvh/230313/jog_ff_start_315_R_002__A266.bvh",
+        "g1_csv": "./data/feature_matrix_instances/age_waist_mean_vel_jogging_A266_jog_ff_start_315_R_002__A266.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 174,
+          "weight_kg": 120
+        },
+        "per_clip_F": 43.34,
+        "n_frames": 524
+      },
+      "low": {}
+    },
+    {
+      "row_id": "age_waist_mean_vel_jogging_A256_jog_ff_loop_270_R_006__A256",
+      "attribute_short": "age",
+      "task": "jogging",
+      "feature": "waist_mean_vel",
+      "side": "high",
+      "r": -0.3637,
+      "predicted_sign": -1,
+      "high": {
+        "label": "66 yr",
+        "actor_uid": "A256",
+        "source_bvh": "dataset/soma_uniform/bvh/230308/jog_ff_loop_270_R_006__A256.bvh",
+        "g1_csv": "./data/feature_matrix_instances/age_waist_mean_vel_jogging_A256_jog_ff_loop_270_R_006__A256.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 182,
+          "weight_kg": 95
+        },
+        "per_clip_F": 43.96,
+        "n_frames": 438
+      },
+      "low": {}
+    },
+    {
+      "row_id": "age_waist_mean_vel_jogging_A039_jog_sideway_090_loop_002__A039",
+      "attribute_short": "age",
+      "task": "jogging",
+      "feature": "waist_mean_vel",
+      "side": "high",
+      "r": -0.3637,
+      "predicted_sign": -1,
+      "high": {
+        "label": "64 yr",
+        "actor_uid": "A039",
+        "source_bvh": "dataset/soma_uniform/bvh/220727/jog_sideway_090_loop_002__A039.bvh",
+        "g1_csv": "./data/feature_matrix_instances/age_waist_mean_vel_jogging_A039_jog_sideway_090_loop_002__A039.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 188,
+          "weight_kg": 90
+        },
+        "per_clip_F": 39.7,
+        "n_frames": 1110
+      },
+      "low": {}
+    },
+    {
+      "row_id": "age_waist_mean_vel_jogging_A060_jog_ff_start_225_003__A060",
+      "attribute_short": "age",
+      "task": "jogging",
+      "feature": "waist_mean_vel",
+      "side": "low",
+      "r": -0.3637,
+      "predicted_sign": -1,
+      "high": {
+        "label": "21 yr",
+        "actor_uid": "A060",
+        "source_bvh": "dataset/soma_uniform/bvh/221115/jog_ff_start_225_003__A060.bvh",
+        "g1_csv": "./data/feature_matrix_instances/age_waist_mean_vel_jogging_A060_jog_ff_start_225_003__A060.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 192,
+          "weight_kg": 97
+        },
+        "per_clip_F": 105.9,
+        "n_frames": 584
+      },
+      "low": {}
+    },
+    {
+      "row_id": "age_waist_mean_vel_jogging_A238_jog_ff_stop_270_R_003__A238",
+      "attribute_short": "age",
+      "task": "jogging",
+      "feature": "waist_mean_vel",
+      "side": "low",
+      "r": -0.3637,
+      "predicted_sign": -1,
+      "high": {
+        "label": "24 yr",
+        "actor_uid": "A238",
+        "source_bvh": "dataset/soma_uniform/bvh/230302/jog_ff_stop_270_R_003__A238.bvh",
+        "g1_csv": "./data/feature_matrix_instances/age_waist_mean_vel_jogging_A238_jog_ff_stop_270_R_003__A238.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 183,
+          "weight_kg": 83
+        },
+        "per_clip_F": 70.4,
+        "n_frames": 607
+      },
+      "low": {}
+    },
+    {
+      "row_id": "age_waist_mean_vel_jogging_A238_jog_ff_loop_360_R_001__A238",
+      "attribute_short": "age",
+      "task": "jogging",
+      "feature": "waist_mean_vel",
+      "side": "low",
+      "r": -0.3637,
+      "predicted_sign": -1,
+      "high": {
+        "label": "24 yr",
+        "actor_uid": "A238",
+        "source_bvh": "dataset/soma_uniform/bvh/230302/jog_ff_loop_360_R_001__A238.bvh",
+        "g1_csv": "./data/feature_matrix_instances/age_waist_mean_vel_jogging_A238_jog_ff_loop_360_R_001__A238.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 183,
+          "weight_kg": 83
+        },
+        "per_clip_F": 77.25,
+        "n_frames": 373
+      },
+      "low": {}
+    },
+    {
+      "row_id": "age_waist_mean_vel_jogging_A075_jog_ff_start_180_R_003__A075",
+      "attribute_short": "age",
+      "task": "jogging",
+      "feature": "waist_mean_vel",
+      "side": "low",
+      "r": -0.3637,
+      "predicted_sign": -1,
+      "high": {
+        "label": "24 yr",
+        "actor_uid": "A075",
+        "source_bvh": "dataset/soma_uniform/bvh/221128/jog_ff_start_180_R_003__A075.bvh",
+        "g1_csv": "./data/feature_matrix_instances/age_waist_mean_vel_jogging_A075_jog_ff_start_180_R_003__A075.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 196,
+          "weight_kg": 82
+        },
+        "per_clip_F": 86.01,
+        "n_frames": 318
+      },
+      "low": {}
+    },
+    {
+      "row_id": "age_waist_mean_vel_jogging_A051_jog_arc_cw_start_001__A051",
+      "attribute_short": "age",
+      "task": "jogging",
+      "feature": "waist_mean_vel",
+      "side": "low",
+      "r": -0.3637,
+      "predicted_sign": -1,
+      "high": {
+        "label": "19 yr",
+        "actor_uid": "A051",
+        "source_bvh": "dataset/soma_uniform/bvh/221011/jog_arc_cw_start_001__A051.bvh",
+        "g1_csv": "./data/feature_matrix_instances/age_waist_mean_vel_jogging_A051_jog_arc_cw_start_001__A051.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 189,
+          "weight_kg": 62
+        },
+        "per_clip_F": 65.79,
+        "n_frames": 501
+      },
+      "low": {}
+    },
+    {
+      "row_id": "age_waist_mean_vel_jogging_A347_jog_ff_stop_180_R_003__A347",
+      "attribute_short": "age",
+      "task": "jogging",
+      "feature": "waist_mean_vel",
+      "side": "low",
+      "r": -0.3637,
+      "predicted_sign": -1,
+      "high": {
+        "label": "24 yr",
+        "actor_uid": "A347",
+        "source_bvh": "dataset/soma_uniform/bvh/230424/jog_ff_stop_180_R_003__A347.bvh",
+        "g1_csv": "./data/feature_matrix_instances/age_waist_mean_vel_jogging_A347_jog_ff_stop_180_R_003__A347.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 183,
+          "weight_kg": 83
+        },
+        "per_clip_F": 62.18,
+        "n_frames": 560
+      },
+      "low": {}
+    },
+    {
+      "row_id": "age_waist_mean_vel_jogging_A152_jog_ff_start_180_R_003__A152",
+      "attribute_short": "age",
+      "task": "jogging",
+      "feature": "waist_mean_vel",
+      "side": "low",
+      "r": -0.3637,
+      "predicted_sign": -1,
+      "high": {
+        "label": "24 yr",
+        "actor_uid": "A152",
+        "source_bvh": "dataset/soma_uniform/bvh/230126/jog_ff_start_180_R_003__A152.bvh",
+        "g1_csv": "./data/feature_matrix_instances/age_waist_mean_vel_jogging_A152_jog_ff_start_180_R_003__A152.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 188,
+          "weight_kg": 89
+        },
+        "per_clip_F": 97.64,
+        "n_frames": 348
+      },
+      "low": {}
+    },
+    {
+      "row_id": "age_waist_mean_vel_jogging_A109_jog_ff_stop_180_R_003__A109",
+      "attribute_short": "age",
+      "task": "jogging",
+      "feature": "waist_mean_vel",
+      "side": "low",
+      "r": -0.3637,
+      "predicted_sign": -1,
+      "high": {
+        "label": "24 yr",
+        "actor_uid": "A109",
+        "source_bvh": "dataset/soma_uniform/bvh/230105/jog_ff_stop_180_R_003__A109.bvh",
+        "g1_csv": "./data/feature_matrix_instances/age_waist_mean_vel_jogging_A109_jog_ff_stop_180_R_003__A109.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 188,
+          "weight_kg": 89
+        },
+        "per_clip_F": 67.16,
+        "n_frames": 432
+      },
+      "low": {}
+    },
+    {
+      "row_id": "age_waist_mean_vel_jogging_A096_jog_arc_cw_stop_001__A096",
+      "attribute_short": "age",
+      "task": "jogging",
+      "feature": "waist_mean_vel",
+      "side": "low",
+      "r": -0.3637,
+      "predicted_sign": -1,
+      "high": {
+        "label": "24 yr",
+        "actor_uid": "A096",
+        "source_bvh": "dataset/soma_uniform/bvh/230102/jog_arc_cw_stop_001__A096.bvh",
+        "g1_csv": "./data/feature_matrix_instances/age_waist_mean_vel_jogging_A096_jog_arc_cw_stop_001__A096.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 177,
+          "weight_kg": 74
+        },
+        "per_clip_F": 71.14,
+        "n_frames": 368
+      },
+      "low": {}
+    },
+    {
+      "row_id": "age_waist_mean_vel_jogging_A031_jog_backward_stop_003__A031",
+      "attribute_short": "age",
+      "task": "jogging",
+      "feature": "waist_mean_vel",
+      "side": "low",
+      "r": -0.3637,
+      "predicted_sign": -1,
+      "high": {
+        "label": "22 yr",
+        "actor_uid": "A031",
+        "source_bvh": "dataset/soma_uniform/bvh/220720/jog_backward_stop_003__A031.bvh",
+        "g1_csv": "./data/feature_matrix_instances/age_waist_mean_vel_jogging_A031_jog_backward_stop_003__A031.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 192,
+          "weight_kg": 85
+        },
+        "per_clip_F": 60.83,
+        "n_frames": 566
+      },
+      "low": {}
+    },
+    {
+      "row_id": "age_ankle_rom_jogging_A269_jog_ff_stop_180_R_003__A269",
+      "attribute_short": "age",
+      "task": "jogging",
+      "feature": "ankle_rom",
+      "side": "high",
+      "r": -0.2322,
+      "predicted_sign": -1,
+      "high": {
+        "label": "59 yr",
+        "actor_uid": "A269",
+        "source_bvh": "dataset/soma_uniform/bvh/230314/jog_ff_stop_180_R_003__A269.bvh",
+        "g1_csv": "./data/feature_matrix_instances/age_ankle_rom_jogging_A269_jog_ff_stop_180_R_003__A269.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 178,
+          "weight_kg": 65
+        },
+        "per_clip_F": 51.65,
+        "n_frames": 561
+      },
+      "low": {}
+    },
+    {
+      "row_id": "age_ankle_rom_jogging_A043_jog_sideway_045_stop_003__A043",
+      "attribute_short": "age",
+      "task": "jogging",
+      "feature": "ankle_rom",
+      "side": "high",
+      "r": -0.2322,
+      "predicted_sign": -1,
+      "high": {
+        "label": "53 yr",
+        "actor_uid": "A043",
+        "source_bvh": "dataset/soma_uniform/bvh/220728/jog_sideway_045_stop_003__A043.bvh",
+        "g1_csv": "./data/feature_matrix_instances/age_ankle_rom_jogging_A043_jog_sideway_045_stop_003__A043.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 190,
+          "weight_kg": 88
+        },
+        "per_clip_F": 52.99,
+        "n_frames": 568
+      },
+      "low": {}
+    },
+    {
+      "row_id": "age_ankle_rom_jogging_A272_jog_ff_stop_180_R_003__A272",
+      "attribute_short": "age",
+      "task": "jogging",
+      "feature": "ankle_rom",
+      "side": "high",
+      "r": -0.2322,
+      "predicted_sign": -1,
+      "high": {
+        "label": "66 yr",
+        "actor_uid": "A272",
+        "source_bvh": "dataset/soma_uniform/bvh/230314/jog_ff_stop_180_R_003__A272.bvh",
+        "g1_csv": "./data/feature_matrix_instances/age_ankle_rom_jogging_A272_jog_ff_stop_180_R_003__A272.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 182,
+          "weight_kg": 95
+        },
+        "per_clip_F": 41.4,
+        "n_frames": 594
+      },
+      "low": {}
+    },
+    {
+      "row_id": "age_ankle_rom_jogging_A055_jog_ff_stop_180_R_002__A055",
+      "attribute_short": "age",
+      "task": "jogging",
+      "feature": "ankle_rom",
+      "side": "high",
+      "r": -0.2322,
+      "predicted_sign": -1,
+      "high": {
+        "label": "71 yr",
+        "actor_uid": "A055",
+        "source_bvh": "dataset/soma_uniform/bvh/221012/jog_ff_stop_180_R_002__A055.bvh",
+        "g1_csv": "./data/feature_matrix_instances/age_ankle_rom_jogging_A055_jog_ff_stop_180_R_002__A055.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 188,
+          "weight_kg": 77
+        },
+        "per_clip_F": 45.36,
+        "n_frames": 643
+      },
+      "low": {}
+    },
+    {
+      "row_id": "age_ankle_rom_jogging_A072_jog_arc_cw_stop_001__A072",
+      "attribute_short": "age",
+      "task": "jogging",
+      "feature": "ankle_rom",
+      "side": "high",
+      "r": -0.2322,
+      "predicted_sign": -1,
+      "high": {
+        "label": "49 yr",
+        "actor_uid": "A072",
+        "source_bvh": "dataset/soma_uniform/bvh/221118/jog_arc_cw_stop_001__A072.bvh",
+        "g1_csv": "./data/feature_matrix_instances/age_ankle_rom_jogging_A072_jog_arc_cw_stop_001__A072.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 191,
+          "weight_kg": 97
+        },
+        "per_clip_F": 44.4,
+        "n_frames": 406
+      },
+      "low": {}
+    },
+    {
+      "row_id": "age_ankle_rom_jogging_A069_jog_arc_cw_start_002__A069",
+      "attribute_short": "age",
+      "task": "jogging",
+      "feature": "ankle_rom",
+      "side": "high",
+      "r": -0.2322,
+      "predicted_sign": -1,
+      "high": {
+        "label": "63 yr",
+        "actor_uid": "A069",
+        "source_bvh": "dataset/soma_uniform/bvh/221118/jog_arc_cw_start_002__A069.bvh",
+        "g1_csv": "./data/feature_matrix_instances/age_ankle_rom_jogging_A069_jog_arc_cw_start_002__A069.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 162,
+          "weight_kg": 90
+        },
+        "per_clip_F": 46.8,
+        "n_frames": 437
+      },
+      "low": {}
+    },
+    {
+      "row_id": "age_ankle_rom_jogging_A041_exercise_2_003__A041",
+      "attribute_short": "age",
+      "task": "jogging",
+      "feature": "ankle_rom",
+      "side": "high",
+      "r": -0.2322,
+      "predicted_sign": -1,
+      "high": {
+        "label": "59 yr",
+        "actor_uid": "A041",
+        "source_bvh": "dataset/soma_uniform/bvh/220728/exercise_2_003__A041.bvh",
+        "g1_csv": "./data/feature_matrix_instances/age_ankle_rom_jogging_A041_exercise_2_003__A041.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 157,
+          "weight_kg": 65
+        },
+        "per_clip_F": 44.99,
+        "n_frames": 497
+      },
+      "low": {}
+    },
+    {
+      "row_id": "age_ankle_rom_jogging_A268_jog_arc_cw_loop_R_003__A268",
+      "attribute_short": "age",
+      "task": "jogging",
+      "feature": "ankle_rom",
+      "side": "high",
+      "r": -0.2322,
+      "predicted_sign": -1,
+      "high": {
+        "label": "66 yr",
+        "actor_uid": "A268",
+        "source_bvh": "dataset/soma_uniform/bvh/230313/jog_arc_cw_loop_R_003__A268.bvh",
+        "g1_csv": "./data/feature_matrix_instances/age_ankle_rom_jogging_A268_jog_arc_cw_loop_R_003__A268.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 173,
+          "weight_kg": 93
+        },
+        "per_clip_F": 31.94,
+        "n_frames": 1058
+      },
+      "low": {}
+    },
+    {
+      "row_id": "age_ankle_rom_jogging_A264_jog_ff_start_180_R_001__A264",
+      "attribute_short": "age",
+      "task": "jogging",
+      "feature": "ankle_rom",
+      "side": "high",
+      "r": -0.2322,
+      "predicted_sign": -1,
+      "high": {
+        "label": "66 yr",
+        "actor_uid": "A264",
+        "source_bvh": "dataset/soma_uniform/bvh/230310/jog_ff_start_180_R_001__A264.bvh",
+        "g1_csv": "./data/feature_matrix_instances/age_ankle_rom_jogging_A264_jog_ff_start_180_R_001__A264.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 182,
+          "weight_kg": 95
+        },
+        "per_clip_F": 41.71,
+        "n_frames": 517
+      },
+      "low": {}
+    },
+    {
+      "row_id": "age_ankle_rom_jogging_A039_jog_backward_start_002__A039",
+      "attribute_short": "age",
+      "task": "jogging",
+      "feature": "ankle_rom",
+      "side": "high",
+      "r": -0.2322,
+      "predicted_sign": -1,
+      "high": {
+        "label": "64 yr",
+        "actor_uid": "A039",
+        "source_bvh": "dataset/soma_uniform/bvh/220727/jog_backward_start_002__A039.bvh",
+        "g1_csv": "./data/feature_matrix_instances/age_ankle_rom_jogging_A039_jog_backward_start_002__A039.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 188,
+          "weight_kg": 90
+        },
+        "per_clip_F": 48.3,
+        "n_frames": 928
+      },
+      "low": {}
+    },
+    {
+      "row_id": "age_ankle_rom_jogging_A045_jog_arc_cw_start_003__A045",
+      "attribute_short": "age",
+      "task": "jogging",
+      "feature": "ankle_rom",
+      "side": "low",
+      "r": -0.2322,
+      "predicted_sign": -1,
+      "high": {
+        "label": "22 yr",
+        "actor_uid": "A045",
+        "source_bvh": "dataset/soma_uniform/bvh/221010/jog_arc_cw_start_003__A045.bvh",
+        "g1_csv": "./data/feature_matrix_instances/age_ankle_rom_jogging_A045_jog_arc_cw_start_003__A045.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 156,
+          "weight_kg": 59
+        },
+        "per_clip_F": 51.78,
+        "n_frames": 775
+      },
+      "low": {}
+    },
+    {
+      "row_id": "age_ankle_rom_jogging_A093_jog_ff_loop_225_004__A093",
+      "attribute_short": "age",
+      "task": "jogging",
+      "feature": "ankle_rom",
+      "side": "low",
+      "r": -0.2322,
+      "predicted_sign": -1,
+      "high": {
+        "label": "24 yr",
+        "actor_uid": "A093",
+        "source_bvh": "dataset/soma_uniform/bvh/230102/jog_ff_loop_225_004__A093.bvh",
+        "g1_csv": "./data/feature_matrix_instances/age_ankle_rom_jogging_A093_jog_ff_loop_225_004__A093.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 188,
+          "weight_kg": 89
+        },
+        "per_clip_F": 61.64,
+        "n_frames": 536
+      },
+      "low": {}
+    },
+    {
+      "row_id": "age_ankle_rom_jogging_A105_jog_ff_start_180_R_001__A105",
+      "attribute_short": "age",
+      "task": "jogging",
+      "feature": "ankle_rom",
+      "side": "low",
+      "r": -0.2322,
+      "predicted_sign": -1,
+      "high": {
+        "label": "24 yr",
+        "actor_uid": "A105",
+        "source_bvh": "dataset/soma_uniform/bvh/230104/jog_ff_start_180_R_001__A105.bvh",
+        "g1_csv": "./data/feature_matrix_instances/age_ankle_rom_jogging_A105_jog_ff_start_180_R_001__A105.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 177,
+          "weight_kg": 74
+        },
+        "per_clip_F": 57.27,
+        "n_frames": 397
+      },
+      "low": {}
+    },
+    {
+      "row_id": "age_ankle_rom_jogging_A061_jog_ff_start_315_001__A061",
+      "attribute_short": "age",
+      "task": "jogging",
+      "feature": "ankle_rom",
+      "side": "low",
+      "r": -0.2322,
+      "predicted_sign": -1,
+      "high": {
+        "label": "21 yr",
+        "actor_uid": "A061",
+        "source_bvh": "dataset/soma_uniform/bvh/221115/jog_ff_start_315_001__A061.bvh",
+        "g1_csv": "./data/feature_matrix_instances/age_ankle_rom_jogging_A061_jog_ff_start_315_001__A061.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 157,
+          "weight_kg": 47
+        },
+        "per_clip_F": 55.83,
+        "n_frames": 449
+      },
+      "low": {}
+    },
+    {
+      "row_id": "age_ankle_rom_jogging_A031_exercise_2_001__A031",
+      "attribute_short": "age",
+      "task": "jogging",
+      "feature": "ankle_rom",
+      "side": "low",
+      "r": -0.2322,
+      "predicted_sign": -1,
+      "high": {
+        "label": "22 yr",
+        "actor_uid": "A031",
+        "source_bvh": "dataset/soma_uniform/bvh/220720/exercise_2_001__A031.bvh",
+        "g1_csv": "./data/feature_matrix_instances/age_ankle_rom_jogging_A031_exercise_2_001__A031.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 192,
+          "weight_kg": 85
+        },
+        "per_clip_F": 51.77,
+        "n_frames": 555
+      },
+      "low": {}
+    },
+    {
+      "row_id": "age_ankle_rom_jogging_A317_jog_ff_stop_180_R_004__A317",
+      "attribute_short": "age",
+      "task": "jogging",
+      "feature": "ankle_rom",
+      "side": "low",
+      "r": -0.2322,
+      "predicted_sign": -1,
+      "high": {
+        "label": "24 yr",
+        "actor_uid": "A317",
+        "source_bvh": "dataset/soma_uniform/bvh/230413/jog_ff_stop_180_R_004__A317.bvh",
+        "g1_csv": "./data/feature_matrix_instances/age_ankle_rom_jogging_A317_jog_ff_stop_180_R_004__A317.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 168,
+          "weight_kg": 59
+        },
+        "per_clip_F": 51.36,
+        "n_frames": 410
+      },
+      "low": {}
+    },
+    {
+      "row_id": "age_ankle_rom_jogging_A096_jog_ff_stop_180_R_004__A096",
+      "attribute_short": "age",
+      "task": "jogging",
+      "feature": "ankle_rom",
+      "side": "low",
+      "r": -0.2322,
+      "predicted_sign": -1,
+      "high": {
+        "label": "24 yr",
+        "actor_uid": "A096",
+        "source_bvh": "dataset/soma_uniform/bvh/230102/jog_ff_stop_180_R_004__A096.bvh",
+        "g1_csv": "./data/feature_matrix_instances/age_ankle_rom_jogging_A096_jog_ff_stop_180_R_004__A096.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 177,
+          "weight_kg": 74
+        },
+        "per_clip_F": 52.07,
+        "n_frames": 349
+      },
+      "low": {}
+    },
+    {
+      "row_id": "age_ankle_rom_jogging_A070_exercise_2_003__A070",
+      "attribute_short": "age",
+      "task": "jogging",
+      "feature": "ankle_rom",
+      "side": "low",
+      "r": -0.2322,
+      "predicted_sign": -1,
+      "high": {
+        "label": "18 yr",
+        "actor_uid": "A070",
+        "source_bvh": "dataset/soma_uniform/bvh/221118/exercise_2_003__A070.bvh",
+        "g1_csv": "./data/feature_matrix_instances/age_ankle_rom_jogging_A070_exercise_2_003__A070.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 176,
+          "weight_kg": 89
+        },
+        "per_clip_F": 62.95,
+        "n_frames": 654
+      },
+      "low": {}
+    },
+    {
+      "row_id": "age_ankle_rom_jogging_A060_exercise_2_001__A060",
+      "attribute_short": "age",
+      "task": "jogging",
+      "feature": "ankle_rom",
+      "side": "low",
+      "r": -0.2322,
+      "predicted_sign": -1,
+      "high": {
+        "label": "21 yr",
+        "actor_uid": "A060",
+        "source_bvh": "dataset/soma_uniform/bvh/221115/exercise_2_001__A060.bvh",
+        "g1_csv": "./data/feature_matrix_instances/age_ankle_rom_jogging_A060_exercise_2_001__A060.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 192,
+          "weight_kg": 97
+        },
+        "per_clip_F": 56.76,
+        "n_frames": 758
+      },
+      "low": {}
+    },
+    {
+      "row_id": "age_ankle_rom_jogging_A029_jog_sideway_left_loop_002__A029",
+      "attribute_short": "age",
+      "task": "jogging",
+      "feature": "ankle_rom",
+      "side": "low",
+      "r": -0.2322,
+      "predicted_sign": -1,
+      "high": {
+        "label": "22 yr",
+        "actor_uid": "A029",
+        "source_bvh": "dataset/soma_uniform/bvh/220720/jog_sideway_left_loop_002__A029.bvh",
+        "g1_csv": "./data/feature_matrix_instances/age_ankle_rom_jogging_A029_jog_sideway_left_loop_002__A029.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 155,
+          "weight_kg": 41
+        },
+        "per_clip_F": 63.3,
+        "n_frames": 1153
+      },
+      "low": {}
+    },
+    {
+      "row_id": "weight_ankle_peak_vel_jogging_A274_jog_ff_start_180_R_002__A274",
+      "attribute_short": "weight",
+      "task": "jogging",
+      "feature": "ankle_peak_vel",
+      "side": "high",
+      "r": -0.1341,
+      "predicted_sign": -1,
+      "high": {
+        "label": "93 kg",
+        "actor_uid": "A274",
+        "source_bvh": "dataset/soma_uniform/bvh/230315/jog_ff_start_180_R_002__A274.bvh",
+        "g1_csv": "./data/feature_matrix_instances/weight_ankle_peak_vel_jogging_A274_jog_ff_start_180_R_002__A274.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 173,
+          "weight_kg": 93
+        },
+        "per_clip_F": 478.99,
+        "n_frames": 461
+      },
+      "low": {}
+    },
+    {
+      "row_id": "weight_ankle_peak_vel_jogging_A060_jog_ff_stop_270_002__A060",
+      "attribute_short": "weight",
+      "task": "jogging",
+      "feature": "ankle_peak_vel",
+      "side": "high",
+      "r": -0.1341,
+      "predicted_sign": -1,
+      "high": {
+        "label": "97 kg",
+        "actor_uid": "A060",
+        "source_bvh": "dataset/soma_uniform/bvh/221115/jog_ff_stop_270_002__A060.bvh",
+        "g1_csv": "./data/feature_matrix_instances/weight_ankle_peak_vel_jogging_A060_jog_ff_stop_270_002__A060.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 192,
+          "weight_kg": 97
+        },
+        "per_clip_F": 754.99,
+        "n_frames": 589
+      },
+      "low": {}
+    },
+    {
+      "row_id": "weight_ankle_peak_vel_jogging_A273_jog_ff_start_180_R_003__A273",
+      "attribute_short": "weight",
+      "task": "jogging",
+      "feature": "ankle_peak_vel",
+      "side": "high",
+      "r": -0.1341,
+      "predicted_sign": -1,
+      "high": {
+        "label": "92 kg",
+        "actor_uid": "A273",
+        "source_bvh": "dataset/soma_uniform/bvh/230315/jog_ff_start_180_R_003__A273.bvh",
+        "g1_csv": "./data/feature_matrix_instances/weight_ankle_peak_vel_jogging_A273_jog_ff_start_180_R_003__A273.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 169,
+          "weight_kg": 92
+        },
+        "per_clip_F": 595.51,
+        "n_frames": 431
+      },
+      "low": {}
+    },
+    {
+      "row_id": "weight_ankle_peak_vel_jogging_A072_jog_ff_stop_180_R_003__A072",
+      "attribute_short": "weight",
+      "task": "jogging",
+      "feature": "ankle_peak_vel",
+      "side": "high",
+      "r": -0.1341,
+      "predicted_sign": -1,
+      "high": {
+        "label": "97 kg",
+        "actor_uid": "A072",
+        "source_bvh": "dataset/soma_uniform/bvh/221118/jog_ff_stop_180_R_003__A072.bvh",
+        "g1_csv": "./data/feature_matrix_instances/weight_ankle_peak_vel_jogging_A072_jog_ff_stop_180_R_003__A072.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 191,
+          "weight_kg": 97
+        },
+        "per_clip_F": 561.87,
+        "n_frames": 394
+      },
+      "low": {}
+    },
+    {
+      "row_id": "weight_ankle_peak_vel_jogging_A230_jog_arc_cw_start_R_003__A230",
+      "attribute_short": "weight",
+      "task": "jogging",
+      "feature": "ankle_peak_vel",
+      "side": "high",
+      "r": -0.1341,
+      "predicted_sign": -1,
+      "high": {
+        "label": "90 kg",
+        "actor_uid": "A230",
+        "source_bvh": "dataset/soma_uniform/bvh/230301/jog_arc_cw_start_R_003__A230.bvh",
+        "g1_csv": "./data/feature_matrix_instances/weight_ankle_peak_vel_jogging_A230_jog_arc_cw_start_R_003__A230.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 178,
+          "weight_kg": 90
+        },
+        "per_clip_F": 360.77,
+        "n_frames": 920
+      },
+      "low": {}
+    },
+    {
+      "row_id": "weight_ankle_peak_vel_jogging_A256_walk_arc_cw_stop_R_007__A256",
+      "attribute_short": "weight",
+      "task": "jogging",
+      "feature": "ankle_peak_vel",
+      "side": "high",
+      "r": -0.1341,
+      "predicted_sign": -1,
+      "high": {
+        "label": "95 kg",
+        "actor_uid": "A256",
+        "source_bvh": "dataset/soma_uniform/bvh/230308/walk_arc_cw_stop_R_007__A256.bvh",
+        "g1_csv": "./data/feature_matrix_instances/weight_ankle_peak_vel_jogging_A256_walk_arc_cw_stop_R_007__A256.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 182,
+          "weight_kg": 95
+        },
+        "per_clip_F": 286.86,
+        "n_frames": 583
+      },
+      "low": {}
+    },
+    {
+      "row_id": "weight_ankle_peak_vel_jogging_A063_jog_arc_cw_start_001__A063",
+      "attribute_short": "weight",
+      "task": "jogging",
+      "feature": "ankle_peak_vel",
+      "side": "high",
+      "r": -0.1341,
+      "predicted_sign": -1,
+      "high": {
+        "label": "89 kg",
+        "actor_uid": "A063",
+        "source_bvh": "dataset/soma_uniform/bvh/221116/jog_arc_cw_start_001__A063.bvh",
+        "g1_csv": "./data/feature_matrix_instances/weight_ankle_peak_vel_jogging_A063_jog_arc_cw_start_001__A063.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 191,
+          "weight_kg": 89
+        },
+        "per_clip_F": 613.51,
+        "n_frames": 355
+      },
+      "low": {}
+    },
+    {
+      "row_id": "weight_ankle_peak_vel_jogging_A275_jog_ff_stop_180_R_001__A275",
+      "attribute_short": "weight",
+      "task": "jogging",
+      "feature": "ankle_peak_vel",
+      "side": "high",
+      "r": -0.1341,
+      "predicted_sign": -1,
+      "high": {
+        "label": "126 kg",
+        "actor_uid": "A275",
+        "source_bvh": "dataset/soma_uniform/bvh/230315/jog_ff_stop_180_R_001__A275.bvh",
+        "g1_csv": "./data/feature_matrix_instances/weight_ankle_peak_vel_jogging_A275_jog_ff_stop_180_R_001__A275.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 183,
+          "weight_kg": 126
+        },
+        "per_clip_F": 614.66,
+        "n_frames": 265
+      },
+      "low": {}
+    },
+    {
+      "row_id": "weight_ankle_peak_vel_jogging_A267_jog_ff_loop_270_R_003__A267",
+      "attribute_short": "weight",
+      "task": "jogging",
+      "feature": "ankle_peak_vel",
+      "side": "high",
+      "r": -0.1341,
+      "predicted_sign": -1,
+      "high": {
+        "label": "126 kg",
+        "actor_uid": "A267",
+        "source_bvh": "dataset/soma_uniform/bvh/230313/jog_ff_loop_270_R_003__A267.bvh",
+        "g1_csv": "./data/feature_matrix_instances/weight_ankle_peak_vel_jogging_A267_jog_ff_loop_270_R_003__A267.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 183,
+          "weight_kg": 126
+        },
+        "per_clip_F": 723.37,
+        "n_frames": 393
+      },
+      "low": {}
+    },
+    {
+      "row_id": "weight_ankle_peak_vel_jogging_A034_arc_jog_left_loop_001__A034",
+      "attribute_short": "weight",
+      "task": "jogging",
+      "feature": "ankle_peak_vel",
+      "side": "high",
+      "r": -0.1341,
+      "predicted_sign": -1,
+      "high": {
+        "label": "96 kg",
+        "actor_uid": "A034",
+        "source_bvh": "dataset/soma_uniform/bvh/220721/arc_jog_left_loop_001__A034.bvh",
+        "g1_csv": "./data/feature_matrix_instances/weight_ankle_peak_vel_jogging_A034_arc_jog_left_loop_001__A034.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 183,
+          "weight_kg": 96
+        },
+        "per_clip_F": 406.6,
+        "n_frames": 1010
+      },
+      "low": {}
+    },
+    {
+      "row_id": "weight_ankle_peak_vel_jogging_A030_arc_jog_left_stop_005__A030",
+      "attribute_short": "weight",
+      "task": "jogging",
+      "feature": "ankle_peak_vel",
+      "side": "low",
+      "r": -0.1341,
+      "predicted_sign": -1,
+      "high": {
+        "label": "56 kg",
+        "actor_uid": "A030",
+        "source_bvh": "dataset/soma_uniform/bvh/220720/arc_jog_left_stop_005__A030.bvh",
+        "g1_csv": "./data/feature_matrix_instances/weight_ankle_peak_vel_jogging_A030_arc_jog_left_stop_005__A030.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 176,
+          "weight_kg": 56
+        },
+        "per_clip_F": 853.84,
+        "n_frames": 611
+      },
+      "low": {}
+    },
+    {
+      "row_id": "weight_ankle_peak_vel_jogging_A064_jog_ff_start_360_002__A064",
+      "attribute_short": "weight",
+      "task": "jogging",
+      "feature": "ankle_peak_vel",
+      "side": "low",
+      "r": -0.1341,
+      "predicted_sign": -1,
+      "high": {
+        "label": "43 kg",
+        "actor_uid": "A064",
+        "source_bvh": "dataset/soma_uniform/bvh/221116/jog_ff_start_360_002__A064.bvh",
+        "g1_csv": "./data/feature_matrix_instances/weight_ankle_peak_vel_jogging_A064_jog_ff_start_360_002__A064.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 155,
+          "weight_kg": 43
+        },
+        "per_clip_F": 908.9,
+        "n_frames": 332
+      },
+      "low": {}
+    },
+    {
+      "row_id": "weight_ankle_peak_vel_jogging_A064_jog_arc_cw_stop_004__A064",
+      "attribute_short": "weight",
+      "task": "jogging",
+      "feature": "ankle_peak_vel",
+      "side": "low",
+      "r": -0.1341,
+      "predicted_sign": -1,
+      "high": {
+        "label": "43 kg",
+        "actor_uid": "A064",
+        "source_bvh": "dataset/soma_uniform/bvh/221116/jog_arc_cw_stop_004__A064.bvh",
+        "g1_csv": "./data/feature_matrix_instances/weight_ankle_peak_vel_jogging_A064_jog_arc_cw_stop_004__A064.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 155,
+          "weight_kg": 43
+        },
+        "per_clip_F": 923.29,
+        "n_frames": 515
+      },
+      "low": {}
+    },
+    {
+      "row_id": "weight_ankle_peak_vel_jogging_A037_jog_forward_start_001__A037",
+      "attribute_short": "weight",
+      "task": "jogging",
+      "feature": "ankle_peak_vel",
+      "side": "low",
+      "r": -0.1341,
+      "predicted_sign": -1,
+      "high": {
+        "label": "48 kg",
+        "actor_uid": "A037",
+        "source_bvh": "dataset/soma_uniform/bvh/220727/jog_forward_start_001__A037.bvh",
+        "g1_csv": "./data/feature_matrix_instances/weight_ankle_peak_vel_jogging_A037_jog_forward_start_001__A037.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 155,
+          "weight_kg": 48
+        },
+        "per_clip_F": 589.29,
+        "n_frames": 1408
+      },
+      "low": {}
+    },
+    {
+      "row_id": "weight_ankle_peak_vel_jogging_A029_jog_forward_start_001__A029",
+      "attribute_short": "weight",
+      "task": "jogging",
+      "feature": "ankle_peak_vel",
+      "side": "low",
+      "r": -0.1341,
+      "predicted_sign": -1,
+      "high": {
+        "label": "41 kg",
+        "actor_uid": "A029",
+        "source_bvh": "dataset/soma_uniform/bvh/220720/jog_forward_start_001__A029.bvh",
+        "g1_csv": "./data/feature_matrix_instances/weight_ankle_peak_vel_jogging_A029_jog_forward_start_001__A029.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 155,
+          "weight_kg": 41
+        },
+        "per_clip_F": 932.15,
+        "n_frames": 708
+      },
+      "low": {}
+    },
+    {
+      "row_id": "weight_ankle_peak_vel_jogging_A323_jog_ff_stop_180_R_001__A323",
+      "attribute_short": "weight",
+      "task": "jogging",
+      "feature": "ankle_peak_vel",
+      "side": "low",
+      "r": -0.1341,
+      "predicted_sign": -1,
+      "high": {
+        "label": "55 kg",
+        "actor_uid": "A323",
+        "source_bvh": "dataset/soma_uniform/bvh/230414/jog_ff_stop_180_R_001__A323.bvh",
+        "g1_csv": "./data/feature_matrix_instances/weight_ankle_peak_vel_jogging_A323_jog_ff_stop_180_R_001__A323.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 169,
+          "weight_kg": 55
+        },
+        "per_clip_F": 583.1,
+        "n_frames": 462
+      },
+      "low": {}
+    },
+    {
+      "row_id": "weight_ankle_peak_vel_jogging_A058_jog_ff_loop_270_001__A058",
+      "attribute_short": "weight",
+      "task": "jogging",
+      "feature": "ankle_peak_vel",
+      "side": "low",
+      "r": -0.1341,
+      "predicted_sign": -1,
+      "high": {
+        "label": "47 kg",
+        "actor_uid": "A058",
+        "source_bvh": "dataset/soma_uniform/bvh/221115/jog_ff_loop_270_001__A058.bvh",
+        "g1_csv": "./data/feature_matrix_instances/weight_ankle_peak_vel_jogging_A058_jog_ff_loop_270_001__A058.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 157,
+          "weight_kg": 47
+        },
+        "per_clip_F": 826.09,
+        "n_frames": 373
+      },
+      "low": {}
+    },
+    {
+      "row_id": "weight_ankle_peak_vel_jogging_A061_jog_ff_start_360_003__A061",
+      "attribute_short": "weight",
+      "task": "jogging",
+      "feature": "ankle_peak_vel",
+      "side": "low",
+      "r": -0.1341,
+      "predicted_sign": -1,
+      "high": {
+        "label": "47 kg",
+        "actor_uid": "A061",
+        "source_bvh": "dataset/soma_uniform/bvh/221115/jog_ff_start_360_003__A061.bvh",
+        "g1_csv": "./data/feature_matrix_instances/weight_ankle_peak_vel_jogging_A061_jog_ff_start_360_003__A061.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 157,
+          "weight_kg": 47
+        },
+        "per_clip_F": 618.57,
+        "n_frames": 718
+      },
+      "low": {}
+    },
+    {
+      "row_id": "weight_ankle_peak_vel_jogging_A053_jog_ff_stop_180_R_002__A053",
+      "attribute_short": "weight",
+      "task": "jogging",
+      "feature": "ankle_peak_vel",
+      "side": "low",
+      "r": -0.1341,
+      "predicted_sign": -1,
+      "high": {
+        "label": "38 kg",
+        "actor_uid": "A053",
+        "source_bvh": "dataset/soma_uniform/bvh/221012/jog_ff_stop_180_R_002__A053.bvh",
+        "g1_csv": "./data/feature_matrix_instances/weight_ankle_peak_vel_jogging_A053_jog_ff_stop_180_R_002__A053.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 151,
+          "weight_kg": 38
+        },
+        "per_clip_F": 739.1,
+        "n_frames": 512
+      },
+      "low": {}
+    },
+    {
+      "row_id": "weight_ankle_peak_vel_jogging_A021_jog_backward_loop_001__A021",
+      "attribute_short": "weight",
+      "task": "jogging",
+      "feature": "ankle_peak_vel",
+      "side": "low",
+      "r": -0.1341,
+      "predicted_sign": -1,
+      "high": {
+        "label": "41 kg",
+        "actor_uid": "A021",
+        "source_bvh": "dataset/soma_uniform/bvh/220713/jog_backward_loop_001__A021.bvh",
+        "g1_csv": "./data/feature_matrix_instances/weight_ankle_peak_vel_jogging_A021_jog_backward_loop_001__A021.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 155,
+          "weight_kg": 41
+        },
+        "per_clip_F": 664.44,
+        "n_frames": 1024
+      },
+      "low": {}
+    },
+    {
+      "row_id": "weight_ankle_rom_walking_A431_wander_R_002__A431",
+      "attribute_short": "weight",
+      "task": "walking",
+      "feature": "ankle_rom",
+      "side": "high",
+      "r": -0.1612,
+      "predicted_sign": -1,
+      "high": {
+        "label": "132 kg",
+        "actor_uid": "A431",
+        "source_bvh": "dataset/soma_uniform/bvh/230713/wander_R_002__A431.bvh",
+        "g1_csv": "./data/feature_matrix_instances/weight_ankle_rom_walking_A431_wander_R_002__A431.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 193,
+          "weight_kg": 132
+        },
+        "per_clip_F": 41.92,
+        "n_frames": 3216
+      },
+      "low": {}
+    },
+    {
+      "row_id": "weight_ankle_rom_walking_A039_walk_sideway_135_stop_003__A039",
+      "attribute_short": "weight",
+      "task": "walking",
+      "feature": "ankle_rom",
+      "side": "high",
+      "r": -0.1612,
+      "predicted_sign": -1,
+      "high": {
+        "label": "90 kg",
+        "actor_uid": "A039",
+        "source_bvh": "dataset/soma_uniform/bvh/220727/walk_sideway_135_stop_003__A039.bvh",
+        "g1_csv": "./data/feature_matrix_instances/weight_ankle_rom_walking_A039_walk_sideway_135_stop_003__A039.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 188,
+          "weight_kg": 90
+        },
+        "per_clip_F": 37.49,
+        "n_frames": 1080
+      },
+      "low": {}
+    },
+    {
+      "row_id": "weight_ankle_rom_walking_A348_walk_180_R_002__A348",
+      "attribute_short": "weight",
+      "task": "walking",
+      "feature": "ankle_rom",
+      "side": "high",
+      "r": -0.1612,
+      "predicted_sign": -1,
+      "high": {
+        "label": "132 kg",
+        "actor_uid": "A348",
+        "source_bvh": "dataset/soma_uniform/bvh/230424/walk_180_R_002__A348.bvh",
+        "g1_csv": "./data/feature_matrix_instances/weight_ankle_rom_walking_A348_walk_180_R_002__A348.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 193,
+          "weight_kg": 132
+        },
+        "per_clip_F": 38.96,
+        "n_frames": 1118
+      },
+      "low": {}
+    },
+    {
+      "row_id": "weight_ankle_rom_walking_A060_walk_ff_loop_225_003__A060",
+      "attribute_short": "weight",
+      "task": "walking",
+      "feature": "ankle_rom",
+      "side": "high",
+      "r": -0.1612,
+      "predicted_sign": -1,
+      "high": {
+        "label": "97 kg",
+        "actor_uid": "A060",
+        "source_bvh": "dataset/soma_uniform/bvh/221115/walk_ff_loop_225_003__A060.bvh",
+        "g1_csv": "./data/feature_matrix_instances/weight_ankle_rom_walking_A060_walk_ff_loop_225_003__A060.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 192,
+          "weight_kg": 97
+        },
+        "per_clip_F": 37.7,
+        "n_frames": 353
+      },
+      "low": {}
+    },
+    {
+      "row_id": "weight_ankle_rom_walking_A230_walk_arc_cw_start_R_002__A230",
+      "attribute_short": "weight",
+      "task": "walking",
+      "feature": "ankle_rom",
+      "side": "high",
+      "r": -0.1612,
+      "predicted_sign": -1,
+      "high": {
+        "label": "90 kg",
+        "actor_uid": "A230",
+        "source_bvh": "dataset/soma_uniform/bvh/230301/walk_arc_cw_start_R_002__A230.bvh",
+        "g1_csv": "./data/feature_matrix_instances/weight_ankle_rom_walking_A230_walk_arc_cw_start_R_002__A230.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 178,
+          "weight_kg": 90
+        },
+        "per_clip_F": 37.72,
+        "n_frames": 951
+      },
+      "low": {}
+    },
+    {
+      "row_id": "weight_ankle_rom_walking_A256_walk_hands_on_back_180_stop_R_003__A256",
+      "attribute_short": "weight",
+      "task": "walking",
+      "feature": "ankle_rom",
+      "side": "high",
+      "r": -0.1612,
+      "predicted_sign": -1,
+      "high": {
+        "label": "95 kg",
+        "actor_uid": "A256",
+        "source_bvh": "dataset/soma_uniform/bvh/230308/walk_hands_on_back_180_stop_R_003__A256.bvh",
+        "g1_csv": "./data/feature_matrix_instances/weight_ankle_rom_walking_A256_walk_hands_on_back_180_stop_R_003__A256.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 182,
+          "weight_kg": 95
+        },
+        "per_clip_F": 31.1,
+        "n_frames": 659
+      },
+      "low": {}
+    },
+    {
+      "row_id": "weight_ankle_rom_walking_A047_walk_arc_cw_stop_001__A047",
+      "attribute_short": "weight",
+      "task": "walking",
+      "feature": "ankle_rom",
+      "side": "high",
+      "r": -0.1612,
+      "predicted_sign": -1,
+      "high": {
+        "label": "100 kg",
+        "actor_uid": "A047",
+        "source_bvh": "dataset/soma_uniform/bvh/221010/walk_arc_cw_stop_001__A047.bvh",
+        "g1_csv": "./data/feature_matrix_instances/weight_ankle_rom_walking_A047_walk_arc_cw_stop_001__A047.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 189,
+          "weight_kg": 100
+        },
+        "per_clip_F": 38.92,
+        "n_frames": 1040
+      },
+      "low": {}
+    },
+    {
+      "row_id": "weight_ankle_rom_walking_A268_walk_arc_cw_loop_R_001__A268",
+      "attribute_short": "weight",
+      "task": "walking",
+      "feature": "ankle_rom",
+      "side": "high",
+      "r": -0.1612,
+      "predicted_sign": -1,
+      "high": {
+        "label": "93 kg",
+        "actor_uid": "A268",
+        "source_bvh": "dataset/soma_uniform/bvh/230313/walk_arc_cw_loop_R_001__A268.bvh",
+        "g1_csv": "./data/feature_matrix_instances/weight_ankle_rom_walking_A268_walk_arc_cw_loop_R_001__A268.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 173,
+          "weight_kg": 93
+        },
+        "per_clip_F": 33.51,
+        "n_frames": 1303
+      },
+      "low": {}
+    },
+    {
+      "row_id": "weight_ankle_rom_walking_A266_walk_ff_start_270_R_003__A266",
+      "attribute_short": "weight",
+      "task": "walking",
+      "feature": "ankle_rom",
+      "side": "high",
+      "r": -0.1612,
+      "predicted_sign": -1,
+      "high": {
+        "label": "120 kg",
+        "actor_uid": "A266",
+        "source_bvh": "dataset/soma_uniform/bvh/230313/walk_ff_start_270_R_003__A266.bvh",
+        "g1_csv": "./data/feature_matrix_instances/weight_ankle_rom_walking_A266_walk_ff_start_270_R_003__A266.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 174,
+          "weight_kg": 120
+        },
+        "per_clip_F": 42.56,
+        "n_frames": 918
+      },
+      "low": {}
+    },
+    {
+      "row_id": "weight_ankle_rom_walking_A034_walk_sideway_045_stop_005__A034",
+      "attribute_short": "weight",
+      "task": "walking",
+      "feature": "ankle_rom",
+      "side": "high",
+      "r": -0.1612,
+      "predicted_sign": -1,
+      "high": {
+        "label": "96 kg",
+        "actor_uid": "A034",
+        "source_bvh": "dataset/soma_uniform/bvh/220721/walk_sideway_045_stop_005__A034.bvh",
+        "g1_csv": "./data/feature_matrix_instances/weight_ankle_rom_walking_A034_walk_sideway_045_stop_005__A034.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 183,
+          "weight_kg": 96
+        },
+        "per_clip_F": 40.47,
+        "n_frames": 569
+      },
+      "low": {}
+    },
+    {
+      "row_id": "weight_ankle_rom_walking_A030_walk_hands_on_back_start_002__A030",
+      "attribute_short": "weight",
+      "task": "walking",
+      "feature": "ankle_rom",
+      "side": "low",
+      "r": -0.1612,
+      "predicted_sign": -1,
+      "high": {
+        "label": "56 kg",
+        "actor_uid": "A030",
+        "source_bvh": "dataset/soma_uniform/bvh/220720/walk_hands_on_back_start_002__A030.bvh",
+        "g1_csv": "./data/feature_matrix_instances/weight_ankle_rom_walking_A030_walk_hands_on_back_start_002__A030.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 176,
+          "weight_kg": 56
+        },
+        "per_clip_F": 61.38,
+        "n_frames": 1091
+      },
+      "low": {}
+    },
+    {
+      "row_id": "weight_ankle_rom_walking_A064_walk_ff_loop_225_003__A064",
+      "attribute_short": "weight",
+      "task": "walking",
+      "feature": "ankle_rom",
+      "side": "low",
+      "r": -0.1612,
+      "predicted_sign": -1,
+      "high": {
+        "label": "43 kg",
+        "actor_uid": "A064",
+        "source_bvh": "dataset/soma_uniform/bvh/221116/walk_ff_loop_225_003__A064.bvh",
+        "g1_csv": "./data/feature_matrix_instances/weight_ankle_rom_walking_A064_walk_ff_loop_225_003__A064.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 155,
+          "weight_kg": 43
+        },
+        "per_clip_F": 42.2,
+        "n_frames": 244
+      },
+      "low": {}
+    },
+    {
+      "row_id": "weight_ankle_rom_walking_A174_walk_ff_start_315_103__A174",
+      "attribute_short": "weight",
+      "task": "walking",
+      "feature": "ankle_rom",
+      "side": "low",
+      "r": -0.1612,
+      "predicted_sign": -1,
+      "high": {
+        "label": "56 kg",
+        "actor_uid": "A174",
+        "source_bvh": "dataset/soma_uniform/bvh/230209/walk_ff_start_315_103__A174.bvh",
+        "g1_csv": "./data/feature_matrix_instances/weight_ankle_rom_walking_A174_walk_ff_start_315_103__A174.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 169,
+          "weight_kg": 56
+        },
+        "per_clip_F": 43.62,
+        "n_frames": 485
+      },
+      "low": {}
+    },
+    {
+      "row_id": "weight_ankle_rom_walking_A037_arc_walk_left_loop_001__A037",
+      "attribute_short": "weight",
+      "task": "walking",
+      "feature": "ankle_rom",
+      "side": "low",
+      "r": -0.1612,
+      "predicted_sign": -1,
+      "high": {
+        "label": "48 kg",
+        "actor_uid": "A037",
+        "source_bvh": "dataset/soma_uniform/bvh/220727/arc_walk_left_loop_001__A037.bvh",
+        "g1_csv": "./data/feature_matrix_instances/weight_ankle_rom_walking_A037_arc_walk_left_loop_001__A037.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 155,
+          "weight_kg": 48
+        },
+        "per_clip_F": 41.09,
+        "n_frames": 1688
+      },
+      "low": {}
+    },
+    {
+      "row_id": "weight_ankle_rom_walking_A030_walk_sideway_090_start_002__A030",
+      "attribute_short": "weight",
+      "task": "walking",
+      "feature": "ankle_rom",
+      "side": "low",
+      "r": -0.1612,
+      "predicted_sign": -1,
+      "high": {
+        "label": "56 kg",
+        "actor_uid": "A030",
+        "source_bvh": "dataset/soma_uniform/bvh/220720/walk_sideway_090_start_002__A030.bvh",
+        "g1_csv": "./data/feature_matrix_instances/weight_ankle_rom_walking_A030_walk_sideway_090_start_002__A030.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 176,
+          "weight_kg": 56
+        },
+        "per_clip_F": 48.94,
+        "n_frames": 488
+      },
+      "low": {}
+    },
+    {
+      "row_id": "weight_ankle_rom_walking_A418_walk_ff_start_360_R_001__A418",
+      "attribute_short": "weight",
+      "task": "walking",
+      "feature": "ankle_rom",
+      "side": "low",
+      "r": -0.1612,
+      "predicted_sign": -1,
+      "high": {
+        "label": "56 kg",
+        "actor_uid": "A418",
+        "source_bvh": "dataset/soma_uniform/bvh/230710/walk_ff_start_360_R_001__A418.bvh",
+        "g1_csv": "./data/feature_matrix_instances/weight_ankle_rom_walking_A418_walk_ff_start_360_R_001__A418.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 168,
+          "weight_kg": 56
+        },
+        "per_clip_F": 39.68,
+        "n_frames": 802
+      },
+      "low": {}
+    },
+    {
+      "row_id": "weight_ankle_rom_walking_A064_walk_hands_on_back_start_001__A064",
+      "attribute_short": "weight",
+      "task": "walking",
+      "feature": "ankle_rom",
+      "side": "low",
+      "r": -0.1612,
+      "predicted_sign": -1,
+      "high": {
+        "label": "43 kg",
+        "actor_uid": "A064",
+        "source_bvh": "dataset/soma_uniform/bvh/221116/walk_hands_on_back_start_001__A064.bvh",
+        "g1_csv": "./data/feature_matrix_instances/weight_ankle_rom_walking_A064_walk_hands_on_back_start_001__A064.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 155,
+          "weight_kg": 43
+        },
+        "per_clip_F": 46.2,
+        "n_frames": 351
+      },
+      "low": {}
+    },
+    {
+      "row_id": "weight_ankle_rom_walking_A061_walk_ff_start_315_003__A061",
+      "attribute_short": "weight",
+      "task": "walking",
+      "feature": "ankle_rom",
+      "side": "low",
+      "r": -0.1612,
+      "predicted_sign": -1,
+      "high": {
+        "label": "47 kg",
+        "actor_uid": "A061",
+        "source_bvh": "dataset/soma_uniform/bvh/221115/walk_ff_start_315_003__A061.bvh",
+        "g1_csv": "./data/feature_matrix_instances/weight_ankle_rom_walking_A061_walk_ff_start_315_003__A061.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 157,
+          "weight_kg": 47
+        },
+        "per_clip_F": 42.86,
+        "n_frames": 781
+      },
+      "low": {}
+    },
+    {
+      "row_id": "weight_ankle_rom_walking_A053_walk_ff_loop_360_005__A053",
+      "attribute_short": "weight",
+      "task": "walking",
+      "feature": "ankle_rom",
+      "side": "low",
+      "r": -0.1612,
+      "predicted_sign": -1,
+      "high": {
+        "label": "38 kg",
+        "actor_uid": "A053",
+        "source_bvh": "dataset/soma_uniform/bvh/221012/walk_ff_loop_360_005__A053.bvh",
+        "g1_csv": "./data/feature_matrix_instances/weight_ankle_rom_walking_A053_walk_ff_loop_360_005__A053.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 151,
+          "weight_kg": 38
+        },
+        "per_clip_F": 49.82,
+        "n_frames": 563
+      },
+      "low": {}
+    },
+    {
+      "row_id": "weight_ankle_rom_walking_A018_Loop_Forward_Walk_001__A018",
+      "attribute_short": "weight",
+      "task": "walking",
+      "feature": "ankle_rom",
+      "side": "low",
+      "r": -0.1612,
+      "predicted_sign": -1,
+      "high": {
+        "label": "45 kg",
+        "actor_uid": "A018",
+        "source_bvh": "dataset/soma_uniform/bvh/220705/Loop_Forward_Walk_001__A018.bvh",
+        "g1_csv": "./data/feature_matrix_instances/weight_ankle_rom_walking_A018_Loop_Forward_Walk_001__A018.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 148,
+          "weight_kg": 45
+        },
+        "per_clip_F": 44.76,
+        "n_frames": 695
+      },
+      "low": {}
+    },
+    {
+      "row_id": "weight_root_translate_peak_vel_walking_A267_walk_arc_cw_loop_R_001__A267",
+      "attribute_short": "weight",
+      "task": "walking",
+      "feature": "root_translate_peak_vel",
+      "side": "high",
+      "r": -0.1904,
+      "predicted_sign": -1,
+      "high": {
+        "label": "126 kg",
+        "actor_uid": "A267",
+        "source_bvh": "dataset/soma_uniform/bvh/230313/walk_arc_cw_loop_R_001__A267.bvh",
+        "g1_csv": "./data/feature_matrix_instances/weight_root_translate_peak_vel_walking_A267_walk_arc_cw_loop_R_001__A267.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 183,
+          "weight_kg": 126
+        },
+        "per_clip_F": 83.78,
+        "n_frames": 1303
+      },
+      "low": {}
+    },
+    {
+      "row_id": "weight_root_translate_peak_vel_walking_A034_arc_walk_left_stop_001__A034",
+      "attribute_short": "weight",
+      "task": "walking",
+      "feature": "root_translate_peak_vel",
+      "side": "high",
+      "r": -0.1904,
+      "predicted_sign": -1,
+      "high": {
+        "label": "96 kg",
+        "actor_uid": "A034",
+        "source_bvh": "dataset/soma_uniform/bvh/220721/arc_walk_left_stop_001__A034.bvh",
+        "g1_csv": "./data/feature_matrix_instances/weight_root_translate_peak_vel_walking_A034_arc_walk_left_stop_001__A034.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 183,
+          "weight_kg": 96
+        },
+        "per_clip_F": 94.59,
+        "n_frames": 582
+      },
+      "low": {}
+    },
+    {
+      "row_id": "weight_root_translate_peak_vel_walking_A265_walk_arc_cw_loop_R_002__A265",
+      "attribute_short": "weight",
+      "task": "walking",
+      "feature": "root_translate_peak_vel",
+      "side": "high",
+      "r": -0.1904,
+      "predicted_sign": -1,
+      "high": {
+        "label": "92 kg",
+        "actor_uid": "A265",
+        "source_bvh": "dataset/soma_uniform/bvh/230313/walk_arc_cw_loop_R_002__A265.bvh",
+        "g1_csv": "./data/feature_matrix_instances/weight_root_translate_peak_vel_walking_A265_walk_arc_cw_loop_R_002__A265.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 169,
+          "weight_kg": 92
+        },
+        "per_clip_F": 93.3,
+        "n_frames": 1243
+      },
+      "low": {}
+    },
+    {
+      "row_id": "weight_root_translate_peak_vel_walking_A060_walk_ff_start_225_002__A060",
+      "attribute_short": "weight",
+      "task": "walking",
+      "feature": "root_translate_peak_vel",
+      "side": "high",
+      "r": -0.1904,
+      "predicted_sign": -1,
+      "high": {
+        "label": "97 kg",
+        "actor_uid": "A060",
+        "source_bvh": "dataset/soma_uniform/bvh/221115/walk_ff_start_225_002__A060.bvh",
+        "g1_csv": "./data/feature_matrix_instances/weight_root_translate_peak_vel_walking_A060_walk_ff_start_225_002__A060.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 192,
+          "weight_kg": 97
+        },
+        "per_clip_F": 110.64,
+        "n_frames": 544
+      },
+      "low": {}
+    },
+    {
+      "row_id": "weight_root_translate_peak_vel_walking_A255_walk_hands_on_back_180_start_R_002__A255",
+      "attribute_short": "weight",
+      "task": "walking",
+      "feature": "root_translate_peak_vel",
+      "side": "high",
+      "r": -0.1904,
+      "predicted_sign": -1,
+      "high": {
+        "label": "120 kg",
+        "actor_uid": "A255",
+        "source_bvh": "dataset/soma_uniform/bvh/230308/walk_hands_on_back_180_start_R_002__A255.bvh",
+        "g1_csv": "./data/feature_matrix_instances/weight_root_translate_peak_vel_walking_A255_walk_hands_on_back_180_start_R_002__A255.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 174,
+          "weight_kg": 120
+        },
+        "per_clip_F": 98.34,
+        "n_frames": 660
+      },
+      "low": {}
+    },
+    {
+      "row_id": "weight_root_translate_peak_vel_walking_A256_walk_hands_on_back_180_loop_R_002__A256",
+      "attribute_short": "weight",
+      "task": "walking",
+      "feature": "root_translate_peak_vel",
+      "side": "high",
+      "r": -0.1904,
+      "predicted_sign": -1,
+      "high": {
+        "label": "95 kg",
+        "actor_uid": "A256",
+        "source_bvh": "dataset/soma_uniform/bvh/230308/walk_hands_on_back_180_loop_R_002__A256.bvh",
+        "g1_csv": "./data/feature_matrix_instances/weight_root_translate_peak_vel_walking_A256_walk_hands_on_back_180_loop_R_002__A256.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 182,
+          "weight_kg": 95
+        },
+        "per_clip_F": 92.09,
+        "n_frames": 663
+      },
+      "low": {}
+    },
+    {
+      "row_id": "weight_root_translate_peak_vel_walking_A039_arc_walk_left_start_003__A039",
+      "attribute_short": "weight",
+      "task": "walking",
+      "feature": "root_translate_peak_vel",
+      "side": "high",
+      "r": -0.1904,
+      "predicted_sign": -1,
+      "high": {
+        "label": "90 kg",
+        "actor_uid": "A039",
+        "source_bvh": "dataset/soma_uniform/bvh/220727/arc_walk_left_start_003__A039.bvh",
+        "g1_csv": "./data/feature_matrix_instances/weight_root_translate_peak_vel_walking_A039_arc_walk_left_start_003__A039.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 188,
+          "weight_kg": 90
+        },
+        "per_clip_F": 93.97,
+        "n_frames": 2175
+      },
+      "low": {}
+    },
+    {
+      "row_id": "weight_root_translate_peak_vel_walking_A266_walk_arc_cw_loop_R_003__A266",
+      "attribute_short": "weight",
+      "task": "walking",
+      "feature": "root_translate_peak_vel",
+      "side": "high",
+      "r": -0.1904,
+      "predicted_sign": -1,
+      "high": {
+        "label": "120 kg",
+        "actor_uid": "A266",
+        "source_bvh": "dataset/soma_uniform/bvh/230313/walk_arc_cw_loop_R_003__A266.bvh",
+        "g1_csv": "./data/feature_matrix_instances/weight_root_translate_peak_vel_walking_A266_walk_arc_cw_loop_R_003__A266.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 174,
+          "weight_kg": 120
+        },
+        "per_clip_F": 89.35,
+        "n_frames": 1253
+      },
+      "low": {}
+    },
+    {
+      "row_id": "weight_root_translate_peak_vel_walking_A266_walk_ff_start_270_R_003__A266",
+      "attribute_short": "weight",
+      "task": "walking",
+      "feature": "root_translate_peak_vel",
+      "side": "high",
+      "r": -0.1904,
+      "predicted_sign": -1,
+      "high": {
+        "label": "120 kg",
+        "actor_uid": "A266",
+        "source_bvh": "dataset/soma_uniform/bvh/230313/walk_ff_start_270_R_003__A266.bvh",
+        "g1_csv": "./data/feature_matrix_instances/weight_root_translate_peak_vel_walking_A266_walk_ff_start_270_R_003__A266.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 174,
+          "weight_kg": 120
+        },
+        "per_clip_F": 91.49,
+        "n_frames": 918
+      },
+      "low": {}
+    },
+    {
+      "row_id": "weight_root_translate_peak_vel_walking_A034_walk_sideway_135_loop_001__A034",
+      "attribute_short": "weight",
+      "task": "walking",
+      "feature": "root_translate_peak_vel",
+      "side": "high",
+      "r": -0.1904,
+      "predicted_sign": -1,
+      "high": {
+        "label": "96 kg",
+        "actor_uid": "A034",
+        "source_bvh": "dataset/soma_uniform/bvh/220721/walk_sideway_135_loop_001__A034.bvh",
+        "g1_csv": "./data/feature_matrix_instances/weight_root_translate_peak_vel_walking_A034_walk_sideway_135_loop_001__A034.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 183,
+          "weight_kg": 96
+        },
+        "per_clip_F": 86.85,
+        "n_frames": 830
+      },
+      "low": {}
+    },
+    {
+      "row_id": "weight_root_translate_peak_vel_walking_A029_walk_forward_stop_001__A029",
+      "attribute_short": "weight",
+      "task": "walking",
+      "feature": "root_translate_peak_vel",
+      "side": "low",
+      "r": -0.1904,
+      "predicted_sign": -1,
+      "high": {
+        "label": "41 kg",
+        "actor_uid": "A029",
+        "source_bvh": "dataset/soma_uniform/bvh/220720/walk_forward_stop_001__A029.bvh",
+        "g1_csv": "./data/feature_matrix_instances/weight_root_translate_peak_vel_walking_A029_walk_forward_stop_001__A029.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 155,
+          "weight_kg": 41
+        },
+        "per_clip_F": 145.39,
+        "n_frames": 856
+      },
+      "low": {}
+    },
+    {
+      "row_id": "weight_root_translate_peak_vel_walking_A058_walk_arc_cw_stop_001__A058",
+      "attribute_short": "weight",
+      "task": "walking",
+      "feature": "root_translate_peak_vel",
+      "side": "low",
+      "r": -0.1904,
+      "predicted_sign": -1,
+      "high": {
+        "label": "47 kg",
+        "actor_uid": "A058",
+        "source_bvh": "dataset/soma_uniform/bvh/221115/walk_arc_cw_stop_001__A058.bvh",
+        "g1_csv": "./data/feature_matrix_instances/weight_root_translate_peak_vel_walking_A058_walk_arc_cw_stop_001__A058.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 157,
+          "weight_kg": 47
+        },
+        "per_clip_F": 139.59,
+        "n_frames": 675
+      },
+      "low": {}
+    },
+    {
+      "row_id": "weight_root_translate_peak_vel_walking_A064_walk_ff_stop_225_001__A064",
+      "attribute_short": "weight",
+      "task": "walking",
+      "feature": "root_translate_peak_vel",
+      "side": "low",
+      "r": -0.1904,
+      "predicted_sign": -1,
+      "high": {
+        "label": "43 kg",
+        "actor_uid": "A064",
+        "source_bvh": "dataset/soma_uniform/bvh/221116/walk_ff_stop_225_001__A064.bvh",
+        "g1_csv": "./data/feature_matrix_instances/weight_root_translate_peak_vel_walking_A064_walk_ff_stop_225_001__A064.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 155,
+          "weight_kg": 43
+        },
+        "per_clip_F": 140.68,
+        "n_frames": 329
+      },
+      "low": {}
+    },
+    {
+      "row_id": "weight_root_translate_peak_vel_walking_A049_walk_hands_on_back_start_001__A049",
+      "attribute_short": "weight",
+      "task": "walking",
+      "feature": "root_translate_peak_vel",
+      "side": "low",
+      "r": -0.1904,
+      "predicted_sign": -1,
+      "high": {
+        "label": "50 kg",
+        "actor_uid": "A049",
+        "source_bvh": "dataset/soma_uniform/bvh/221011/walk_hands_on_back_start_001__A049.bvh",
+        "g1_csv": "./data/feature_matrix_instances/weight_root_translate_peak_vel_walking_A049_walk_hands_on_back_start_001__A049.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 156,
+          "weight_kg": 50
+        },
+        "per_clip_F": 167.99,
+        "n_frames": 530
+      },
+      "low": {}
+    },
+    {
+      "row_id": "weight_root_translate_peak_vel_walking_A030_walk_sideway_045_stop_002__A030",
+      "attribute_short": "weight",
+      "task": "walking",
+      "feature": "root_translate_peak_vel",
+      "side": "low",
+      "r": -0.1904,
+      "predicted_sign": -1,
+      "high": {
+        "label": "56 kg",
+        "actor_uid": "A030",
+        "source_bvh": "dataset/soma_uniform/bvh/220720/walk_sideway_045_stop_002__A030.bvh",
+        "g1_csv": "./data/feature_matrix_instances/weight_root_translate_peak_vel_walking_A030_walk_sideway_045_stop_002__A030.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 176,
+          "weight_kg": 56
+        },
+        "per_clip_F": 119.64,
+        "n_frames": 609
+      },
+      "low": {}
+    },
+    {
+      "row_id": "weight_root_translate_peak_vel_walking_A418_walk_ff_start_180_R_001__A418",
+      "attribute_short": "weight",
+      "task": "walking",
+      "feature": "root_translate_peak_vel",
+      "side": "low",
+      "r": -0.1904,
+      "predicted_sign": -1,
+      "high": {
+        "label": "56 kg",
+        "actor_uid": "A418",
+        "source_bvh": "dataset/soma_uniform/bvh/230710/walk_ff_start_180_R_001__A418.bvh",
+        "g1_csv": "./data/feature_matrix_instances/weight_root_translate_peak_vel_walking_A418_walk_ff_start_180_R_001__A418.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 168,
+          "weight_kg": 56
+        },
+        "per_clip_F": 106.16,
+        "n_frames": 733
+      },
+      "low": {}
+    },
+    {
+      "row_id": "weight_root_translate_peak_vel_walking_A058_walk_ff_start_225_002__A058",
+      "attribute_short": "weight",
+      "task": "walking",
+      "feature": "root_translate_peak_vel",
+      "side": "low",
+      "r": -0.1904,
+      "predicted_sign": -1,
+      "high": {
+        "label": "47 kg",
+        "actor_uid": "A058",
+        "source_bvh": "dataset/soma_uniform/bvh/221115/walk_ff_start_225_002__A058.bvh",
+        "g1_csv": "./data/feature_matrix_instances/weight_root_translate_peak_vel_walking_A058_walk_ff_start_225_002__A058.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 157,
+          "weight_kg": 47
+        },
+        "per_clip_F": 134.87,
+        "n_frames": 718
+      },
+      "low": {}
+    },
+    {
+      "row_id": "weight_root_translate_peak_vel_walking_A061_walk_ff_stop_360_003__A061",
+      "attribute_short": "weight",
+      "task": "walking",
+      "feature": "root_translate_peak_vel",
+      "side": "low",
+      "r": -0.1904,
+      "predicted_sign": -1,
+      "high": {
+        "label": "47 kg",
+        "actor_uid": "A061",
+        "source_bvh": "dataset/soma_uniform/bvh/221115/walk_ff_stop_360_003__A061.bvh",
+        "g1_csv": "./data/feature_matrix_instances/weight_root_translate_peak_vel_walking_A061_walk_ff_stop_360_003__A061.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 157,
+          "weight_kg": 47
+        },
+        "per_clip_F": 127.35,
+        "n_frames": 858
+      },
+      "low": {}
+    },
+    {
+      "row_id": "weight_root_translate_peak_vel_walking_A053_walk_ff_start_180_R_002__A053",
+      "attribute_short": "weight",
+      "task": "walking",
+      "feature": "root_translate_peak_vel",
+      "side": "low",
+      "r": -0.1904,
+      "predicted_sign": -1,
+      "high": {
+        "label": "38 kg",
+        "actor_uid": "A053",
+        "source_bvh": "dataset/soma_uniform/bvh/221012/walk_ff_start_180_R_002__A053.bvh",
+        "g1_csv": "./data/feature_matrix_instances/weight_root_translate_peak_vel_walking_A053_walk_ff_start_180_R_002__A053.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 151,
+          "weight_kg": 38
+        },
+        "per_clip_F": 139.07,
+        "n_frames": 677
+      },
+      "low": {}
+    },
+    {
+      "row_id": "weight_root_translate_peak_vel_walking_A021_walk_sideway_135_stop_001__A021",
+      "attribute_short": "weight",
+      "task": "walking",
+      "feature": "root_translate_peak_vel",
+      "side": "low",
+      "r": -0.1904,
+      "predicted_sign": -1,
+      "high": {
+        "label": "41 kg",
+        "actor_uid": "A021",
+        "source_bvh": "dataset/soma_uniform/bvh/220713/walk_sideway_135_stop_001__A021.bvh",
+        "g1_csv": "./data/feature_matrix_instances/weight_root_translate_peak_vel_walking_A021_walk_sideway_135_stop_001__A021.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 155,
+          "weight_kg": 41
+        },
+        "per_clip_F": 141.89,
+        "n_frames": 1313
+      },
+      "low": {}
+    },
+    {
+      "row_id": "height_root_translate_rom_jogging_A309_jog_ff_loop_180_R_003__A309",
+      "attribute_short": "height",
+      "task": "jogging",
+      "feature": "root_translate_rom",
+      "side": "high",
+      "r": -0.2834,
+      "predicted_sign": -1,
+      "high": {
+        "label": "187 cm",
+        "actor_uid": "A309",
+        "source_bvh": "dataset/soma_uniform/bvh/230411/jog_ff_loop_180_R_003__A309.bvh",
+        "g1_csv": "./data/feature_matrix_instances/height_root_translate_rom_jogging_A309_jog_ff_loop_180_R_003__A309.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 187,
+          "weight_kg": 90
+        },
+        "per_clip_F": 439.11,
+        "n_frames": 328
+      },
+      "low": {}
+    },
+    {
+      "row_id": "height_root_translate_rom_jogging_A039_jog_sideway_090_start_002__A039",
+      "attribute_short": "height",
+      "task": "jogging",
+      "feature": "root_translate_rom",
+      "side": "high",
+      "r": -0.2834,
+      "predicted_sign": -1,
+      "high": {
+        "label": "188 cm",
+        "actor_uid": "A039",
+        "source_bvh": "dataset/soma_uniform/bvh/220727/jog_sideway_090_start_002__A039.bvh",
+        "g1_csv": "./data/feature_matrix_instances/height_root_translate_rom_jogging_A039_jog_sideway_090_start_002__A039.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 188,
+          "weight_kg": 90
+        },
+        "per_clip_F": 374.83,
+        "n_frames": 707
+      },
+      "low": {}
+    },
+    {
+      "row_id": "height_root_translate_rom_jogging_A309_jog_ff_stop_180_R_004__A309",
+      "attribute_short": "height",
+      "task": "jogging",
+      "feature": "root_translate_rom",
+      "side": "high",
+      "r": -0.2834,
+      "predicted_sign": -1,
+      "high": {
+        "label": "187 cm",
+        "actor_uid": "A309",
+        "source_bvh": "dataset/soma_uniform/bvh/230411/jog_ff_stop_180_R_004__A309.bvh",
+        "g1_csv": "./data/feature_matrix_instances/height_root_translate_rom_jogging_A309_jog_ff_stop_180_R_004__A309.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 187,
+          "weight_kg": 90
+        },
+        "per_clip_F": 393.32,
+        "n_frames": 442
+      },
+      "low": {}
+    },
+    {
+      "row_id": "height_root_translate_rom_jogging_A051_jog_ff_start_225_003__A051",
+      "attribute_short": "height",
+      "task": "jogging",
+      "feature": "root_translate_rom",
+      "side": "high",
+      "r": -0.2834,
+      "predicted_sign": -1,
+      "high": {
+        "label": "189 cm",
+        "actor_uid": "A051",
+        "source_bvh": "dataset/soma_uniform/bvh/221011/jog_ff_start_225_003__A051.bvh",
+        "g1_csv": "./data/feature_matrix_instances/height_root_translate_rom_jogging_A051_jog_ff_start_225_003__A051.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 189,
+          "weight_kg": 62
+        },
+        "per_clip_F": 459.39,
+        "n_frames": 430
+      },
+      "low": {}
+    },
+    {
+      "row_id": "height_root_translate_rom_jogging_A072_jog_ff_stop_180_R_003__A072",
+      "attribute_short": "height",
+      "task": "jogging",
+      "feature": "root_translate_rom",
+      "side": "high",
+      "r": -0.2834,
+      "predicted_sign": -1,
+      "high": {
+        "label": "191 cm",
+        "actor_uid": "A072",
+        "source_bvh": "dataset/soma_uniform/bvh/221118/jog_ff_stop_180_R_003__A072.bvh",
+        "g1_csv": "./data/feature_matrix_instances/height_root_translate_rom_jogging_A072_jog_ff_stop_180_R_003__A072.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 191,
+          "weight_kg": 97
+        },
+        "per_clip_F": 184.31,
+        "n_frames": 394
+      },
+      "low": {}
+    },
+    {
+      "row_id": "height_root_translate_rom_jogging_A072_jog_ff_start_315_003__A072",
+      "attribute_short": "height",
+      "task": "jogging",
+      "feature": "root_translate_rom",
+      "side": "high",
+      "r": -0.2834,
+      "predicted_sign": -1,
+      "high": {
+        "label": "191 cm",
+        "actor_uid": "A072",
+        "source_bvh": "dataset/soma_uniform/bvh/221118/jog_ff_start_315_003__A072.bvh",
+        "g1_csv": "./data/feature_matrix_instances/height_root_translate_rom_jogging_A072_jog_ff_start_315_003__A072.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 191,
+          "weight_kg": 97
+        },
+        "per_clip_F": 167.29,
+        "n_frames": 222
+      },
+      "low": {}
+    },
+    {
+      "row_id": "height_root_translate_rom_jogging_A043_arc_jog_left_stop_006__A043",
+      "attribute_short": "height",
+      "task": "jogging",
+      "feature": "root_translate_rom",
+      "side": "high",
+      "r": -0.2834,
+      "predicted_sign": -1,
+      "high": {
+        "label": "190 cm",
+        "actor_uid": "A043",
+        "source_bvh": "dataset/soma_uniform/bvh/220728/arc_jog_left_stop_006__A043.bvh",
+        "g1_csv": "./data/feature_matrix_instances/height_root_translate_rom_jogging_A043_arc_jog_left_stop_006__A043.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 190,
+          "weight_kg": 88
+        },
+        "per_clip_F": 284.15,
+        "n_frames": 588
+      },
+      "low": {}
+    },
+    {
+      "row_id": "height_root_translate_rom_jogging_A279_jog_ff_start_180_R_003__A279",
+      "attribute_short": "height",
+      "task": "jogging",
+      "feature": "root_translate_rom",
+      "side": "high",
+      "r": -0.2834,
+      "predicted_sign": -1,
+      "high": {
+        "label": "187 cm",
+        "actor_uid": "A279",
+        "source_bvh": "dataset/soma_uniform/bvh/230316/jog_ff_start_180_R_003__A279.bvh",
+        "g1_csv": "./data/feature_matrix_instances/height_root_translate_rom_jogging_A279_jog_ff_start_180_R_003__A279.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 187,
+          "weight_kg": 80
+        },
+        "per_clip_F": 427.2,
+        "n_frames": 445
+      },
+      "low": {}
+    },
+    {
+      "row_id": "height_root_translate_rom_jogging_A168_jog_ff_loop_180_R_001__A168",
+      "attribute_short": "height",
+      "task": "jogging",
+      "feature": "root_translate_rom",
+      "side": "high",
+      "r": -0.2834,
+      "predicted_sign": -1,
+      "high": {
+        "label": "187 cm",
+        "actor_uid": "A168",
+        "source_bvh": "dataset/soma_uniform/bvh/230201/jog_ff_loop_180_R_001__A168.bvh",
+        "g1_csv": "./data/feature_matrix_instances/height_root_translate_rom_jogging_A168_jog_ff_loop_180_R_001__A168.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 187,
+          "weight_kg": 87
+        },
+        "per_clip_F": 315.64,
+        "n_frames": 279
+      },
+      "low": {}
+    },
+    {
+      "row_id": "height_root_translate_rom_jogging_A031_arc_jog_left_stop_001__A031",
+      "attribute_short": "height",
+      "task": "jogging",
+      "feature": "root_translate_rom",
+      "side": "high",
+      "r": -0.2834,
+      "predicted_sign": -1,
+      "high": {
+        "label": "192 cm",
+        "actor_uid": "A031",
+        "source_bvh": "dataset/soma_uniform/bvh/220720/arc_jog_left_stop_001__A031.bvh",
+        "g1_csv": "./data/feature_matrix_instances/height_root_translate_rom_jogging_A031_arc_jog_left_stop_001__A031.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 192,
+          "weight_kg": 85
+        },
+        "per_clip_F": 266.16,
+        "n_frames": 505
+      },
+      "low": {}
+    },
+    {
+      "row_id": "height_root_translate_rom_jogging_A032_jog_forward_stop_004__A032",
+      "attribute_short": "height",
+      "task": "jogging",
+      "feature": "root_translate_rom",
+      "side": "low",
+      "r": -0.2834,
+      "predicted_sign": -1,
+      "high": {
+        "label": "166 cm",
+        "actor_uid": "A032",
+        "source_bvh": "dataset/soma_uniform/bvh/220720/jog_forward_stop_004__A032.bvh",
+        "g1_csv": "./data/feature_matrix_instances/height_root_translate_rom_jogging_A032_jog_forward_stop_004__A032.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 166,
+          "weight_kg": 60
+        },
+        "per_clip_F": 528.33,
+        "n_frames": 917
+      },
+      "low": {}
+    },
+    {
+      "row_id": "height_root_translate_rom_jogging_A049_jog_ff_start_360_001__A049",
+      "attribute_short": "height",
+      "task": "jogging",
+      "feature": "root_translate_rom",
+      "side": "low",
+      "r": -0.2834,
+      "predicted_sign": -1,
+      "high": {
+        "label": "156 cm",
+        "actor_uid": "A049",
+        "source_bvh": "dataset/soma_uniform/bvh/221011/jog_ff_start_360_001__A049.bvh",
+        "g1_csv": "./data/feature_matrix_instances/height_root_translate_rom_jogging_A049_jog_ff_start_360_001__A049.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 156,
+          "weight_kg": 50
+        },
+        "per_clip_F": 489.96,
+        "n_frames": 412
+      },
+      "low": {}
+    },
+    {
+      "row_id": "height_root_translate_rom_jogging_A049_jog_arc_cw_start_002__A049",
+      "attribute_short": "height",
+      "task": "jogging",
+      "feature": "root_translate_rom",
+      "side": "low",
+      "r": -0.2834,
+      "predicted_sign": -1,
+      "high": {
+        "label": "156 cm",
+        "actor_uid": "A049",
+        "source_bvh": "dataset/soma_uniform/bvh/221011/jog_arc_cw_start_002__A049.bvh",
+        "g1_csv": "./data/feature_matrix_instances/height_root_translate_rom_jogging_A049_jog_arc_cw_start_002__A049.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 156,
+          "weight_kg": 50
+        },
+        "per_clip_F": 455.41,
+        "n_frames": 592
+      },
+      "low": {}
+    },
+    {
+      "row_id": "height_root_translate_rom_jogging_A033_arc_jog_left_start_004__A033",
+      "attribute_short": "height",
+      "task": "jogging",
+      "feature": "root_translate_rom",
+      "side": "low",
+      "r": -0.2834,
+      "predicted_sign": -1,
+      "high": {
+        "label": "160 cm",
+        "actor_uid": "A033",
+        "source_bvh": "dataset/soma_uniform/bvh/220721/arc_jog_left_start_004__A033.bvh",
+        "g1_csv": "./data/feature_matrix_instances/height_root_translate_rom_jogging_A033_arc_jog_left_start_004__A033.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 160,
+          "weight_kg": 59
+        },
+        "per_clip_F": 471.93,
+        "n_frames": 595
+      },
+      "low": {}
+    },
+    {
+      "row_id": "height_root_translate_rom_jogging_A029_jog_sideway_135_stop_004__A029",
+      "attribute_short": "height",
+      "task": "jogging",
+      "feature": "root_translate_rom",
+      "side": "low",
+      "r": -0.2834,
+      "predicted_sign": -1,
+      "high": {
+        "label": "155 cm",
+        "actor_uid": "A029",
+        "source_bvh": "dataset/soma_uniform/bvh/220720/jog_sideway_135_stop_004__A029.bvh",
+        "g1_csv": "./data/feature_matrix_instances/height_root_translate_rom_jogging_A029_jog_sideway_135_stop_004__A029.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 155,
+          "weight_kg": 41
+        },
+        "per_clip_F": 600.98,
+        "n_frames": 635
+      },
+      "low": {}
+    },
+    {
+      "row_id": "height_root_translate_rom_jogging_A071_jog_ff_stop_360_001__A071",
+      "attribute_short": "height",
+      "task": "jogging",
+      "feature": "root_translate_rom",
+      "side": "low",
+      "r": -0.2834,
+      "predicted_sign": -1,
+      "high": {
+        "label": "159 cm",
+        "actor_uid": "A071",
+        "source_bvh": "dataset/soma_uniform/bvh/221118/jog_ff_stop_360_001__A071.bvh",
+        "g1_csv": "./data/feature_matrix_instances/height_root_translate_rom_jogging_A071_jog_ff_stop_360_001__A071.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 159,
+          "weight_kg": 84
+        },
+        "per_clip_F": 389.07,
+        "n_frames": 459
+      },
+      "low": {}
+    },
+    {
+      "row_id": "height_root_translate_rom_jogging_A045_jog_ff_loop_180_R__A045",
+      "attribute_short": "height",
+      "task": "jogging",
+      "feature": "root_translate_rom",
+      "side": "low",
+      "r": -0.2834,
+      "predicted_sign": -1,
+      "high": {
+        "label": "156 cm",
+        "actor_uid": "A045",
+        "source_bvh": "dataset/soma_uniform/bvh/221010/jog_ff_loop_180_R__A045.bvh",
+        "g1_csv": "./data/feature_matrix_instances/height_root_translate_rom_jogging_A045_jog_ff_loop_180_R__A045.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 156,
+          "weight_kg": 59
+        },
+        "per_clip_F": 787.51,
+        "n_frames": 943
+      },
+      "low": {}
+    },
+    {
+      "row_id": "height_root_translate_rom_jogging_A041_jog_sideway_090_loop_003__A041",
+      "attribute_short": "height",
+      "task": "jogging",
+      "feature": "root_translate_rom",
+      "side": "low",
+      "r": -0.2834,
+      "predicted_sign": -1,
+      "high": {
+        "label": "157 cm",
+        "actor_uid": "A041",
+        "source_bvh": "dataset/soma_uniform/bvh/220728/jog_sideway_090_loop_003__A041.bvh",
+        "g1_csv": "./data/feature_matrix_instances/height_root_translate_rom_jogging_A041_jog_sideway_090_loop_003__A041.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 157,
+          "weight_kg": 65
+        },
+        "per_clip_F": 676.27,
+        "n_frames": 923
+      },
+      "low": {}
+    },
+    {
+      "row_id": "height_root_translate_rom_jogging_A037_jog_backward_stop_002__A037",
+      "attribute_short": "height",
+      "task": "jogging",
+      "feature": "root_translate_rom",
+      "side": "low",
+      "r": -0.2834,
+      "predicted_sign": -1,
+      "high": {
+        "label": "155 cm",
+        "actor_uid": "A037",
+        "source_bvh": "dataset/soma_uniform/bvh/220727/jog_backward_stop_002__A037.bvh",
+        "g1_csv": "./data/feature_matrix_instances/height_root_translate_rom_jogging_A037_jog_backward_stop_002__A037.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 155,
+          "weight_kg": 48
+        },
+        "per_clip_F": 402.91,
+        "n_frames": 1108
+      },
+      "low": {}
+    },
+    {
+      "row_id": "height_root_translate_rom_jogging_A024_jog_sideway_045_loop_003__A024",
+      "attribute_short": "height",
+      "task": "jogging",
+      "feature": "root_translate_rom",
+      "side": "low",
+      "r": -0.2834,
+      "predicted_sign": -1,
+      "high": {
+        "label": "162 cm",
+        "actor_uid": "A024",
+        "source_bvh": "dataset/soma_uniform/bvh/220713/jog_sideway_045_loop_003__A024.bvh",
+        "g1_csv": "./data/feature_matrix_instances/height_root_translate_rom_jogging_A024_jog_sideway_045_loop_003__A024.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 162,
+          "weight_kg": 58
+        },
+        "per_clip_F": 549.6,
+        "n_frames": 731
+      },
+      "low": {}
+    },
+    {
+      "row_id": "height_root_translate_peak_vel_walking_A431_walking_quip_180_R_001__A431",
+      "attribute_short": "height",
+      "task": "walking",
+      "feature": "root_translate_peak_vel",
+      "side": "high",
+      "r": -0.2823,
+      "predicted_sign": -1,
+      "high": {
+        "label": "193 cm",
+        "actor_uid": "A431",
+        "source_bvh": "dataset/soma_uniform/bvh/230713/walking_quip_180_R_001__A431.bvh",
+        "g1_csv": "./data/feature_matrix_instances/height_root_translate_peak_vel_walking_A431_walking_quip_180_R_001__A431.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 193,
+          "weight_kg": 132
+        },
+        "per_clip_F": 85.45,
+        "n_frames": 1180
+      },
+      "low": {}
+    },
+    {
+      "row_id": "height_root_translate_peak_vel_walking_A039_walk_hands_on_back_start_002__A039",
+      "attribute_short": "height",
+      "task": "walking",
+      "feature": "root_translate_peak_vel",
+      "side": "high",
+      "r": -0.2823,
+      "predicted_sign": -1,
+      "high": {
+        "label": "188 cm",
+        "actor_uid": "A039",
+        "source_bvh": "dataset/soma_uniform/bvh/220727/walk_hands_on_back_start_002__A039.bvh",
+        "g1_csv": "./data/feature_matrix_instances/height_root_translate_peak_vel_walking_A039_walk_hands_on_back_start_002__A039.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 188,
+          "weight_kg": 90
+        },
+        "per_clip_F": 103.89,
+        "n_frames": 565
+      },
+      "low": {}
+    },
+    {
+      "row_id": "height_root_translate_peak_vel_walking_A431_walking_quip_270_R_001__A431",
+      "attribute_short": "height",
+      "task": "walking",
+      "feature": "root_translate_peak_vel",
+      "side": "high",
+      "r": -0.2823,
+      "predicted_sign": -1,
+      "high": {
+        "label": "193 cm",
+        "actor_uid": "A431",
+        "source_bvh": "dataset/soma_uniform/bvh/230713/walking_quip_270_R_001__A431.bvh",
+        "g1_csv": "./data/feature_matrix_instances/height_root_translate_peak_vel_walking_A431_walking_quip_270_R_001__A431.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 193,
+          "weight_kg": 132
+        },
+        "per_clip_F": 94.43,
+        "n_frames": 1039
+      },
+      "low": {}
+    },
+    {
+      "row_id": "height_root_translate_peak_vel_walking_A047_walk_ff_loop_180_R_001__A047",
+      "attribute_short": "height",
+      "task": "walking",
+      "feature": "root_translate_peak_vel",
+      "side": "high",
+      "r": -0.2823,
+      "predicted_sign": -1,
+      "high": {
+        "label": "189 cm",
+        "actor_uid": "A047",
+        "source_bvh": "dataset/soma_uniform/bvh/221010/walk_ff_loop_180_R_001__A047.bvh",
+        "g1_csv": "./data/feature_matrix_instances/height_root_translate_peak_vel_walking_A047_walk_ff_loop_180_R_001__A047.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 189,
+          "weight_kg": 100
+        },
+        "per_clip_F": 106.73,
+        "n_frames": 963
+      },
+      "low": {}
+    },
+    {
+      "row_id": "height_root_translate_peak_vel_walking_A063_walk_ff_stop_315_003__A063",
+      "attribute_short": "height",
+      "task": "walking",
+      "feature": "root_translate_peak_vel",
+      "side": "high",
+      "r": -0.2823,
+      "predicted_sign": -1,
+      "high": {
+        "label": "191 cm",
+        "actor_uid": "A063",
+        "source_bvh": "dataset/soma_uniform/bvh/221116/walk_ff_stop_315_003__A063.bvh",
+        "g1_csv": "./data/feature_matrix_instances/height_root_translate_peak_vel_walking_A063_walk_ff_stop_315_003__A063.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 191,
+          "weight_kg": 89
+        },
+        "per_clip_F": 99.21,
+        "n_frames": 639
+      },
+      "low": {}
+    },
+    {
+      "row_id": "height_root_translate_peak_vel_walking_A063_walk_ff_start_360_001__A063",
+      "attribute_short": "height",
+      "task": "walking",
+      "feature": "root_translate_peak_vel",
+      "side": "high",
+      "r": -0.2823,
+      "predicted_sign": -1,
+      "high": {
+        "label": "191 cm",
+        "actor_uid": "A063",
+        "source_bvh": "dataset/soma_uniform/bvh/221116/walk_ff_start_360_001__A063.bvh",
+        "g1_csv": "./data/feature_matrix_instances/height_root_translate_peak_vel_walking_A063_walk_ff_start_360_001__A063.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 191,
+          "weight_kg": 89
+        },
+        "per_clip_F": 106.11,
+        "n_frames": 480
+      },
+      "low": {}
+    },
+    {
+      "row_id": "height_root_translate_peak_vel_walking_A043_walk_hands_on_back_stop_002__A043",
+      "attribute_short": "height",
+      "task": "walking",
+      "feature": "root_translate_peak_vel",
+      "side": "high",
+      "r": -0.2823,
+      "predicted_sign": -1,
+      "high": {
+        "label": "190 cm",
+        "actor_uid": "A043",
+        "source_bvh": "dataset/soma_uniform/bvh/220728/walk_hands_on_back_stop_002__A043.bvh",
+        "g1_csv": "./data/feature_matrix_instances/height_root_translate_peak_vel_walking_A043_walk_hands_on_back_stop_002__A043.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 190,
+          "weight_kg": 88
+        },
+        "per_clip_F": 100.97,
+        "n_frames": 849
+      },
+      "low": {}
+    },
+    {
+      "row_id": "height_root_translate_peak_vel_walking_A431_walking_talking_180_R_002__A431",
+      "attribute_short": "height",
+      "task": "walking",
+      "feature": "root_translate_peak_vel",
+      "side": "high",
+      "r": -0.2823,
+      "predicted_sign": -1,
+      "high": {
+        "label": "193 cm",
+        "actor_uid": "A431",
+        "source_bvh": "dataset/soma_uniform/bvh/230713/walking_talking_180_R_002__A431.bvh",
+        "g1_csv": "./data/feature_matrix_instances/height_root_translate_peak_vel_walking_A431_walking_talking_180_R_002__A431.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 193,
+          "weight_kg": 132
+        },
+        "per_clip_F": 78.77,
+        "n_frames": 1082
+      },
+      "low": {}
+    },
+    {
+      "row_id": "height_root_translate_peak_vel_walking_A104_neutral_stoop_down_R_002__A104",
+      "attribute_short": "height",
+      "task": "walking",
+      "feature": "root_translate_peak_vel",
+      "side": "high",
+      "r": -0.2823,
+      "predicted_sign": -1,
+      "high": {
+        "label": "188 cm",
+        "actor_uid": "A104",
+        "source_bvh": "dataset/soma_uniform/bvh/230104/neutral_stoop_down_R_002__A104.bvh",
+        "g1_csv": "./data/feature_matrix_instances/height_root_translate_peak_vel_walking_A104_neutral_stoop_down_R_002__A104.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 188,
+          "weight_kg": 89
+        },
+        "per_clip_F": 104.96,
+        "n_frames": 1132
+      },
+      "low": {}
+    },
+    {
+      "row_id": "height_root_translate_peak_vel_walking_A035_walk_sideway_045_stop_004__A035",
+      "attribute_short": "height",
+      "task": "walking",
+      "feature": "root_translate_peak_vel",
+      "side": "high",
+      "r": -0.2823,
+      "predicted_sign": -1,
+      "high": {
+        "label": "198 cm",
+        "actor_uid": "A035",
+        "source_bvh": "dataset/soma_uniform/bvh/220721/walk_sideway_045_stop_004__A035.bvh",
+        "g1_csv": "./data/feature_matrix_instances/height_root_translate_peak_vel_walking_A035_walk_sideway_045_stop_004__A035.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 198,
+          "weight_kg": 145
+        },
+        "per_clip_F": 83.81,
+        "n_frames": 401
+      },
+      "low": {}
+    },
+    {
+      "row_id": "height_root_translate_peak_vel_walking_A026_walk_forward_loop_003__A026",
+      "attribute_short": "height",
+      "task": "walking",
+      "feature": "root_translate_peak_vel",
+      "side": "low",
+      "r": -0.2823,
+      "predicted_sign": -1,
+      "high": {
+        "label": "145 cm",
+        "actor_uid": "A026",
+        "source_bvh": "dataset/soma_uniform/bvh/220714/walk_forward_loop_003__A026.bvh",
+        "g1_csv": "./data/feature_matrix_instances/height_root_translate_peak_vel_walking_A026_walk_forward_loop_003__A026.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 145,
+          "weight_kg": 64
+        },
+        "per_clip_F": 126.2,
+        "n_frames": 1629
+      },
+      "low": {}
+    },
+    {
+      "row_id": "height_root_translate_peak_vel_walking_A053_walk_ff_start_225_004__A053",
+      "attribute_short": "height",
+      "task": "walking",
+      "feature": "root_translate_peak_vel",
+      "side": "low",
+      "r": -0.2823,
+      "predicted_sign": -1,
+      "high": {
+        "label": "151 cm",
+        "actor_uid": "A053",
+        "source_bvh": "dataset/soma_uniform/bvh/221012/walk_ff_start_225_004__A053.bvh",
+        "g1_csv": "./data/feature_matrix_instances/height_root_translate_peak_vel_walking_A053_walk_ff_start_225_004__A053.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 151,
+          "weight_kg": 38
+        },
+        "per_clip_F": 120.3,
+        "n_frames": 1112
+      },
+      "low": {}
+    },
+    {
+      "row_id": "height_root_translate_peak_vel_walking_A061_walk_hands_on_back_stop_003__A061",
+      "attribute_short": "height",
+      "task": "walking",
+      "feature": "root_translate_peak_vel",
+      "side": "low",
+      "r": -0.2823,
+      "predicted_sign": -1,
+      "high": {
+        "label": "157 cm",
+        "actor_uid": "A061",
+        "source_bvh": "dataset/soma_uniform/bvh/221115/walk_hands_on_back_stop_003__A061.bvh",
+        "g1_csv": "./data/feature_matrix_instances/height_root_translate_peak_vel_walking_A061_walk_hands_on_back_stop_003__A061.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 157,
+          "weight_kg": 47
+        },
+        "per_clip_F": 154.12,
+        "n_frames": 762
+      },
+      "low": {}
+    },
+    {
+      "row_id": "height_root_translate_peak_vel_walking_A036_walk_hands_on_back_start_002__A036",
+      "attribute_short": "height",
+      "task": "walking",
+      "feature": "root_translate_peak_vel",
+      "side": "low",
+      "r": -0.2823,
+      "predicted_sign": -1,
+      "high": {
+        "label": "150 cm",
+        "actor_uid": "A036",
+        "source_bvh": "dataset/soma_uniform/bvh/220721/walk_hands_on_back_start_002__A036.bvh",
+        "g1_csv": "./data/feature_matrix_instances/height_root_translate_peak_vel_walking_A036_walk_hands_on_back_start_002__A036.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 150,
+          "weight_kg": 50
+        },
+        "per_clip_F": 140.24,
+        "n_frames": 588
+      },
+      "low": {}
+    },
+    {
+      "row_id": "height_root_translate_peak_vel_walking_A024_walk_sideway_045_loop_004__A024",
+      "attribute_short": "height",
+      "task": "walking",
+      "feature": "root_translate_peak_vel",
+      "side": "low",
+      "r": -0.2823,
+      "predicted_sign": -1,
+      "high": {
+        "label": "162 cm",
+        "actor_uid": "A024",
+        "source_bvh": "dataset/soma_uniform/bvh/220713/walk_sideway_045_loop_004__A024.bvh",
+        "g1_csv": "./data/feature_matrix_instances/height_root_translate_peak_vel_walking_A024_walk_sideway_045_loop_004__A024.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 162,
+          "weight_kg": 58
+        },
+        "per_clip_F": 128.85,
+        "n_frames": 1269
+      },
+      "low": {}
+    },
+    {
+      "row_id": "height_root_translate_peak_vel_walking_A064_walk_arc_cw_start_002__A064",
+      "attribute_short": "height",
+      "task": "walking",
+      "feature": "root_translate_peak_vel",
+      "side": "low",
+      "r": -0.2823,
+      "predicted_sign": -1,
+      "high": {
+        "label": "155 cm",
+        "actor_uid": "A064",
+        "source_bvh": "dataset/soma_uniform/bvh/221116/walk_arc_cw_start_002__A064.bvh",
+        "g1_csv": "./data/feature_matrix_instances/height_root_translate_peak_vel_walking_A064_walk_arc_cw_start_002__A064.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 155,
+          "weight_kg": 43
+        },
+        "per_clip_F": 147.19,
+        "n_frames": 311
+      },
+      "low": {}
+    },
+    {
+      "row_id": "height_root_translate_peak_vel_walking_A049_walk_arc_cw_stop_003__A049",
+      "attribute_short": "height",
+      "task": "walking",
+      "feature": "root_translate_peak_vel",
+      "side": "low",
+      "r": -0.2823,
+      "predicted_sign": -1,
+      "high": {
+        "label": "156 cm",
+        "actor_uid": "A049",
+        "source_bvh": "dataset/soma_uniform/bvh/221011/walk_arc_cw_stop_003__A049.bvh",
+        "g1_csv": "./data/feature_matrix_instances/height_root_translate_peak_vel_walking_A049_walk_arc_cw_stop_003__A049.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 156,
+          "weight_kg": 50
+        },
+        "per_clip_F": 129.09,
+        "n_frames": 803
+      },
+      "low": {}
+    },
+    {
+      "row_id": "height_root_translate_peak_vel_walking_A045_walk_arc_cw_loop_003__A045",
+      "attribute_short": "height",
+      "task": "walking",
+      "feature": "root_translate_peak_vel",
+      "side": "low",
+      "r": -0.2823,
+      "predicted_sign": -1,
+      "high": {
+        "label": "156 cm",
+        "actor_uid": "A045",
+        "source_bvh": "dataset/soma_uniform/bvh/221010/walk_arc_cw_loop_003__A045.bvh",
+        "g1_csv": "./data/feature_matrix_instances/height_root_translate_peak_vel_walking_A045_walk_arc_cw_loop_003__A045.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 156,
+          "weight_kg": 59
+        },
+        "per_clip_F": 124.8,
+        "n_frames": 658
+      },
+      "low": {}
+    },
+    {
+      "row_id": "height_root_translate_peak_vel_walking_A040_arc_walk_left_start_002__A040",
+      "attribute_short": "height",
+      "task": "walking",
+      "feature": "root_translate_peak_vel",
+      "side": "low",
+      "r": -0.2823,
+      "predicted_sign": -1,
+      "high": {
+        "label": "164 cm",
+        "actor_uid": "A040",
+        "source_bvh": "dataset/soma_uniform/bvh/220727/arc_walk_left_start_002__A040.bvh",
+        "g1_csv": "./data/feature_matrix_instances/height_root_translate_peak_vel_walking_A040_arc_walk_left_start_002__A040.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 164,
+          "weight_kg": 67
+        },
+        "per_clip_F": 119.07,
+        "n_frames": 675
+      },
+      "low": {}
+    },
+    {
+      "row_id": "height_root_translate_peak_vel_walking_A006_dancecards1_CD_normal_003__A006",
+      "attribute_short": "height",
+      "task": "walking",
+      "feature": "root_translate_peak_vel",
+      "side": "low",
+      "r": -0.2823,
+      "predicted_sign": -1,
+      "high": {
+        "label": "160 cm",
+        "actor_uid": "A006",
+        "source_bvh": "dataset/soma_uniform/bvh/210707/dancecards1_CD_normal_003__A006.bvh",
+        "g1_csv": "./data/feature_matrix_instances/height_root_translate_peak_vel_walking_A006_dancecards1_CD_normal_003__A006.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 160,
+          "weight_kg": 50
+        },
+        "per_clip_F": 166.01,
+        "n_frames": 17128
+      },
+      "low": {}
+    },
+    {
+      "row_id": "height_ankle_rom_jogging_A344_jog_ff_start_180_R_002__A344",
+      "attribute_short": "height",
+      "task": "jogging",
+      "feature": "ankle_rom",
+      "side": "high",
+      "r": -0.312,
+      "predicted_sign": -1,
+      "high": {
+        "label": "194 cm",
+        "actor_uid": "A344",
+        "source_bvh": "dataset/soma_uniform/bvh/230420/jog_ff_start_180_R_002__A344.bvh",
+        "g1_csv": "./data/feature_matrix_instances/height_ankle_rom_jogging_A344_jog_ff_start_180_R_002__A344.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 194,
+          "weight_kg": 79
+        },
+        "per_clip_F": 51.62,
+        "n_frames": 530
+      },
+      "low": {}
+    },
+    {
+      "row_id": "height_ankle_rom_jogging_A043_jog_sideway_135_start_001__A043",
+      "attribute_short": "height",
+      "task": "jogging",
+      "feature": "ankle_rom",
+      "side": "high",
+      "r": -0.312,
+      "predicted_sign": -1,
+      "high": {
+        "label": "190 cm",
+        "actor_uid": "A043",
+        "source_bvh": "dataset/soma_uniform/bvh/220728/jog_sideway_135_start_001__A043.bvh",
+        "g1_csv": "./data/feature_matrix_instances/height_ankle_rom_jogging_A043_jog_sideway_135_start_001__A043.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 190,
+          "weight_kg": 88
+        },
+        "per_clip_F": 57.74,
+        "n_frames": 542
+      },
+      "low": {}
+    },
+    {
+      "row_id": "height_ankle_rom_jogging_A344_jog_ff_stop_180_R_001__A344",
+      "attribute_short": "height",
+      "task": "jogging",
+      "feature": "ankle_rom",
+      "side": "high",
+      "r": -0.312,
+      "predicted_sign": -1,
+      "high": {
+        "label": "194 cm",
+        "actor_uid": "A344",
+        "source_bvh": "dataset/soma_uniform/bvh/230420/jog_ff_stop_180_R_001__A344.bvh",
+        "g1_csv": "./data/feature_matrix_instances/height_ankle_rom_jogging_A344_jog_ff_stop_180_R_001__A344.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 194,
+          "weight_kg": 79
+        },
+        "per_clip_F": 41.14,
+        "n_frames": 569
+      },
+      "low": {}
+    },
+    {
+      "row_id": "height_ankle_rom_jogging_A055_jog_arc_cw_start_001__A055",
+      "attribute_short": "height",
+      "task": "jogging",
+      "feature": "ankle_rom",
+      "side": "high",
+      "r": -0.312,
+      "predicted_sign": -1,
+      "high": {
+        "label": "188 cm",
+        "actor_uid": "A055",
+        "source_bvh": "dataset/soma_uniform/bvh/221012/jog_arc_cw_start_001__A055.bvh",
+        "g1_csv": "./data/feature_matrix_instances/height_ankle_rom_jogging_A055_jog_arc_cw_start_001__A055.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 188,
+          "weight_kg": 77
+        },
+        "per_clip_F": 39.55,
+        "n_frames": 701
+      },
+      "low": {}
+    },
+    {
+      "row_id": "height_ankle_rom_jogging_A081_jog_ff_stop_180_R_004__A081",
+      "attribute_short": "height",
+      "task": "jogging",
+      "feature": "ankle_rom",
+      "side": "high",
+      "r": -0.312,
+      "predicted_sign": -1,
+      "high": {
+        "label": "196 cm",
+        "actor_uid": "A081",
+        "source_bvh": "dataset/soma_uniform/bvh/221129/jog_ff_stop_180_R_004__A081.bvh",
+        "g1_csv": "./data/feature_matrix_instances/height_ankle_rom_jogging_A081_jog_ff_stop_180_R_004__A081.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 196,
+          "weight_kg": 82
+        },
+        "per_clip_F": 39.03,
+        "n_frames": 458
+      },
+      "low": {}
+    },
+    {
+      "row_id": "height_ankle_rom_jogging_A081_jog_ff_start_180_R_003__A081",
+      "attribute_short": "height",
+      "task": "jogging",
+      "feature": "ankle_rom",
+      "side": "high",
+      "r": -0.312,
+      "predicted_sign": -1,
+      "high": {
+        "label": "196 cm",
+        "actor_uid": "A081",
+        "source_bvh": "dataset/soma_uniform/bvh/221129/jog_ff_start_180_R_003__A081.bvh",
+        "g1_csv": "./data/feature_matrix_instances/height_ankle_rom_jogging_A081_jog_ff_start_180_R_003__A081.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 196,
+          "weight_kg": 82
+        },
+        "per_clip_F": 45.76,
+        "n_frames": 303
+      },
+      "low": {}
+    },
+    {
+      "row_id": "height_ankle_rom_jogging_A047_jog_ff_start_180_R_002__A047",
+      "attribute_short": "height",
+      "task": "jogging",
+      "feature": "ankle_rom",
+      "side": "high",
+      "r": -0.312,
+      "predicted_sign": -1,
+      "high": {
+        "label": "189 cm",
+        "actor_uid": "A047",
+        "source_bvh": "dataset/soma_uniform/bvh/221010/jog_ff_start_180_R_002__A047.bvh",
+        "g1_csv": "./data/feature_matrix_instances/height_ankle_rom_jogging_A047_jog_ff_start_180_R_002__A047.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 189,
+          "weight_kg": 100
+        },
+        "per_clip_F": 53.95,
+        "n_frames": 840
+      },
+      "low": {}
+    },
+    {
+      "row_id": "height_ankle_rom_jogging_A314_jog_ff_start_180_R_002__A314",
+      "attribute_short": "height",
+      "task": "jogging",
+      "feature": "ankle_rom",
+      "side": "high",
+      "r": -0.312,
+      "predicted_sign": -1,
+      "high": {
+        "label": "187 cm",
+        "actor_uid": "A314",
+        "source_bvh": "dataset/soma_uniform/bvh/230412/jog_ff_start_180_R_002__A314.bvh",
+        "g1_csv": "./data/feature_matrix_instances/height_ankle_rom_jogging_A314_jog_ff_start_180_R_002__A314.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 187,
+          "weight_kg": 90
+        },
+        "per_clip_F": 48.4,
+        "n_frames": 416
+      },
+      "low": {}
+    },
+    {
+      "row_id": "height_ankle_rom_jogging_A202_jog_ff_start_180_R_002__A202",
+      "attribute_short": "height",
+      "task": "jogging",
+      "feature": "ankle_rom",
+      "side": "high",
+      "r": -0.312,
+      "predicted_sign": -1,
+      "high": {
+        "label": "187 cm",
+        "actor_uid": "A202",
+        "source_bvh": "dataset/soma_uniform/bvh/230216/jog_ff_start_180_R_002__A202.bvh",
+        "g1_csv": "./data/feature_matrix_instances/height_ankle_rom_jogging_A202_jog_ff_start_180_R_002__A202.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 187,
+          "weight_kg": 78
+        },
+        "per_clip_F": 46.37,
+        "n_frames": 613
+      },
+      "low": {}
+    },
+    {
+      "row_id": "height_ankle_rom_jogging_A035_jog_backward_start_001__A035",
+      "attribute_short": "height",
+      "task": "jogging",
+      "feature": "ankle_rom",
+      "side": "high",
+      "r": -0.312,
+      "predicted_sign": -1,
+      "high": {
+        "label": "198 cm",
+        "actor_uid": "A035",
+        "source_bvh": "dataset/soma_uniform/bvh/220721/jog_backward_start_001__A035.bvh",
+        "g1_csv": "./data/feature_matrix_instances/height_ankle_rom_jogging_A035_jog_backward_start_001__A035.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 198,
+          "weight_kg": 145
+        },
+        "per_clip_F": 57.19,
+        "n_frames": 528
+      },
+      "low": {}
+    },
+    {
+      "row_id": "height_ankle_rom_jogging_A029_jog_sideway_090_stop_002__A029",
+      "attribute_short": "height",
+      "task": "jogging",
+      "feature": "ankle_rom",
+      "side": "low",
+      "r": -0.312,
+      "predicted_sign": -1,
+      "high": {
+        "label": "155 cm",
+        "actor_uid": "A029",
+        "source_bvh": "dataset/soma_uniform/bvh/220720/jog_sideway_090_stop_002__A029.bvh",
+        "g1_csv": "./data/feature_matrix_instances/height_ankle_rom_jogging_A029_jog_sideway_090_stop_002__A029.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 155,
+          "weight_kg": 41
+        },
+        "per_clip_F": 73.59,
+        "n_frames": 609
+      },
+      "low": {}
+    },
+    {
+      "row_id": "height_ankle_rom_jogging_A049_jog_ff_start_270_102__A049",
+      "attribute_short": "height",
+      "task": "jogging",
+      "feature": "ankle_rom",
+      "side": "low",
+      "r": -0.312,
+      "predicted_sign": -1,
+      "high": {
+        "label": "156 cm",
+        "actor_uid": "A049",
+        "source_bvh": "dataset/soma_uniform/bvh/221011/jog_ff_start_270_102__A049.bvh",
+        "g1_csv": "./data/feature_matrix_instances/height_ankle_rom_jogging_A049_jog_ff_start_270_102__A049.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 156,
+          "weight_kg": 50
+        },
+        "per_clip_F": 70.08,
+        "n_frames": 580
+      },
+      "low": {}
+    },
+    {
+      "row_id": "height_ankle_rom_jogging_A049_jog_arc_cw_loop_003__A049",
+      "attribute_short": "height",
+      "task": "jogging",
+      "feature": "ankle_rom",
+      "side": "low",
+      "r": -0.312,
+      "predicted_sign": -1,
+      "high": {
+        "label": "156 cm",
+        "actor_uid": "A049",
+        "source_bvh": "dataset/soma_uniform/bvh/221011/jog_arc_cw_loop_003__A049.bvh",
+        "g1_csv": "./data/feature_matrix_instances/height_ankle_rom_jogging_A049_jog_arc_cw_loop_003__A049.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 156,
+          "weight_kg": 50
+        },
+        "per_clip_F": 62.83,
+        "n_frames": 423
+      },
+      "low": {}
+    },
+    {
+      "row_id": "height_ankle_rom_jogging_A036_jog_sideway_045_start_002__A036",
+      "attribute_short": "height",
+      "task": "jogging",
+      "feature": "ankle_rom",
+      "side": "low",
+      "r": -0.312,
+      "predicted_sign": -1,
+      "high": {
+        "label": "150 cm",
+        "actor_uid": "A036",
+        "source_bvh": "dataset/soma_uniform/bvh/220721/jog_sideway_045_start_002__A036.bvh",
+        "g1_csv": "./data/feature_matrix_instances/height_ankle_rom_jogging_A036_jog_sideway_045_start_002__A036.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 150,
+          "weight_kg": 50
+        },
+        "per_clip_F": 57.61,
+        "n_frames": 398
+      },
+      "low": {}
+    },
+    {
+      "row_id": "height_ankle_rom_jogging_A026_jog_backward_start_001__A026",
+      "attribute_short": "height",
+      "task": "jogging",
+      "feature": "ankle_rom",
+      "side": "low",
+      "r": -0.312,
+      "predicted_sign": -1,
+      "high": {
+        "label": "145 cm",
+        "actor_uid": "A026",
+        "source_bvh": "dataset/soma_uniform/bvh/220714/jog_backward_start_001__A026.bvh",
+        "g1_csv": "./data/feature_matrix_instances/height_ankle_rom_jogging_A026_jog_backward_start_001__A026.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 145,
+          "weight_kg": 64
+        },
+        "per_clip_F": 56.87,
+        "n_frames": 546
+      },
+      "low": {}
+    },
+    {
+      "row_id": "height_ankle_rom_jogging_A064_exercise_2_004__A064",
+      "attribute_short": "height",
+      "task": "jogging",
+      "feature": "ankle_rom",
+      "side": "low",
+      "r": -0.312,
+      "predicted_sign": -1,
+      "high": {
+        "label": "155 cm",
+        "actor_uid": "A064",
+        "source_bvh": "dataset/soma_uniform/bvh/221116/exercise_2_004__A064.bvh",
+        "g1_csv": "./data/feature_matrix_instances/height_ankle_rom_jogging_A064_exercise_2_004__A064.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 155,
+          "weight_kg": 43
+        },
+        "per_clip_F": 54.35,
+        "n_frames": 512
+      },
+      "low": {}
+    },
+    {
+      "row_id": "height_ankle_rom_jogging_A048_jog_arc_cw_stop_001__A048",
+      "attribute_short": "height",
+      "task": "jogging",
+      "feature": "ankle_rom",
+      "side": "low",
+      "r": -0.312,
+      "predicted_sign": -1,
+      "high": {
+        "label": "166 cm",
+        "actor_uid": "A048",
+        "source_bvh": "dataset/soma_uniform/bvh/221010/jog_arc_cw_stop_001__A048.bvh",
+        "g1_csv": "./data/feature_matrix_instances/height_ankle_rom_jogging_A048_jog_arc_cw_stop_001__A048.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 166,
+          "weight_kg": 63
+        },
+        "per_clip_F": 72.25,
+        "n_frames": 727
+      },
+      "low": {}
+    },
+    {
+      "row_id": "height_ankle_rom_jogging_A037_jog_backward_stop_001__A037",
+      "attribute_short": "height",
+      "task": "jogging",
+      "feature": "ankle_rom",
+      "side": "low",
+      "r": -0.312,
+      "predicted_sign": -1,
+      "high": {
+        "label": "155 cm",
+        "actor_uid": "A037",
+        "source_bvh": "dataset/soma_uniform/bvh/220727/jog_backward_stop_001__A037.bvh",
+        "g1_csv": "./data/feature_matrix_instances/height_ankle_rom_jogging_A037_jog_backward_stop_001__A037.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 155,
+          "weight_kg": 48
+        },
+        "per_clip_F": 64.11,
+        "n_frames": 1083
+      },
+      "low": {}
+    },
+    {
+      "row_id": "height_ankle_rom_jogging_A040_jog_sideway_090_start_001__A040",
+      "attribute_short": "height",
+      "task": "jogging",
+      "feature": "ankle_rom",
+      "side": "low",
+      "r": -0.312,
+      "predicted_sign": -1,
+      "high": {
+        "label": "164 cm",
+        "actor_uid": "A040",
+        "source_bvh": "dataset/soma_uniform/bvh/220727/jog_sideway_090_start_001__A040.bvh",
+        "g1_csv": "./data/feature_matrix_instances/height_ankle_rom_jogging_A040_jog_sideway_090_start_001__A040.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 164,
+          "weight_kg": 67
+        },
+        "per_clip_F": 60.93,
+        "n_frames": 1268
+      },
+      "low": {}
+    },
+    {
+      "row_id": "height_ankle_rom_jogging_A021_jog_sideway_045_stop_003__A021",
+      "attribute_short": "height",
+      "task": "jogging",
+      "feature": "ankle_rom",
+      "side": "low",
+      "r": -0.312,
+      "predicted_sign": -1,
+      "high": {
+        "label": "155 cm",
+        "actor_uid": "A021",
+        "source_bvh": "dataset/soma_uniform/bvh/220713/jog_sideway_045_stop_003__A021.bvh",
+        "g1_csv": "./data/feature_matrix_instances/height_ankle_rom_jogging_A021_jog_sideway_045_stop_003__A021.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 155,
+          "weight_kg": 41
+        },
+        "per_clip_F": 59.17,
+        "n_frames": 1070
+      },
+      "low": {}
+    },
+    {
+      "row_id": "gender_ankle_rom_walking_A446_walk_ff_loop_180_R_normal_pace_001__A446",
+      "attribute_short": "gender",
+      "task": "walking",
+      "feature": "ankle_rom",
+      "side": "high",
+      "r": -0.1884,
+      "predicted_sign": -1,
+      "high": {
+        "label": "male",
+        "actor_uid": "A446",
+        "source_bvh": "dataset/soma_uniform/bvh/230905/walk_ff_loop_180_R_normal_pace_001__A446.bvh",
+        "g1_csv": "./data/feature_matrix_instances/gender_ankle_rom_walking_A446_walk_ff_loop_180_R_normal_pace_001__A446.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 181,
+          "weight_kg": 81
+        },
+        "per_clip_F": 31.81,
+        "n_frames": 513
+      },
+      "low": {}
+    },
+    {
+      "row_id": "gender_ankle_rom_walking_A056_walk_ff_stop_225_002__A056",
+      "attribute_short": "gender",
+      "task": "walking",
+      "feature": "ankle_rom",
+      "side": "high",
+      "r": -0.1884,
+      "predicted_sign": -1,
+      "high": {
+        "label": "male",
+        "actor_uid": "A056",
+        "source_bvh": "dataset/soma_uniform/bvh/221012/walk_ff_stop_225_002__A056.bvh",
+        "g1_csv": "./data/feature_matrix_instances/gender_ankle_rom_walking_A056_walk_ff_stop_225_002__A056.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 169,
+          "weight_kg": 80
+        },
+        "per_clip_F": 39.32,
+        "n_frames": 895
+      },
+      "low": {}
+    },
+    {
+      "row_id": "gender_ankle_rom_walking_A446_walk_ff_loop_270_R_very_slow_001__A446",
+      "attribute_short": "gender",
+      "task": "walking",
+      "feature": "ankle_rom",
+      "side": "high",
+      "r": -0.1884,
+      "predicted_sign": -1,
+      "high": {
+        "label": "male",
+        "actor_uid": "A446",
+        "source_bvh": "dataset/soma_uniform/bvh/230905/walk_ff_loop_270_R_very_slow_001__A446.bvh",
+        "g1_csv": "./data/feature_matrix_instances/gender_ankle_rom_walking_A446_walk_ff_loop_270_R_very_slow_001__A446.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 181,
+          "weight_kg": 81
+        },
+        "per_clip_F": 32.89,
+        "n_frames": 1938
+      },
+      "low": {}
+    },
+    {
+      "row_id": "gender_ankle_rom_walking_A069_walk_ff_stop_180_R_003__A069",
+      "attribute_short": "gender",
+      "task": "walking",
+      "feature": "ankle_rom",
+      "side": "high",
+      "r": -0.1884,
+      "predicted_sign": -1,
+      "high": {
+        "label": "male",
+        "actor_uid": "A069",
+        "source_bvh": "dataset/soma_uniform/bvh/221118/walk_ff_stop_180_R_003__A069.bvh",
+        "g1_csv": "./data/feature_matrix_instances/gender_ankle_rom_walking_A069_walk_ff_stop_180_R_003__A069.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 162,
+          "weight_kg": 90
+        },
+        "per_clip_F": 31.52,
+        "n_frames": 759
+      },
+      "low": {}
+    },
+    {
+      "row_id": "gender_ankle_rom_walking_A163_lift_crate_walk_ff_loop_180_R_003__A163",
+      "attribute_short": "gender",
+      "task": "walking",
+      "feature": "ankle_rom",
+      "side": "high",
+      "r": -0.1884,
+      "predicted_sign": -1,
+      "high": {
+        "label": "male",
+        "actor_uid": "A163",
+        "source_bvh": "dataset/soma_uniform/bvh/230131/lift_crate_walk_ff_loop_180_R_003__A163.bvh",
+        "g1_csv": "./data/feature_matrix_instances/gender_ankle_rom_walking_A163_lift_crate_walk_ff_loop_180_R_003__A163.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 177,
+          "weight_kg": 82
+        },
+        "per_clip_F": 35.25,
+        "n_frames": 1039
+      },
+      "low": {}
+    },
+    {
+      "row_id": "gender_ankle_rom_walking_A175_walk_ff_stop_315_102__A175",
+      "attribute_short": "gender",
+      "task": "walking",
+      "feature": "ankle_rom",
+      "side": "high",
+      "r": -0.1884,
+      "predicted_sign": -1,
+      "high": {
+        "label": "male",
+        "actor_uid": "A175",
+        "source_bvh": "dataset/soma_uniform/bvh/230209/walk_ff_stop_315_102__A175.bvh",
+        "g1_csv": "./data/feature_matrix_instances/gender_ankle_rom_walking_A175_walk_ff_stop_315_102__A175.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 171,
+          "weight_kg": 68
+        },
+        "per_clip_F": 39.47,
+        "n_frames": 534
+      },
+      "low": {}
+    },
+    {
+      "row_id": "gender_ankle_rom_walking_A067_walk_hands_on_back_stop_001__A067",
+      "attribute_short": "gender",
+      "task": "walking",
+      "feature": "ankle_rom",
+      "side": "high",
+      "r": -0.1884,
+      "predicted_sign": -1,
+      "high": {
+        "label": "male",
+        "actor_uid": "A067",
+        "source_bvh": "dataset/soma_uniform/bvh/221117/walk_hands_on_back_stop_001__A067.bvh",
+        "g1_csv": "./data/feature_matrix_instances/gender_ankle_rom_walking_A067_walk_hands_on_back_stop_001__A067.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 190,
+          "weight_kg": 80
+        },
+        "per_clip_F": 35.86,
+        "n_frames": 526
+      },
+      "low": {}
+    },
+    {
+      "row_id": "gender_ankle_rom_walking_A446_walk_ff_start_180_R_very_slow_003__A446",
+      "attribute_short": "gender",
+      "task": "walking",
+      "feature": "ankle_rom",
+      "side": "high",
+      "r": -0.1884,
+      "predicted_sign": -1,
+      "high": {
+        "label": "male",
+        "actor_uid": "A446",
+        "source_bvh": "dataset/soma_uniform/bvh/230905/walk_ff_start_180_R_very_slow_003__A446.bvh",
+        "g1_csv": "./data/feature_matrix_instances/gender_ankle_rom_walking_A446_walk_ff_start_180_R_very_slow_003__A446.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 181,
+          "weight_kg": 81
+        },
+        "per_clip_F": 33.1,
+        "n_frames": 372
+      },
+      "low": {}
+    },
+    {
+      "row_id": "gender_ankle_rom_walking_A266_walk_ff_loop_270_R_001__A266",
+      "attribute_short": "gender",
+      "task": "walking",
+      "feature": "ankle_rom",
+      "side": "high",
+      "r": -0.1884,
+      "predicted_sign": -1,
+      "high": {
+        "label": "male",
+        "actor_uid": "A266",
+        "source_bvh": "dataset/soma_uniform/bvh/230313/walk_ff_loop_270_R_001__A266.bvh",
+        "g1_csv": "./data/feature_matrix_instances/gender_ankle_rom_walking_A266_walk_ff_loop_270_R_001__A266.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 174,
+          "weight_kg": 120
+        },
+        "per_clip_F": 38.1,
+        "n_frames": 688
+      },
+      "low": {}
+    },
+    {
+      "row_id": "gender_ankle_rom_walking_A043_walk_sideway_045_stop_004__A043",
+      "attribute_short": "gender",
+      "task": "walking",
+      "feature": "ankle_rom",
+      "side": "high",
+      "r": -0.1884,
+      "predicted_sign": -1,
+      "high": {
+        "label": "male",
+        "actor_uid": "A043",
+        "source_bvh": "dataset/soma_uniform/bvh/220728/walk_sideway_045_stop_004__A043.bvh",
+        "g1_csv": "./data/feature_matrix_instances/gender_ankle_rom_walking_A043_walk_sideway_045_stop_004__A043.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 190,
+          "weight_kg": 88
+        },
+        "per_clip_F": 38.97,
+        "n_frames": 714
+      },
+      "low": {}
+    },
+    {
+      "row_id": "gender_ankle_rom_walking_A042_walk_sideway_090_loop_001__A042",
+      "attribute_short": "gender",
+      "task": "walking",
+      "feature": "ankle_rom",
+      "side": "low",
+      "r": -0.1884,
+      "predicted_sign": -1,
+      "high": {
+        "label": "female",
+        "actor_uid": "A042",
+        "source_bvh": "dataset/soma_uniform/bvh/220728/walk_sideway_090_loop_001__A042.bvh",
+        "g1_csv": "./data/feature_matrix_instances/gender_ankle_rom_walking_A042_walk_sideway_090_loop_001__A042.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 178,
+          "weight_kg": 86
+        },
+        "per_clip_F": 42.73,
+        "n_frames": 1411
+      },
+      "low": {}
+    },
+    {
+      "row_id": "gender_ankle_rom_walking_A176_walk_ff_start_315_103__A176",
+      "attribute_short": "gender",
+      "task": "walking",
+      "feature": "ankle_rom",
+      "side": "low",
+      "r": -0.1884,
+      "predicted_sign": -1,
+      "high": {
+        "label": "female",
+        "actor_uid": "A176",
+        "source_bvh": "dataset/soma_uniform/bvh/230209/walk_ff_start_315_103__A176.bvh",
+        "g1_csv": "./data/feature_matrix_instances/gender_ankle_rom_walking_A176_walk_ff_start_315_103__A176.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 177,
+          "weight_kg": 68
+        },
+        "per_clip_F": 47.93,
+        "n_frames": 497
+      },
+      "low": {}
+    },
+    {
+      "row_id": "gender_ankle_rom_walking_A181_walk_arc_cw_loop_003__A181",
+      "attribute_short": "gender",
+      "task": "walking",
+      "feature": "ankle_rom",
+      "side": "low",
+      "r": -0.1884,
+      "predicted_sign": -1,
+      "high": {
+        "label": "female",
+        "actor_uid": "A181",
+        "source_bvh": "dataset/soma_uniform/bvh/230210/walk_arc_cw_loop_003__A181.bvh",
+        "g1_csv": "./data/feature_matrix_instances/gender_ankle_rom_walking_A181_walk_arc_cw_loop_003__A181.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 177,
+          "weight_kg": 68
+        },
+        "per_clip_F": 47.87,
+        "n_frames": 868
+      },
+      "low": {}
+    },
+    {
+      "row_id": "gender_ankle_rom_walking_A064_walk_ff_stop_315_001__A064",
+      "attribute_short": "gender",
+      "task": "walking",
+      "feature": "ankle_rom",
+      "side": "low",
+      "r": -0.1884,
+      "predicted_sign": -1,
+      "high": {
+        "label": "female",
+        "actor_uid": "A064",
+        "source_bvh": "dataset/soma_uniform/bvh/221116/walk_ff_stop_315_001__A064.bvh",
+        "g1_csv": "./data/feature_matrix_instances/gender_ankle_rom_walking_A064_walk_ff_stop_315_001__A064.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 155,
+          "weight_kg": 43
+        },
+        "per_clip_F": 49.63,
+        "n_frames": 848
+      },
+      "low": {}
+    },
+    {
+      "row_id": "gender_ankle_rom_walking_A034_arc_walk_left_loop_003__A034",
+      "attribute_short": "gender",
+      "task": "walking",
+      "feature": "ankle_rom",
+      "side": "low",
+      "r": -0.1884,
+      "predicted_sign": -1,
+      "high": {
+        "label": "female",
+        "actor_uid": "A034",
+        "source_bvh": "dataset/soma_uniform/bvh/220721/arc_walk_left_loop_003__A034.bvh",
+        "g1_csv": "./data/feature_matrix_instances/gender_ankle_rom_walking_A034_arc_walk_left_loop_003__A034.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 183,
+          "weight_kg": 96
+        },
+        "per_clip_F": 40.2,
+        "n_frames": 1429
+      },
+      "low": {}
+    },
+    {
+      "row_id": "gender_ankle_rom_walking_A342_push_obstacle_270_003__A342",
+      "attribute_short": "gender",
+      "task": "walking",
+      "feature": "ankle_rom",
+      "side": "low",
+      "r": -0.1884,
+      "predicted_sign": -1,
+      "high": {
+        "label": "female",
+        "actor_uid": "A342",
+        "source_bvh": "dataset/soma_uniform/bvh/230420/push_obstacle_270_003__A342.bvh",
+        "g1_csv": "./data/feature_matrix_instances/gender_ankle_rom_walking_A342_push_obstacle_270_003__A342.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 175,
+          "weight_kg": 64
+        },
+        "per_clip_F": 69.3,
+        "n_frames": 2699
+      },
+      "low": {}
+    },
+    {
+      "row_id": "gender_ankle_rom_walking_A146_crouch_ff_stop_225_001__A146",
+      "attribute_short": "gender",
+      "task": "walking",
+      "feature": "ankle_rom",
+      "side": "low",
+      "r": -0.1884,
+      "predicted_sign": -1,
+      "high": {
+        "label": "female",
+        "actor_uid": "A146",
+        "source_bvh": "dataset/soma_uniform/bvh/230125/crouch_ff_stop_225_001__A146.bvh",
+        "g1_csv": "./data/feature_matrix_instances/gender_ankle_rom_walking_A146_crouch_ff_stop_225_001__A146.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 168,
+          "weight_kg": 57
+        },
+        "per_clip_F": 78.44,
+        "n_frames": 722
+      },
+      "low": {}
+    },
+    {
+      "row_id": "gender_ankle_rom_walking_A141_lift_crate_walk_ff_stop_315_001__A141",
+      "attribute_short": "gender",
+      "task": "walking",
+      "feature": "ankle_rom",
+      "side": "low",
+      "r": -0.1884,
+      "predicted_sign": -1,
+      "high": {
+        "label": "female",
+        "actor_uid": "A141",
+        "source_bvh": "dataset/soma_uniform/bvh/230124/lift_crate_walk_ff_stop_315_001__A141.bvh",
+        "g1_csv": "./data/feature_matrix_instances/gender_ankle_rom_walking_A141_lift_crate_walk_ff_stop_315_001__A141.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 168,
+          "weight_kg": 61
+        },
+        "per_clip_F": 45.59,
+        "n_frames": 976
+      },
+      "low": {}
+    },
+    {
+      "row_id": "gender_ankle_rom_walking_A095_walk_ff_loop_360_002__A095",
+      "attribute_short": "gender",
+      "task": "walking",
+      "feature": "ankle_rom",
+      "side": "low",
+      "r": -0.1884,
+      "predicted_sign": -1,
+      "high": {
+        "label": "female",
+        "actor_uid": "A095",
+        "source_bvh": "dataset/soma_uniform/bvh/230102/walk_ff_loop_360_002__A095.bvh",
+        "g1_csv": "./data/feature_matrix_instances/gender_ankle_rom_walking_A095_walk_ff_loop_360_002__A095.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 169,
+          "weight_kg": 61
+        },
+        "per_clip_F": 46.46,
+        "n_frames": 909
+      },
+      "low": {}
+    },
+    {
+      "row_id": "gender_ankle_rom_walking_A021_walk_backward_stop_005__A021",
+      "attribute_short": "gender",
+      "task": "walking",
+      "feature": "ankle_rom",
+      "side": "low",
+      "r": -0.1884,
+      "predicted_sign": -1,
+      "high": {
+        "label": "female",
+        "actor_uid": "A021",
+        "source_bvh": "dataset/soma_uniform/bvh/220713/walk_backward_stop_005__A021.bvh",
+        "g1_csv": "./data/feature_matrix_instances/gender_ankle_rom_walking_A021_walk_backward_stop_005__A021.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 155,
+          "weight_kg": 41
+        },
+        "per_clip_F": 42.56,
+        "n_frames": 583
+      },
+      "low": {}
+    },
+    {
+      "row_id": "gender_shoulder_rom_jogging_A388_jog_ff_loop_180_R_001__A388",
+      "attribute_short": "gender",
+      "task": "jogging",
+      "feature": "shoulder_rom",
+      "side": "high",
+      "r": -0.4832,
+      "predicted_sign": -1,
+      "high": {
+        "label": "male",
+        "actor_uid": "A388",
+        "source_bvh": "dataset/soma_uniform/bvh/230522/jog_ff_loop_180_R_001__A388.bvh",
+        "g1_csv": "./data/feature_matrix_instances/gender_shoulder_rom_jogging_A388_jog_ff_loop_180_R_001__A388.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 182,
+          "weight_kg": 83
+        },
+        "per_clip_F": 72.92,
+        "n_frames": 273
+      },
+      "low": {}
+    },
+    {
+      "row_id": "gender_shoulder_rom_jogging_A056_jog_ff_loop_180_R_004__A056",
+      "attribute_short": "gender",
+      "task": "jogging",
+      "feature": "shoulder_rom",
+      "side": "high",
+      "r": -0.4832,
+      "predicted_sign": -1,
+      "high": {
+        "label": "male",
+        "actor_uid": "A056",
+        "source_bvh": "dataset/soma_uniform/bvh/221012/jog_ff_loop_180_R_004__A056.bvh",
+        "g1_csv": "./data/feature_matrix_instances/gender_shoulder_rom_jogging_A056_jog_ff_loop_180_R_004__A056.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 169,
+          "weight_kg": 80
+        },
+        "per_clip_F": 41.19,
+        "n_frames": 498
+      },
+      "low": {}
+    },
+    {
+      "row_id": "gender_shoulder_rom_jogging_A389_jog_ff_start_180_R_004__A389",
+      "attribute_short": "gender",
+      "task": "jogging",
+      "feature": "shoulder_rom",
+      "side": "high",
+      "r": -0.4832,
+      "predicted_sign": -1,
+      "high": {
+        "label": "male",
+        "actor_uid": "A389",
+        "source_bvh": "dataset/soma_uniform/bvh/230522/jog_ff_start_180_R_004__A389.bvh",
+        "g1_csv": "./data/feature_matrix_instances/gender_shoulder_rom_jogging_A389_jog_ff_start_180_R_004__A389.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 184,
+          "weight_kg": 80
+        },
+        "per_clip_F": 65.59,
+        "n_frames": 463
+      },
+      "low": {}
+    },
+    {
+      "row_id": "gender_shoulder_rom_jogging_A096_jog_ff_stop_180_R_001__A096",
+      "attribute_short": "gender",
+      "task": "jogging",
+      "feature": "shoulder_rom",
+      "side": "high",
+      "r": -0.4832,
+      "predicted_sign": -1,
+      "high": {
+        "label": "male",
+        "actor_uid": "A096",
+        "source_bvh": "dataset/soma_uniform/bvh/230102/jog_ff_stop_180_R_001__A096.bvh",
+        "g1_csv": "./data/feature_matrix_instances/gender_shoulder_rom_jogging_A096_jog_ff_stop_180_R_001__A096.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 177,
+          "weight_kg": 74
+        },
+        "per_clip_F": 70.43,
+        "n_frames": 395
+      },
+      "low": {}
+    },
+    {
+      "row_id": "gender_shoulder_rom_jogging_A237_jog_ff_start_360_R_002__A237",
+      "attribute_short": "gender",
+      "task": "jogging",
+      "feature": "shoulder_rom",
+      "side": "high",
+      "r": -0.4832,
+      "predicted_sign": -1,
+      "high": {
+        "label": "male",
+        "actor_uid": "A237",
+        "source_bvh": "dataset/soma_uniform/bvh/230302/jog_ff_start_360_R_002__A237.bvh",
+        "g1_csv": "./data/feature_matrix_instances/gender_shoulder_rom_jogging_A237_jog_ff_start_360_R_002__A237.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 187,
+          "weight_kg": 80
+        },
+        "per_clip_F": 39.8,
+        "n_frames": 512
+      },
+      "low": {}
+    },
+    {
+      "row_id": "gender_shoulder_rom_jogging_A236_jog_ff_start_270_R_001__A236",
+      "attribute_short": "gender",
+      "task": "jogging",
+      "feature": "shoulder_rom",
+      "side": "high",
+      "r": -0.4832,
+      "predicted_sign": -1,
+      "high": {
+        "label": "male",
+        "actor_uid": "A236",
+        "source_bvh": "dataset/soma_uniform/bvh/230302/jog_ff_start_270_R_001__A236.bvh",
+        "g1_csv": "./data/feature_matrix_instances/gender_shoulder_rom_jogging_A236_jog_ff_start_270_R_001__A236.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 182,
+          "weight_kg": 74
+        },
+        "per_clip_F": 55.87,
+        "n_frames": 484
+      },
+      "low": {}
+    },
+    {
+      "row_id": "gender_shoulder_rom_jogging_A072_jog_ff_start_180_R_001__A072",
+      "attribute_short": "gender",
+      "task": "jogging",
+      "feature": "shoulder_rom",
+      "side": "high",
+      "r": -0.4832,
+      "predicted_sign": -1,
+      "high": {
+        "label": "male",
+        "actor_uid": "A072",
+        "source_bvh": "dataset/soma_uniform/bvh/221118/jog_ff_start_180_R_001__A072.bvh",
+        "g1_csv": "./data/feature_matrix_instances/gender_shoulder_rom_jogging_A072_jog_ff_start_180_R_001__A072.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 191,
+          "weight_kg": 97
+        },
+        "per_clip_F": 62.1,
+        "n_frames": 283
+      },
+      "low": {}
+    },
+    {
+      "row_id": "gender_shoulder_rom_jogging_A385_jog_ff_start_180_R_001__A385",
+      "attribute_short": "gender",
+      "task": "jogging",
+      "feature": "shoulder_rom",
+      "side": "high",
+      "r": -0.4832,
+      "predicted_sign": -1,
+      "high": {
+        "label": "male",
+        "actor_uid": "A385",
+        "source_bvh": "dataset/soma_uniform/bvh/230519/jog_ff_start_180_R_001__A385.bvh",
+        "g1_csv": "./data/feature_matrix_instances/gender_shoulder_rom_jogging_A385_jog_ff_start_180_R_001__A385.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 184,
+          "weight_kg": 80
+        },
+        "per_clip_F": 53.15,
+        "n_frames": 421
+      },
+      "low": {}
+    },
+    {
+      "row_id": "gender_shoulder_rom_jogging_A327_jog_ff_start_180_R_003__A327",
+      "attribute_short": "gender",
+      "task": "jogging",
+      "feature": "shoulder_rom",
+      "side": "high",
+      "r": -0.4832,
+      "predicted_sign": -1,
+      "high": {
+        "label": "male",
+        "actor_uid": "A327",
+        "source_bvh": "dataset/soma_uniform/bvh/230417/jog_ff_start_180_R_003__A327.bvh",
+        "g1_csv": "./data/feature_matrix_instances/gender_shoulder_rom_jogging_A327_jog_ff_start_180_R_003__A327.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 177,
+          "weight_kg": 74
+        },
+        "per_clip_F": 55.09,
+        "n_frames": 458
+      },
+      "low": {}
+    },
+    {
+      "row_id": "gender_shoulder_rom_jogging_A044_jog_sideway_045_stop_003__A044",
+      "attribute_short": "gender",
+      "task": "jogging",
+      "feature": "shoulder_rom",
+      "side": "high",
+      "r": -0.4832,
+      "predicted_sign": -1,
+      "high": {
+        "label": "male",
+        "actor_uid": "A044",
+        "source_bvh": "dataset/soma_uniform/bvh/220728/jog_sideway_045_stop_003__A044.bvh",
+        "g1_csv": "./data/feature_matrix_instances/gender_shoulder_rom_jogging_A044_jog_sideway_045_stop_003__A044.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 167,
+          "weight_kg": 75
+        },
+        "per_clip_F": 57.5,
+        "n_frames": 634
+      },
+      "low": {}
+    },
+    {
+      "row_id": "gender_shoulder_rom_jogging_A041_jog_backward_stop_005__A041",
+      "attribute_short": "gender",
+      "task": "jogging",
+      "feature": "shoulder_rom",
+      "side": "low",
+      "r": -0.4832,
+      "predicted_sign": -1,
+      "high": {
+        "label": "female",
+        "actor_uid": "A041",
+        "source_bvh": "dataset/soma_uniform/bvh/220728/jog_backward_stop_005__A041.bvh",
+        "g1_csv": "./data/feature_matrix_instances/gender_shoulder_rom_jogging_A041_jog_backward_stop_005__A041.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 157,
+          "weight_kg": 65
+        },
+        "per_clip_F": 69.52,
+        "n_frames": 617
+      },
+      "low": {}
+    },
+    {
+      "row_id": "gender_shoulder_rom_jogging_A207_jog_ff_loop_180_R_004__A207",
+      "attribute_short": "gender",
+      "task": "jogging",
+      "feature": "shoulder_rom",
+      "side": "low",
+      "r": -0.4832,
+      "predicted_sign": -1,
+      "high": {
+        "label": "female",
+        "actor_uid": "A207",
+        "source_bvh": "dataset/soma_uniform/bvh/230217/jog_ff_loop_180_R_004__A207.bvh",
+        "g1_csv": "./data/feature_matrix_instances/gender_shoulder_rom_jogging_A207_jog_ff_loop_180_R_004__A207.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 168,
+          "weight_kg": 57
+        },
+        "per_clip_F": 84.49,
+        "n_frames": 443
+      },
+      "low": {}
+    },
+    {
+      "row_id": "gender_shoulder_rom_jogging_A227_jog_ff_stop_180_R_003__A227",
+      "attribute_short": "gender",
+      "task": "jogging",
+      "feature": "shoulder_rom",
+      "side": "low",
+      "r": -0.4832,
+      "predicted_sign": -1,
+      "high": {
+        "label": "female",
+        "actor_uid": "A227",
+        "source_bvh": "dataset/soma_uniform/bvh/230228/jog_ff_stop_180_R_003__A227.bvh",
+        "g1_csv": "./data/feature_matrix_instances/gender_shoulder_rom_jogging_A227_jog_ff_stop_180_R_003__A227.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 174,
+          "weight_kg": 65
+        },
+        "per_clip_F": 82.67,
+        "n_frames": 430
+      },
+      "low": {}
+    },
+    {
+      "row_id": "gender_shoulder_rom_jogging_A073_jog_ff_loop_180_R_004__A073",
+      "attribute_short": "gender",
+      "task": "jogging",
+      "feature": "shoulder_rom",
+      "side": "low",
+      "r": -0.4832,
+      "predicted_sign": -1,
+      "high": {
+        "label": "female",
+        "actor_uid": "A073",
+        "source_bvh": "dataset/soma_uniform/bvh/221125/jog_ff_loop_180_R_004__A073.bvh",
+        "g1_csv": "./data/feature_matrix_instances/gender_shoulder_rom_jogging_A073_jog_ff_loop_180_R_004__A073.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 165,
+          "weight_kg": 55
+        },
+        "per_clip_F": 95.76,
+        "n_frames": 288
+      },
+      "low": {}
+    },
+    {
+      "row_id": "gender_shoulder_rom_jogging_A038_jog_sideway_045_loop_003__A038",
+      "attribute_short": "gender",
+      "task": "jogging",
+      "feature": "shoulder_rom",
+      "side": "low",
+      "r": -0.4832,
+      "predicted_sign": -1,
+      "high": {
+        "label": "female",
+        "actor_uid": "A038",
+        "source_bvh": "dataset/soma_uniform/bvh/220727/jog_sideway_045_loop_003__A038.bvh",
+        "g1_csv": "./data/feature_matrix_instances/gender_shoulder_rom_jogging_A038_jog_sideway_045_loop_003__A038.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 178,
+          "weight_kg": 65
+        },
+        "per_clip_F": 93.98,
+        "n_frames": 717
+      },
+      "low": {}
+    },
+    {
+      "row_id": "gender_shoulder_rom_jogging_A350_jog_ff_stop_180_R_001__A350",
+      "attribute_short": "gender",
+      "task": "jogging",
+      "feature": "shoulder_rom",
+      "side": "low",
+      "r": -0.4832,
+      "predicted_sign": -1,
+      "high": {
+        "label": "female",
+        "actor_uid": "A350",
+        "source_bvh": "dataset/soma_uniform/bvh/230425/jog_ff_stop_180_R_001__A350.bvh",
+        "g1_csv": "./data/feature_matrix_instances/gender_shoulder_rom_jogging_A350_jog_ff_stop_180_R_001__A350.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 168,
+          "weight_kg": 61
+        },
+        "per_clip_F": 97.16,
+        "n_frames": 863
+      },
+      "low": {}
+    },
+    {
+      "row_id": "gender_shoulder_rom_jogging_A179_jog_ff_loop_225_001__A179",
+      "attribute_short": "gender",
+      "task": "jogging",
+      "feature": "shoulder_rom",
+      "side": "low",
+      "r": -0.4832,
+      "predicted_sign": -1,
+      "high": {
+        "label": "female",
+        "actor_uid": "A179",
+        "source_bvh": "dataset/soma_uniform/bvh/230210/jog_ff_loop_225_001__A179.bvh",
+        "g1_csv": "./data/feature_matrix_instances/gender_shoulder_rom_jogging_A179_jog_ff_loop_225_001__A179.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 169,
+          "weight_kg": 56
+        },
+        "per_clip_F": 120.75,
+        "n_frames": 269
+      },
+      "low": {}
+    },
+    {
+      "row_id": "gender_shoulder_rom_jogging_A167_jog_ff_loop_180_R_001__A167",
+      "attribute_short": "gender",
+      "task": "jogging",
+      "feature": "shoulder_rom",
+      "side": "low",
+      "r": -0.4832,
+      "predicted_sign": -1,
+      "high": {
+        "label": "female",
+        "actor_uid": "A167",
+        "source_bvh": "dataset/soma_uniform/bvh/230201/jog_ff_loop_180_R_001__A167.bvh",
+        "g1_csv": "./data/feature_matrix_instances/gender_shoulder_rom_jogging_A167_jog_ff_loop_180_R_001__A167.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 168,
+          "weight_kg": 57
+        },
+        "per_clip_F": 83.59,
+        "n_frames": 279
+      },
+      "low": {}
+    },
+    {
+      "row_id": "gender_shoulder_rom_jogging_A124_exercise_2_003__A124",
+      "attribute_short": "gender",
+      "task": "jogging",
+      "feature": "shoulder_rom",
+      "side": "low",
+      "r": -0.4832,
+      "predicted_sign": -1,
+      "high": {
+        "label": "female",
+        "actor_uid": "A124",
+        "source_bvh": "dataset/soma_uniform/bvh/230118/exercise_2_003__A124.bvh",
+        "g1_csv": "./data/feature_matrix_instances/gender_shoulder_rom_jogging_A124_exercise_2_003__A124.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 175,
+          "weight_kg": 64
+        },
+        "per_clip_F": 133.78,
+        "n_frames": 1069
+      },
+      "low": {}
+    },
+    {
+      "row_id": "gender_shoulder_rom_jogging_A028_jog_forward_start_004__A028",
+      "attribute_short": "gender",
+      "task": "jogging",
+      "feature": "shoulder_rom",
+      "side": "low",
+      "r": -0.4832,
+      "predicted_sign": -1,
+      "high": {
+        "label": "female",
+        "actor_uid": "A028",
+        "source_bvh": "dataset/soma_uniform/bvh/220714/jog_forward_start_004__A028.bvh",
+        "g1_csv": "./data/feature_matrix_instances/gender_shoulder_rom_jogging_A028_jog_forward_start_004__A028.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 176,
+          "weight_kg": 76
+        },
+        "per_clip_F": 77.8,
+        "n_frames": 937
+      },
+      "low": {}
+    },
+    {
+      "row_id": "gender_shoulder_mean_vel_jogging_A386_jog_ff_stop_180_R_003__A386",
+      "attribute_short": "gender",
+      "task": "jogging",
+      "feature": "shoulder_mean_vel",
+      "side": "high",
+      "r": -0.4774,
+      "predicted_sign": -1,
+      "high": {
+        "label": "male",
+        "actor_uid": "A386",
+        "source_bvh": "dataset/soma_uniform/bvh/230522/jog_ff_stop_180_R_003__A386.bvh",
+        "g1_csv": "./data/feature_matrix_instances/gender_shoulder_mean_vel_jogging_A386_jog_ff_stop_180_R_003__A386.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 172,
+          "weight_kg": 73
+        },
+        "per_clip_F": 99.81,
+        "n_frames": 309
+      },
+      "low": {}
+    },
+    {
+      "row_id": "gender_shoulder_mean_vel_jogging_A047_jog_arc_cw_stop_002__A047",
+      "attribute_short": "gender",
+      "task": "jogging",
+      "feature": "shoulder_mean_vel",
+      "side": "high",
+      "r": -0.4774,
+      "predicted_sign": -1,
+      "high": {
+        "label": "male",
+        "actor_uid": "A047",
+        "source_bvh": "dataset/soma_uniform/bvh/221010/jog_arc_cw_stop_002__A047.bvh",
+        "g1_csv": "./data/feature_matrix_instances/gender_shoulder_mean_vel_jogging_A047_jog_arc_cw_stop_002__A047.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 189,
+          "weight_kg": 100
+        },
+        "per_clip_F": 82.71,
+        "n_frames": 669
+      },
+      "low": {}
+    },
+    {
+      "row_id": "gender_shoulder_mean_vel_jogging_A389_jog_ff_stop_180_R_005__A389",
+      "attribute_short": "gender",
+      "task": "jogging",
+      "feature": "shoulder_mean_vel",
+      "side": "high",
+      "r": -0.4774,
+      "predicted_sign": -1,
+      "high": {
+        "label": "male",
+        "actor_uid": "A389",
+        "source_bvh": "dataset/soma_uniform/bvh/230522/jog_ff_stop_180_R_005__A389.bvh",
+        "g1_csv": "./data/feature_matrix_instances/gender_shoulder_mean_vel_jogging_A389_jog_ff_stop_180_R_005__A389.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 184,
+          "weight_kg": 80
+        },
+        "per_clip_F": 91.1,
+        "n_frames": 328
+      },
+      "low": {}
+    },
+    {
+      "row_id": "gender_shoulder_mean_vel_jogging_A072_jog_ff_start_225_002__A072",
+      "attribute_short": "gender",
+      "task": "jogging",
+      "feature": "shoulder_mean_vel",
+      "side": "high",
+      "r": -0.4774,
+      "predicted_sign": -1,
+      "high": {
+        "label": "male",
+        "actor_uid": "A072",
+        "source_bvh": "dataset/soma_uniform/bvh/221118/jog_ff_start_225_002__A072.bvh",
+        "g1_csv": "./data/feature_matrix_instances/gender_shoulder_mean_vel_jogging_A072_jog_ff_start_225_002__A072.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 191,
+          "weight_kg": 97
+        },
+        "per_clip_F": 95.67,
+        "n_frames": 311
+      },
+      "low": {}
+    },
+    {
+      "row_id": "gender_shoulder_mean_vel_jogging_A217_jog_arc_cw_loop_R_001__A217",
+      "attribute_short": "gender",
+      "task": "jogging",
+      "feature": "shoulder_mean_vel",
+      "side": "high",
+      "r": -0.4774,
+      "predicted_sign": -1,
+      "high": {
+        "label": "male",
+        "actor_uid": "A217",
+        "source_bvh": "dataset/soma_uniform/bvh/230223/jog_arc_cw_loop_R_001__A217.bvh",
+        "g1_csv": "./data/feature_matrix_instances/gender_shoulder_mean_vel_jogging_A217_jog_arc_cw_loop_R_001__A217.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 177,
+          "weight_kg": 82
+        },
+        "per_clip_F": 118.05,
+        "n_frames": 638
+      },
+      "low": {}
+    },
+    {
+      "row_id": "gender_shoulder_mean_vel_jogging_A225_jog_ff_stop_180_R_002__A225",
+      "attribute_short": "gender",
+      "task": "jogging",
+      "feature": "shoulder_mean_vel",
+      "side": "high",
+      "r": -0.4774,
+      "predicted_sign": -1,
+      "high": {
+        "label": "male",
+        "actor_uid": "A225",
+        "source_bvh": "dataset/soma_uniform/bvh/230228/jog_ff_stop_180_R_002__A225.bvh",
+        "g1_csv": "./data/feature_matrix_instances/gender_shoulder_mean_vel_jogging_A225_jog_ff_stop_180_R_002__A225.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 178,
+          "weight_kg": 90
+        },
+        "per_clip_F": 79.23,
+        "n_frames": 480
+      },
+      "low": {}
+    },
+    {
+      "row_id": "gender_shoulder_mean_vel_jogging_A061_jog_ff_loop_315_002__A061",
+      "attribute_short": "gender",
+      "task": "jogging",
+      "feature": "shoulder_mean_vel",
+      "side": "high",
+      "r": -0.4774,
+      "predicted_sign": -1,
+      "high": {
+        "label": "male",
+        "actor_uid": "A061",
+        "source_bvh": "dataset/soma_uniform/bvh/221115/jog_ff_loop_315_002__A061.bvh",
+        "g1_csv": "./data/feature_matrix_instances/gender_shoulder_mean_vel_jogging_A061_jog_ff_loop_315_002__A061.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 157,
+          "weight_kg": 47
+        },
+        "per_clip_F": 61.32,
+        "n_frames": 403
+      },
+      "low": {}
+    },
+    {
+      "row_id": "gender_shoulder_mean_vel_jogging_A385_jog_ff_stop_180_R_001__A385",
+      "attribute_short": "gender",
+      "task": "jogging",
+      "feature": "shoulder_mean_vel",
+      "side": "high",
+      "r": -0.4774,
+      "predicted_sign": -1,
+      "high": {
+        "label": "male",
+        "actor_uid": "A385",
+        "source_bvh": "dataset/soma_uniform/bvh/230519/jog_ff_stop_180_R_001__A385.bvh",
+        "g1_csv": "./data/feature_matrix_instances/gender_shoulder_mean_vel_jogging_A385_jog_ff_stop_180_R_001__A385.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 184,
+          "weight_kg": 80
+        },
+        "per_clip_F": 73.77,
+        "n_frames": 475
+      },
+      "low": {}
+    },
+    {
+      "row_id": "gender_shoulder_mean_vel_jogging_A313_jog_ff_stop_180_R_003__A313",
+      "attribute_short": "gender",
+      "task": "jogging",
+      "feature": "shoulder_mean_vel",
+      "side": "high",
+      "r": -0.4774,
+      "predicted_sign": -1,
+      "high": {
+        "label": "male",
+        "actor_uid": "A313",
+        "source_bvh": "dataset/soma_uniform/bvh/230412/jog_ff_stop_180_R_003__A313.bvh",
+        "g1_csv": "./data/feature_matrix_instances/gender_shoulder_mean_vel_jogging_A313_jog_ff_stop_180_R_003__A313.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 175,
+          "weight_kg": 76
+        },
+        "per_clip_F": 58.24,
+        "n_frames": 613
+      },
+      "low": {}
+    },
+    {
+      "row_id": "gender_shoulder_mean_vel_jogging_A040_jog_sideway_090_loop_003__A040",
+      "attribute_short": "gender",
+      "task": "jogging",
+      "feature": "shoulder_mean_vel",
+      "side": "high",
+      "r": -0.4774,
+      "predicted_sign": -1,
+      "high": {
+        "label": "male",
+        "actor_uid": "A040",
+        "source_bvh": "dataset/soma_uniform/bvh/220727/jog_sideway_090_loop_003__A040.bvh",
+        "g1_csv": "./data/feature_matrix_instances/gender_shoulder_mean_vel_jogging_A040_jog_sideway_090_loop_003__A040.csv",
+        "shape": {
+          "gender": "male",
+          "height_cm": 164,
+          "weight_kg": 67
+        },
+        "per_clip_F": 87.51,
+        "n_frames": 1068
+      },
+      "low": {}
+    },
+    {
+      "row_id": "gender_shoulder_mean_vel_jogging_A050_jog_arc_cw_start_002__A050",
+      "attribute_short": "gender",
+      "task": "jogging",
+      "feature": "shoulder_mean_vel",
+      "side": "low",
+      "r": -0.4774,
+      "predicted_sign": -1,
+      "high": {
+        "label": "female",
+        "actor_uid": "A050",
+        "source_bvh": "dataset/soma_uniform/bvh/221011/jog_arc_cw_start_002__A050.bvh",
+        "g1_csv": "./data/feature_matrix_instances/gender_shoulder_mean_vel_jogging_A050_jog_arc_cw_start_002__A050.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 182,
+          "weight_kg": 75
+        },
+        "per_clip_F": 126.28,
+        "n_frames": 591
+      },
+      "low": {}
+    },
+    {
+      "row_id": "gender_shoulder_mean_vel_jogging_A224_jog_ff_stop_180_R_002__A224",
+      "attribute_short": "gender",
+      "task": "jogging",
+      "feature": "shoulder_mean_vel",
+      "side": "low",
+      "r": -0.4774,
+      "predicted_sign": -1,
+      "high": {
+        "label": "female",
+        "actor_uid": "A224",
+        "source_bvh": "dataset/soma_uniform/bvh/230228/jog_ff_stop_180_R_002__A224.bvh",
+        "g1_csv": "./data/feature_matrix_instances/gender_shoulder_mean_vel_jogging_A224_jog_ff_stop_180_R_002__A224.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 177,
+          "weight_kg": 64
+        },
+        "per_clip_F": 112.16,
+        "n_frames": 457
+      },
+      "low": {}
+    },
+    {
+      "row_id": "gender_shoulder_mean_vel_jogging_A234_jog_ff_start_315_R_001__A234",
+      "attribute_short": "gender",
+      "task": "jogging",
+      "feature": "shoulder_mean_vel",
+      "side": "low",
+      "r": -0.4774,
+      "predicted_sign": -1,
+      "high": {
+        "label": "female",
+        "actor_uid": "A234",
+        "source_bvh": "dataset/soma_uniform/bvh/230302/jog_ff_start_315_R_001__A234.bvh",
+        "g1_csv": "./data/feature_matrix_instances/gender_shoulder_mean_vel_jogging_A234_jog_ff_start_315_R_001__A234.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 170,
+          "weight_kg": 52
+        },
+        "per_clip_F": 135.53,
+        "n_frames": 451
+      },
+      "low": {}
+    },
+    {
+      "row_id": "gender_shoulder_mean_vel_jogging_A094_jog_ff_stop_180_R_001__A094",
+      "attribute_short": "gender",
+      "task": "jogging",
+      "feature": "shoulder_mean_vel",
+      "side": "low",
+      "r": -0.4774,
+      "predicted_sign": -1,
+      "high": {
+        "label": "female",
+        "actor_uid": "A094",
+        "source_bvh": "dataset/soma_uniform/bvh/230102/jog_ff_stop_180_R_001__A094.bvh",
+        "g1_csv": "./data/feature_matrix_instances/gender_shoulder_mean_vel_jogging_A094_jog_ff_stop_180_R_001__A094.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 168,
+          "weight_kg": 57
+        },
+        "per_clip_F": 160.36,
+        "n_frames": 529
+      },
+      "low": {}
+    },
+    {
+      "row_id": "gender_shoulder_mean_vel_jogging_A045_jog_ff_start_180_R_003__A045",
+      "attribute_short": "gender",
+      "task": "jogging",
+      "feature": "shoulder_mean_vel",
+      "side": "low",
+      "r": -0.4774,
+      "predicted_sign": -1,
+      "high": {
+        "label": "female",
+        "actor_uid": "A045",
+        "source_bvh": "dataset/soma_uniform/bvh/221010/jog_ff_start_180_R_003__A045.bvh",
+        "g1_csv": "./data/feature_matrix_instances/gender_shoulder_mean_vel_jogging_A045_jog_ff_start_180_R_003__A045.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 156,
+          "weight_kg": 59
+        },
+        "per_clip_F": 138.02,
+        "n_frames": 1010
+      },
+      "low": {}
+    },
+    {
+      "row_id": "gender_shoulder_mean_vel_jogging_A359_jog_high_knees_R_loop_001__A359",
+      "attribute_short": "gender",
+      "task": "jogging",
+      "feature": "shoulder_mean_vel",
+      "side": "low",
+      "r": -0.4774,
+      "predicted_sign": -1,
+      "high": {
+        "label": "female",
+        "actor_uid": "A359",
+        "source_bvh": "dataset/soma_uniform/bvh/230509/jog_high_knees_R_loop_001__A359.bvh",
+        "g1_csv": "./data/feature_matrix_instances/gender_shoulder_mean_vel_jogging_A359_jog_high_knees_R_loop_001__A359.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 176,
+          "weight_kg": 59
+        },
+        "per_clip_F": 429.44,
+        "n_frames": 493
+      },
+      "low": {}
+    },
+    {
+      "row_id": "gender_shoulder_mean_vel_jogging_A201_jog_ff_loop_180_R_003__A201",
+      "attribute_short": "gender",
+      "task": "jogging",
+      "feature": "shoulder_mean_vel",
+      "side": "low",
+      "r": -0.4774,
+      "predicted_sign": -1,
+      "high": {
+        "label": "female",
+        "actor_uid": "A201",
+        "source_bvh": "dataset/soma_uniform/bvh/230216/jog_ff_loop_180_R_003__A201.bvh",
+        "g1_csv": "./data/feature_matrix_instances/gender_shoulder_mean_vel_jogging_A201_jog_ff_loop_180_R_003__A201.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 168,
+          "weight_kg": 61
+        },
+        "per_clip_F": 153.34,
+        "n_frames": 686
+      },
+      "low": {}
+    },
+    {
+      "row_id": "gender_shoulder_mean_vel_jogging_A179_jog_ff_start_225_003__A179",
+      "attribute_short": "gender",
+      "task": "jogging",
+      "feature": "shoulder_mean_vel",
+      "side": "low",
+      "r": -0.4774,
+      "predicted_sign": -1,
+      "high": {
+        "label": "female",
+        "actor_uid": "A179",
+        "source_bvh": "dataset/soma_uniform/bvh/230210/jog_ff_start_225_003__A179.bvh",
+        "g1_csv": "./data/feature_matrix_instances/gender_shoulder_mean_vel_jogging_A179_jog_ff_start_225_003__A179.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 169,
+          "weight_kg": 56
+        },
+        "per_clip_F": 232.55,
+        "n_frames": 384
+      },
+      "low": {}
+    },
+    {
+      "row_id": "gender_shoulder_mean_vel_jogging_A153_jog_ff_loop_180_R_002__A153",
+      "attribute_short": "gender",
+      "task": "jogging",
+      "feature": "shoulder_mean_vel",
+      "side": "low",
+      "r": -0.4774,
+      "predicted_sign": -1,
+      "high": {
+        "label": "female",
+        "actor_uid": "A153",
+        "source_bvh": "dataset/soma_uniform/bvh/230126/jog_ff_loop_180_R_002__A153.bvh",
+        "g1_csv": "./data/feature_matrix_instances/gender_shoulder_mean_vel_jogging_A153_jog_ff_loop_180_R_002__A153.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 175,
+          "weight_kg": 64
+        },
+        "per_clip_F": 115.7,
+        "n_frames": 289
+      },
+      "low": {}
+    },
+    {
+      "row_id": "gender_shoulder_mean_vel_jogging_A029_jog_sideway_045_start_001__A029",
+      "attribute_short": "gender",
+      "task": "jogging",
+      "feature": "shoulder_mean_vel",
+      "side": "low",
+      "r": -0.4774,
+      "predicted_sign": -1,
+      "high": {
+        "label": "female",
+        "actor_uid": "A029",
+        "source_bvh": "dataset/soma_uniform/bvh/220720/jog_sideway_045_start_001__A029.bvh",
+        "g1_csv": "./data/feature_matrix_instances/gender_shoulder_mean_vel_jogging_A029_jog_sideway_045_start_001__A029.csv",
+        "shape": {
+          "gender": "female",
+          "height_cm": 155,
+          "weight_kg": 41
+        },
+        "per_clip_F": 194.07,
+        "n_frames": 583
+      },
+      "low": {}
+    }
+  ]
+}

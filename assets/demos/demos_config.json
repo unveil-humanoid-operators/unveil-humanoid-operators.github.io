@@ -1,0 +1,281 @@
+{
+  "defaultDemo": "dancing",
+  "demos": [
+    {
+      "id": "walking",
+      "label": "Walking",
+      "count": 20222,
+      "g1CsvFile": "./g1_csv/walking.csv",
+      "smplPredFile": "./smpl/walking_predicted.bin",
+      "smplGtFile": "./smpl/walking_gt.bin",
+      "smplFacesFile": "./smpl/faces.bin",
+      "numFrames": 150,
+      "fps": 17.424976348876953,
+      "predicted": {
+        "height": 175,
+        "weight": 57,
+        "age": 31,
+        "gender": "female"
+      },
+      "groundTruth": {
+        "height": 171,
+        "weight": 62,
+        "age": 29,
+        "gender": "female"
+      }
+    },
+    {
+      "id": "jogging",
+      "label": "Jogging",
+      "count": 16437,
+      "g1CsvFile": "./g1_csv/jogging.csv",
+      "smplPredFile": "./smpl/jogging_predicted.bin",
+      "smplGtFile": "./smpl/jogging_gt.bin",
+      "smplFacesFile": "./smpl/faces.bin",
+      "numFrames": 150,
+      "fps": 25.53191566467285,
+      "predicted": {
+        "height": 168,
+        "weight": 65,
+        "age": 27,
+        "gender": "female"
+      },
+      "groundTruth": {
+        "height": 171,
+        "weight": 62,
+        "age": 29,
+        "gender": "female"
+      }
+    },
+    {
+      "id": "gesture",
+      "label": "Gesture",
+      "count": 15862,
+      "g1CsvFile": "./g1_csv/gesture.csv",
+      "smplPredFile": "./smpl/gesture_predicted.bin",
+      "smplGtFile": "./smpl/gesture_gt.bin",
+      "smplFacesFile": "./smpl/faces.bin",
+      "numFrames": 150,
+      "fps": 20.111732482910156,
+      "predicted": {
+        "height": 176,
+        "weight": 72,
+        "age": 22,
+        "gender": "male"
+      },
+      "groundTruth": {
+        "height": 179,
+        "weight": 77,
+        "age": 25,
+        "gender": "male"
+      }
+    },
+    {
+      "id": "dancing",
+      "label": "Dancing",
+      "count": 12593,
+      "g1CsvFile": "./g1_csv/dancing.csv",
+      "smplPredFile": "./smpl/dancing_predicted.bin",
+      "smplGtFile": "./smpl/dancing_gt.bin",
+      "smplFacesFile": "./smpl/faces.bin",
+      "numFrames": 150,
+      "fps": 5.449591159820557,
+      "predicted": {
+        "height": 168,
+        "weight": 68,
+        "age": 29,
+        "gender": "female"
+      },
+      "groundTruth": {
+        "height": 172,
+        "weight": 68,
+        "age": 28,
+        "gender": "female"
+      }
+    },
+    {
+      "id": "jumping",
+      "label": "Jumping",
+      "count": 11475,
+      "g1CsvFile": "./g1_csv/jumping.csv",
+      "smplPredFile": "./smpl/jumping_predicted.bin",
+      "smplGtFile": "./smpl/jumping_gt.bin",
+      "smplFacesFile": "./smpl/faces.bin",
+      "numFrames": 150,
+      "fps": 9.682624816894531,
+      "predicted": {
+        "height": 183,
+        "weight": 83,
+        "age": 28,
+        "gender": "male"
+      },
+      "groundTruth": {
+        "height": 179,
+        "weight": 77,
+        "age": 25,
+        "gender": "male"
+      }
+    },
+    {
+      "id": "turning",
+      "label": "Turning",
+      "count": 3472,
+      "g1CsvFile": "./g1_csv/turning.csv",
+      "smplPredFile": "./smpl/turning_predicted.bin",
+      "smplGtFile": "./smpl/turning_gt.bin",
+      "smplFacesFile": "./smpl/faces.bin",
+      "numFrames": 150,
+      "fps": 2.1377673149108887,
+      "predicted": {
+        "height": 175,
+        "weight": 58,
+        "age": 32,
+        "gender": "female"
+      },
+      "groundTruth": {
+        "height": 171,
+        "weight": 62,
+        "age": 29,
+        "gender": "female"
+      }
+    },
+    {
+      "id": "climbing_box",
+      "label": "Climbing Box",
+      "count": 3402,
+      "g1CsvFile": "./g1_csv/climbing_box.csv",
+      "smplPredFile": "./smpl/climbing_box_predicted.bin",
+      "smplGtFile": "./smpl/climbing_box_gt.bin",
+      "smplFacesFile": "./smpl/faces.bin",
+      "numFrames": 150,
+      "fps": 38.46154022216797,
+      "predicted": {
+        "height": 175,
+        "weight": 81,
+        "age": 29,
+        "gender": "male"
+      },
+      "groundTruth": {
+        "height": 179,
+        "weight": 77,
+        "age": 25,
+        "gender": "male"
+      }
+    },
+    {
+      "id": "kneeling",
+      "label": "Kneeling",
+      "count": 1731,
+      "g1CsvFile": "./g1_csv/kneeling.csv",
+      "smplPredFile": "./smpl/kneeling_predicted.bin",
+      "smplGtFile": "./smpl/kneeling_gt.bin",
+      "smplFacesFile": "./smpl/faces.bin",
+      "numFrames": 150,
+      "fps": 33.39517593383789,
+      "predicted": {
+        "height": 173,
+        "weight": 83,
+        "age": 28,
+        "gender": "male"
+      },
+      "groundTruth": {
+        "height": 178,
+        "weight": 90,
+        "age": 25,
+        "gender": "male"
+      }
+    },
+    {
+      "id": "pulling",
+      "label": "Pulling",
+      "count": 702,
+      "g1CsvFile": "./g1_csv/pulling.csv",
+      "smplPredFile": "./smpl/pulling_predicted.bin",
+      "smplGtFile": "./smpl/pulling_gt.bin",
+      "smplFacesFile": "./smpl/faces.bin",
+      "numFrames": 150,
+      "fps": 15.831134796142578,
+      "predicted": {
+        "height": 163,
+        "weight": 46,
+        "age": 33,
+        "gender": "female"
+      },
+      "groundTruth": {
+        "height": 167,
+        "weight": 52,
+        "age": 29,
+        "gender": "female"
+      }
+    },
+    {
+      "id": "hiphop",
+      "label": "Hip-Hop Dance",
+      "count": 540,
+      "g1CsvFile": "./g1_csv/hiphop.csv",
+      "smplPredFile": "./smpl/hiphop_predicted.bin",
+      "smplGtFile": "./smpl/hiphop_gt.bin",
+      "smplFacesFile": "./smpl/faces.bin",
+      "numFrames": 150,
+      "fps": 26.62721824645996,
+      "predicted": {
+        "height": 172,
+        "weight": 72,
+        "age": 25,
+        "gender": "male"
+      },
+      "groundTruth": {
+        "height": 175,
+        "weight": 76,
+        "age": 22,
+        "gender": "male"
+      }
+    },
+    {
+      "id": "throwing",
+      "label": "Throwing",
+      "count": 316,
+      "g1CsvFile": "./g1_csv/throwing.csv",
+      "smplPredFile": "./smpl/throwing_predicted.bin",
+      "smplGtFile": "./smpl/throwing_gt.bin",
+      "smplFacesFile": "./smpl/faces.bin",
+      "numFrames": 150,
+      "fps": 27.69230842590332,
+      "predicted": {
+        "height": 172,
+        "weight": 68,
+        "age": 30,
+        "gender": "female"
+      },
+      "groundTruth": {
+        "height": 168,
+        "weight": 61,
+        "age": 27,
+        "gender": "female"
+      }
+    },
+    {
+      "id": "guitar",
+      "label": "Guitar",
+      "count": 200,
+      "g1CsvFile": "./g1_csv/guitar.csv",
+      "smplPredFile": "./smpl/guitar_predicted.bin",
+      "smplGtFile": "./smpl/guitar_gt.bin",
+      "smplFacesFile": "./smpl/faces.bin",
+      "numFrames": 150,
+      "fps": 7.413508892059326,
+      "predicted": {
+        "height": 172,
+        "weight": 58,
+        "age": 30,
+        "gender": "female"
+      },
+      "groundTruth": {
+        "height": 169,
+        "weight": 61,
+        "age": 27,
+        "gender": "female"
+      }
+    }
+  ]
+}

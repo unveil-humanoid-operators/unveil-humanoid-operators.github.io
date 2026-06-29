@@ -1,0 +1,247 @@
+[load] actor_task_features.csv
+  -> 4,724 actor-task rows, 492 actors
+[load] metadata parquet
+  -> 65,324 usable clips
+[cache] per_clip_features.json: 35597 entries (pre-existing)
+
+=== AGE (feature: waist_rom) ===
+  [8 tasks]  top:
+    gesture, dancing                r=-0.504  n_actors=51
+    jogging, turning                r=-0.419  n_actors=105
+    jogging                         r=-0.389  n_actors=416
+    turning                         r=-0.360  n_actors=166
+    transition                      r=-0.352  n_actors=166
+    dancing                         r=-0.339  n_actors=381
+    walking                         r=-0.282  n_actors=260
+    jumping, turning                r=-0.278  n_actors=84
+  [keep] gesture, dancing               r=-0.504  lo: 74.9, 74.1, 72.8, 66.9  | hi: 6.5, 8.3, 9.0, 9.2  (max lo=74.9, max hi=9.2)
+  [keep] jogging, turning               r=-0.419  lo: 102.9, 102.2, 83.3, 82.1  | hi: 16.0, 21.0, 22.4, 24.3  (max lo=102.9, max hi=24.3)
+  [keep] jogging                        r=-0.389  lo: 92.7, 80.3, 76.0, 71.2  | hi: 0.6, 1.2, 2.2, 2.7  (max lo=92.7, max hi=2.7)
+  [keep] turning                        r=-0.360  lo: 68.7, 52.3, 42.3, 41.5  | hi: 0.9, 2.9, 4.6, 5.8  (max lo=68.7, max hi=5.8)
+  [keep] transition                     r=-0.352  lo: 76.9, 70.8, 70.5, 68.7  | hi: 3.7, 4.0, 4.6, 5.2  (max lo=76.9, max hi=5.2)
+  [keep] dancing                        r=-0.339  lo: 119.3, 112.6, 103.7, 103.0  | hi: 10.3, 11.2, 11.4, 15.4  (max lo=119.3, max hi=15.4)
+  [keep] walking                        r=-0.282  lo: 94.3, 91.1, 75.8, 74.6  | hi: 0.7, 0.8, 1.1, 1.2  (max lo=94.3, max hi=1.2)
+  [keep] jumping, turning               r=-0.278  lo: 59.4, 44.6, 42.1, 42.0  | hi: 1.4, 3.8, 4.8, 11.9  (max lo=59.4, max hi=11.9)
+  -> age bar tops: low.max=119.27  high.max=24.28  gap=94.99
+
+=== AGE (feature: waist_mean_vel) ===
+  [8 tasks]  top:
+    jumping, turning                r=-0.475  n_actors=84
+    turning                         r=-0.378  n_actors=166
+    jogging, turning                r=-0.358  n_actors=105
+    gesture, dancing                r=-0.352  n_actors=51
+    jogging                         r=-0.344  n_actors=416
+    transition                      r=-0.332  n_actors=166
+    dancing                         r=-0.269  n_actors=381
+    gesture                         r=-0.242  n_actors=158
+  [keep] jumping, turning               r=-0.475  lo: 64.3, 57.5, 55.7, 54.8  | hi: 1.8, 3.4, 4.0, 8.0  (max lo=64.3, max hi=8.0)
+  [keep] turning                        r=-0.378  lo: 99.1, 83.4, 43.4, 37.3  | hi: 1.0, 2.2, 2.9, 3.2  (max lo=99.1, max hi=3.2)
+  [keep] jogging, turning               r=-0.358  lo: 141.8, 140.5, 122.1, 122.0  | hi: 22.6, 29.4, 32.9, 39.3  (max lo=141.8, max hi=39.3)
+  [keep] gesture, dancing               r=-0.352  lo: 150.7, 149.5, 129.6, 124.2  | hi: 10.0, 10.1, 11.2, 11.4  (max lo=150.7, max hi=11.4)
+  [keep] jogging                        r=-0.344  lo: 207.9, 160.3, 160.3, 152.8  | hi: 1.3, 1.7, 2.0, 3.8  (max lo=207.9, max hi=3.8)
+  [keep] transition                     r=-0.332  lo: 62.6, 38.9, 38.4, 32.5  | hi: 1.7, 1.8, 2.0, 2.1  (max lo=62.6, max hi=2.1)
+  [keep] dancing                        r=-0.269  lo: 203.0, 178.9, 177.2, 156.4  | hi: 5.5, 10.9, 11.1, 11.2  (max lo=203.0, max hi=11.2)
+  [keep] gesture                        r=-0.242  lo: 111.9, 106.0, 104.4, 101.2  | hi: 0.9, 1.1, 1.2, 1.3  (max lo=111.9, max hi=1.3)
+  -> age bar tops: low.max=207.92  high.max=39.27  gap=168.65
+
+=== AGE (feature: ankle_rom) ===
+  [8 tasks]  top:
+    jogging, turning                r=-0.556  n_actors=105
+    gesture, dancing                r=-0.381  n_actors=51
+    turning                         r=-0.330  n_actors=166
+    transition                      r=-0.306  n_actors=166
+    walking, turning                r=-0.267  n_actors=107
+    jumping, turning                r=-0.238  n_actors=84
+    jogging                         r=-0.226  n_actors=416
+    sitting                         r=+0.210  n_actors=110
+  [keep] jogging, turning               r=-0.556  lo: 82.6, 81.6, 78.3, 78.2  | hi: 24.8, 34.6, 36.6, 37.8  (max lo=82.6, max hi=37.8)
+  [keep] gesture, dancing               r=-0.381  lo: 84.9, 82.8, 81.8, 81.5  | hi: 1.5, 1.6, 2.1, 2.1  (max lo=84.9, max hi=2.1)
+  [keep] turning                        r=-0.330  lo: 62.9, 56.9, 53.1, 52.8  | hi: 1.2, 1.9, 10.9, 11.6  (max lo=62.9, max hi=11.6)
+  [keep] transition                     r=-0.306  lo: 75.0, 71.4, 70.6, 70.5  | hi: 6.2, 6.3, 8.2, 9.1  (max lo=75.0, max hi=9.1)
+  [keep] walking, turning               r=-0.267  lo: 63.5, 63.3, 60.3, 57.5  | hi: 26.5, 29.7, 30.5, 30.6  (max lo=63.5, max hi=30.6)
+  [keep] jumping, turning               r=-0.238  lo: 83.3, 77.1, 62.8, 61.8  | hi: 1.8, 3.7, 9.9, 11.2  (max lo=83.3, max hi=11.2)
+  [keep] jogging                        r=-0.226  lo: 82.2, 81.1, 77.9, 76.4  | hi: 0.5, 0.6, 2.2, 4.1  (max lo=82.2, max hi=4.1)
+  [keep] sitting                        r=+0.210  lo: 0.0, 0.0, 0.0, 0.0  | hi: 85.4, 85.4, 85.4, 85.4  (max lo=0.0, max hi=85.4)
+  -> age bar tops: low.max=207.92  high.max=85.44  gap=122.48
+
+=== WEIGHT (feature: ankle_peak_vel) ===
+  [8 tasks]  top:
+    jumping, turning                r=-0.284  n_actors=84
+    jogging, turning                r=-0.236  n_actors=105
+    climbing box                    r=-0.196  n_actors=326
+    jumping                         r=-0.175  n_actors=417
+    walking, turning                r=-0.147  n_actors=107
+    jogging                         r=-0.140  n_actors=416
+    walking                         r=-0.129  n_actors=260
+    kneeling                        r=-0.116  n_actors=73
+  [keep] jumping, turning               r=-0.284  lo: 1487.5, 970.9, 947.8, 900.4  | hi: 16.5, 22.9, 256.4, 264.9  (max lo=1487.5, max hi=264.9)
+  [keep] jogging, turning               r=-0.236  lo: 1588.1, 1286.5, 1199.0, 1157.3  | hi: 365.7, 387.8, 405.1, 414.3  (max lo=1588.1, max hi=414.3)
+  [keep] climbing box                   r=-0.196  lo: 3074.4, 2961.1, 2809.0, 2792.9  | hi: 329.0, 338.6, 343.5, 348.2  (max lo=3074.4, max hi=348.2)
+  [keep] jumping                        r=-0.175  lo: 1588.7, 1499.4, 1484.1, 1470.6  | hi: 2.0, 83.9, 86.5, 134.3  (max lo=1588.7, max hi=134.3)
+  [keep] walking, turning               r=-0.147  lo: 1636.3, 1574.1, 1128.5, 1128.2  | hi: 27.9, 167.5, 169.4, 179.1  (max lo=1636.3, max hi=179.1)
+  [keep] jogging                        r=-0.140  lo: 1817.9, 1518.1, 1436.4, 1389.3  | hi: 1.6, 2.6, 4.7, 4.8  (max lo=1817.9, max hi=4.8)
+  [keep] walking                        r=-0.129  lo: 3186.9, 1972.5, 1560.3, 1364.3  | hi: 3.8, 4.4, 4.8, 4.8  (max lo=3186.9, max hi=4.8)
+  [keep] kneeling                       r=-0.116  lo: 2510.4, 1294.4, 802.7, 580.2  | hi: 1.8, 3.6, 4.0, 5.2  (max lo=2510.4, max hi=5.2)
+  -> weight bar tops: low.max=3186.87  high.max=414.34  gap=2772.53
+
+=== WEIGHT (feature: ankle_rom) ===
+  [8 tasks]  top:
+    jogging, turning                r=-0.447  n_actors=105
+    jumping, turning                r=-0.423  n_actors=84
+    jogging                         r=-0.376  n_actors=416
+    jumping                         r=-0.294  n_actors=417
+    walking, turning                r=-0.240  n_actors=107
+    walking                         r=-0.164  n_actors=260
+    climbing box                    r=-0.137  n_actors=326
+    kneeling                        r=-0.136  n_actors=73
+  [keep] jogging, turning               r=-0.447  lo: 82.6, 81.6, 75.0, 74.6  | hi: 34.6, 37.8, 39.8, 40.2  (max lo=82.6, max hi=40.2)
+  [keep] jumping, turning               r=-0.423  lo: 83.3, 77.1, 67.5, 64.1  | hi: 3.7, 8.5, 26.6, 27.0  (max lo=83.3, max hi=27.0)
+  [keep] jogging                        r=-0.376  lo: 82.2, 81.1, 81.1, 77.6  | hi: 0.4, 0.5, 0.6, 1.9  (max lo=82.2, max hi=1.9)
+  [keep] jumping                        r=-0.294  lo: 80.7, 80.4, 79.3, 79.3  | hi: 0.3, 25.2, 27.0, 28.6  (max lo=80.7, max hi=28.6)
+  [keep] walking, turning               r=-0.240  lo: 63.5, 63.3, 61.7, 57.5  | hi: 13.6, 31.2, 31.2, 31.3  (max lo=63.5, max hi=31.3)
+  [keep] walking                        r=-0.164  lo: 85.4, 76.2, 74.6, 72.2  | hi: 0.7, 0.9, 1.4, 2.0  (max lo=85.4, max hi=2.0)
+  [keep] climbing box                   r=-0.137  lo: 77.1, 74.9, 74.4, 73.4  | hi: 35.0, 36.4, 41.1, 41.2  (max lo=77.1, max hi=41.2)
+  [keep] kneeling                       r=-0.136  lo: 77.1, 74.4, 71.7, 66.3  | hi: 0.2, 0.3, 0.8, 0.9  (max lo=77.1, max hi=0.9)
+  -> weight bar tops: low.max=3186.87  high.max=414.34  gap=2772.53
+
+=== WEIGHT (feature: root_translate_peak_vel) ===
+  [8 tasks]  top:
+    jogging, turning                r=-0.444  n_actors=105
+    jumping, turning                r=-0.365  n_actors=84
+    walking, turning                r=-0.351  n_actors=107
+    kneeling                        r=-0.302  n_actors=73
+    jogging                         r=-0.295  n_actors=416
+    dancing                         r=-0.214  n_actors=381
+    walking                         r=-0.192  n_actors=260
+    jumping                         r=-0.156  n_actors=417
+  [keep] jogging, turning               r=-0.444  lo: 348.0, 342.9, 309.9, 301.2  | hi: 140.0, 142.5, 152.1, 152.7  (max lo=348.0, max hi=152.7)
+  [keep] jumping, turning               r=-0.365  lo: 246.6, 242.3, 240.2, 224.3  | hi: 3.4, 11.3, 57.5, 74.1  (max lo=246.6, max hi=74.1)
+  [keep] walking, turning               r=-0.351  lo: 179.2, 166.6, 160.7, 156.1  | hi: 43.1, 51.0, 60.0, 81.1  (max lo=179.2, max hi=81.1)
+  [keep] kneeling                       r=-0.302  lo: 100.5, 95.5, 91.6, 91.2  | hi: 1.0, 1.1, 1.3, 1.6  (max lo=100.5, max hi=1.6)
+  [keep] jogging                        r=-0.295  lo: 448.6, 332.2, 322.9, 309.6  | hi: 1.3, 1.6, 2.9, 3.2  (max lo=448.6, max hi=3.2)
+  [keep] dancing                        r=-0.214  lo: 252.6, 224.4, 223.8, 223.4  | hi: 18.8, 19.1, 20.4, 20.8  (max lo=252.6, max hi=20.8)
+  [keep] walking                        r=-0.192  lo: 319.5, 268.0, 227.7, 223.2  | hi: 1.6, 1.9, 2.8, 2.9  (max lo=319.5, max hi=2.9)
+  [keep] jumping                        r=-0.156  lo: 462.8, 387.9, 285.6, 280.7  | hi: 1.8, 17.7, 23.1, 25.2  (max lo=462.8, max hi=25.2)
+  -> weight bar tops: low.max=3186.87  high.max=414.34  gap=2772.53
+
+=== HEIGHT (feature: root_translate_rom) ===
+  [8 tasks]  top:
+    climbing box                    r=-0.468  n_actors=326
+    jogging, turning                r=-0.325  n_actors=105
+    walking, turning                r=-0.300  n_actors=107
+    walking                         r=-0.282  n_actors=260
+    jogging                         r=-0.281  n_actors=416
+    sitting                         r=-0.163  n_actors=110
+    dancing                         r=-0.146  n_actors=381
+    turning                         r=+0.142  n_actors=166
+  [keep] climbing box                   r=-0.468  lo: 128.2, 127.8, 102.4, 101.6  | hi: 5.7, 10.6, 50.5, 51.8  (max lo=128.2, max hi=51.8)
+  [keep] jogging, turning               r=-0.325  lo: 820.9, 804.1, 801.0, 769.5  | hi: 219.7, 237.8, 274.5, 291.5  (max lo=820.9, max hi=291.5)
+  [keep] walking, turning               r=-0.300  lo: 846.3, 837.1, 771.1, 762.9  | hi: 1.5, 12.9, 25.6, 143.3  (max lo=846.3, max hi=143.3)
+  [keep] walking                        r=-0.282  lo: 1036.1, 985.7, 980.6, 936.7  | hi: 0.6, 0.8, 1.0, 1.8  (max lo=1036.1, max hi=1.8)
+  [keep] jogging                        r=-0.281  lo: 983.0, 982.0, 958.2, 938.9  | hi: 0.6, 0.7, 0.8, 3.1  (max lo=983.0, max hi=3.1)
+  [keep] sitting                        r=-0.163  lo: 154.8, 145.2, 124.3, 115.8  | hi: 0.1, 0.1, 0.1, 0.1  (max lo=154.8, max hi=0.1)
+  [keep] dancing                        r=-0.146  lo: 612.7, 596.4, 573.0, 468.7  | hi: 5.1, 6.0, 11.4, 12.5  (max lo=612.7, max hi=12.5)
+  [keep] turning                        r=+0.142  lo: 1.1, 1.9, 2.2, 3.4  | hi: 67.7, 58.8, 56.7, 53.8  (max lo=3.4, max hi=67.7)
+  -> height bar tops: low.max=1036.07  high.max=291.54  gap=744.53
+
+=== HEIGHT (feature: root_translate_peak_vel) ===
+  [8 tasks]  top:
+    jogging, turning                r=-0.407  n_actors=105
+    walking, turning                r=-0.406  n_actors=107
+    climbing box                    r=-0.338  n_actors=326
+    jumping, turning                r=-0.294  n_actors=84
+    walking                         r=-0.288  n_actors=260
+    jogging                         r=-0.280  n_actors=416
+    dancing                         r=-0.234  n_actors=381
+    kneeling                        r=-0.181  n_actors=73
+  [keep] jogging, turning               r=-0.407  lo: 358.1, 348.0, 342.9, 321.8  | hi: 132.6, 142.5, 150.9, 152.1  (max lo=358.1, max hi=152.1)
+  [keep] walking, turning               r=-0.406  lo: 163.5, 160.7, 156.3, 156.1  | hi: 3.2, 14.0, 43.1, 51.0  (max lo=163.5, max hi=51.0)
+  [keep] climbing box                   r=-0.338  lo: 212.6, 203.0, 201.9, 201.5  | hi: 11.7, 17.1, 100.0, 103.8  (max lo=212.6, max hi=103.8)
+  [keep] jumping, turning               r=-0.294  lo: 246.6, 242.3, 240.2, 224.3  | hi: 3.4, 11.3, 71.3, 85.7  (max lo=246.6, max hi=85.7)
+  [keep] walking                        r=-0.288  lo: 319.5, 272.2, 268.0, 227.7  | hi: 1.6, 1.9, 2.4, 2.8  (max lo=319.5, max hi=2.8)
+  [keep] jogging                        r=-0.280  lo: 452.7, 448.6, 332.2, 322.9  | hi: 1.3, 1.6, 2.9, 3.2  (max lo=452.7, max hi=3.2)
+  [keep] dancing                        r=-0.234  lo: 223.8, 223.4, 221.6, 219.8  | hi: 15.2, 17.8, 18.8, 19.1  (max lo=223.8, max hi=19.1)
+  [keep] kneeling                       r=-0.181  lo: 130.8, 113.4, 100.8, 100.5  | hi: 1.0, 1.1, 1.2, 1.6  (max lo=130.8, max hi=1.6)
+  -> height bar tops: low.max=1036.07  high.max=291.54  gap=744.53
+
+=== HEIGHT (feature: ankle_rom) ===
+  [8 tasks]  top:
+    jogging                         r=-0.315  n_actors=416
+    jumping, turning                r=-0.257  n_actors=84
+    climbing box                    r=-0.252  n_actors=326
+    jumping                         r=-0.231  n_actors=417
+    jogging, turning                r=-0.225  n_actors=105
+    walking, turning                r=-0.199  n_actors=107
+    gesture, dancing                r=+0.172  n_actors=51
+    dancing                         r=-0.165  n_actors=381
+  [keep] jogging                        r=-0.315  lo: 82.2, 81.1, 81.1, 77.6  | hi: 0.4, 0.5, 0.6, 4.1  (max lo=82.2, max hi=4.1)
+  [keep] jumping, turning               r=-0.257  lo: 83.3, 77.1, 67.5, 64.2  | hi: 3.7, 8.5, 25.9, 27.0  (max lo=83.3, max hi=27.0)
+  [keep] climbing box                   r=-0.252  lo: 77.1, 74.8, 74.4, 73.8  | hi: 10.2, 35.3, 40.2, 41.1  (max lo=77.1, max hi=41.1)
+  [keep] jumping                        r=-0.231  lo: 83.6, 80.7, 79.3, 79.3  | hi: 0.3, 0.3, 25.2, 27.0  (max lo=83.6, max hi=27.0)
+  [keep] jogging, turning               r=-0.225  lo: 82.6, 81.6, 74.6, 74.0  | hi: 36.6, 38.8, 42.3, 43.8  (max lo=82.6, max hi=43.8)
+  [keep] walking, turning               r=-0.199  lo: 63.5, 63.3, 57.2, 53.7  | hi: 1.2, 13.6, 24.0, 29.7  (max lo=63.5, max hi=29.7)
+  [keep] gesture, dancing               r=+0.172  lo: 1.4, 1.5, 1.6, 2.1  | hi: 81.5, 78.0, 75.2, 67.7  (max lo=2.1, max hi=81.5)
+  [keep] dancing                        r=-0.165  lo: 84.3, 82.9, 80.8, 80.0  | hi: 11.9, 12.2, 17.8, 18.4  (max lo=84.3, max hi=18.4)
+  -> height bar tops: low.max=1036.07  high.max=291.54  gap=744.53
+
+=== GENDER (feature: ankle_rom) ===
+  [8 tasks]  top:
+    jogging, turning                r=-0.393  n_actors=105
+    walking, turning                r=-0.378  n_actors=107
+    jogging                         r=-0.351  n_actors=416
+    jumping, turning                r=-0.328  n_actors=84
+    climbing box                    r=-0.207  n_actors=326
+    jumping                         r=-0.207  n_actors=417
+    walking                         r=-0.191  n_actors=260
+    dancing                         r=-0.117  n_actors=381
+  [keep] jogging, turning               r=-0.393  lo: 82.6, 81.6, 78.3, 78.0  | hi: 34.6, 36.6, 37.8, 38.8  (max lo=82.6, max hi=38.8)
+  [keep] walking, turning               r=-0.378  lo: 63.5, 63.3, 61.7, 60.3  | hi: 1.2, 8.8, 13.6, 23.2  (max lo=63.5, max hi=23.2)
+  [keep] jogging                        r=-0.351  lo: 82.2, 81.1, 81.1, 78.0  | hi: 0.4, 0.5, 0.6, 0.9  (max lo=82.2, max hi=0.9)
+  [keep] jumping, turning               r=-0.328  lo: 83.3, 77.1, 68.3, 67.5  | hi: 3.7, 8.5, 9.9, 25.9  (max lo=83.3, max hi=25.9)
+  [keep] climbing box                   r=-0.207  lo: 77.1, 74.8, 74.4, 73.8  | hi: 2.4, 10.2, 35.0, 36.4  (max lo=77.1, max hi=36.4)
+  [keep] jumping                        r=-0.207  lo: 83.6, 82.2, 81.4, 80.7  | hi: 0.3, 0.3, 0.6, 0.9  (max lo=83.6, max hi=0.9)
+  [keep] walking                        r=-0.191  lo: 85.4, 85.4, 80.4, 76.5  | hi: 0.7, 1.0, 1.0, 1.1  (max lo=85.4, max hi=1.1)
+  [keep] dancing                        r=-0.117  lo: 84.3, 82.9, 81.3, 80.8  | hi: 3.4, 5.2, 6.3, 7.6  (max lo=84.3, max hi=7.6)
+  -> gender bar tops: low.max=85.44  high.max=38.83  gap=46.61
+
+=== GENDER (feature: shoulder_rom) ===
+  [6 tasks]  top:
+    jogging                         r=-0.475  n_actors=416
+    climbing box                    r=-0.197  n_actors=326
+    gesture, dancing                r=-0.160  n_actors=51
+    dancing                         r=-0.126  n_actors=381
+    jogging, turning                r=-0.116  n_actors=105
+    walking, turning                r=-0.114  n_actors=107
+  [keep] jogging                        r=-0.475  lo: 292.1, 291.0, 224.9, 216.2  | hi: 0.8, 1.3, 1.6, 2.1  (max lo=292.1, max hi=2.1)
+  [keep] climbing box                   r=-0.197  lo: 217.1, 204.7, 174.0, 164.4  | hi: 3.2, 7.5, 14.1, 18.8  (max lo=217.1, max hi=18.8)
+  [keep] gesture, dancing               r=-0.160  lo: 226.8, 202.9, 199.3, 183.6  | hi: 10.1, 17.9, 25.6, 26.8  (max lo=226.8, max hi=26.8)
+  [keep] dancing                        r=-0.126  lo: 413.4, 392.5, 385.8, 380.5  | hi: 10.3, 13.0, 18.2, 18.3  (max lo=413.4, max hi=18.3)
+  [keep] jogging, turning               r=-0.116  lo: 272.6, 257.4, 251.1, 245.2  | hi: 34.4, 41.9, 43.3, 44.7  (max lo=272.6, max hi=44.7)
+  [keep] walking, turning               r=-0.114  lo: 198.2, 155.8, 153.9, 136.5  | hi: 7.9, 10.2, 11.3, 11.4  (max lo=198.2, max hi=11.4)
+  -> gender bar tops: low.max=413.45  high.max=44.74  gap=368.71
+
+=== GENDER (feature: shoulder_mean_vel) ===
+  [4 tasks]  top:
+    jogging                         r=-0.469  n_actors=416
+    jogging, turning                r=-0.316  n_actors=105
+    climbing box                    r=-0.131  n_actors=326
+    walking, turning                r=-0.102  n_actors=107
+  [keep] jogging                        r=-0.469  lo: 567.2, 445.4, 429.4, 425.5  | hi: 1.2, 1.4, 1.5, 2.7  (max lo=567.2, max hi=2.7)
+  [keep] jogging, turning               r=-0.316  lo: 291.0, 290.2, 279.3, 268.9  | hi: 41.1, 54.0, 55.6, 60.2  (max lo=291.0, max hi=60.2)
+  [keep] climbing box                   r=-0.131  lo: 184.6, 144.8, 143.2, 140.1  | hi: 2.7, 9.5, 12.5, 13.0  (max lo=184.6, max hi=13.0)
+  [keep] walking, turning               r=-0.102  lo: 288.5, 237.5, 140.3, 127.6  | hi: 10.1, 11.2, 11.4, 13.0  (max lo=288.5, max hi=13.0)
+  -> gender bar tops: low.max=567.24  high.max=60.24  gap=507.00
+
+[cache] wrote C:\Users\sihat\Downloads\invert\feature-analysis-animation\data\per_clip_features.json (43578 entries)
+[out] wrote C:\Users\sihat\Downloads\invert\feature-analysis-animation\data\fixed_feature_instances_multi.json  (720 instances)
+[out] wrote C:\Users\sihat\Downloads\invert\feature-analysis-animation\data\fixed_feature_instances_summary.csv  (720 rows)
+
+=== counts per attribute / side ===
+  age     high   96
+  age     low    96
+  gender  high   72
+  gender  low    72
+  height  high   96
+  height  low    96
+  weight  high   96
+  weight  low    96

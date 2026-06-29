@@ -1,0 +1,179 @@
+[clip_ids] loaded 14 ids from hf_missing_ids.txt (total=14)
+Plan (feature_matrix_v1): 28 SMPL fits across 14 rows (max_input_frames=600, max_frames=100, device=cuda)
+Output: C:\Users\sihat\Downloads\invert\feature-analysis-animation\data\smpl_feature_matrix_instances
+
+
+  [age_waist_rom_transition_A044]  transition · waist_rom  (r=-0.352)
+    [1/28 · age_waist_rom_transition_A044 · high] gender=male 75kg @ 167cm
+      truncate 865 -> 600 (5.0s)
+  Running FK...
+  Loading SMPL  : basicmodel_m_lbs_10_207_0_v1.0.0.pkl
+  Loading VPoser: C:\Users\sihat\Downloads\BVH2SMPL\vposer_v1_0
+Found Trained Model: C:\Users\sihat\Downloads\BVH2SMPL\vposer_v1_0\snapshots\TR00_E096.pt
+  Fitting SMPL+VPoser (600 frames, batch=64, 120 steps, z_prior=0.0010)...
+    64 / 600 frames done
+      fit done in 25.6s -> 100 frames @ 20.0 fps
+      -> age_waist_rom_transition_A044_high.bin  (100 frames @ 20.0 fps, 8.3 MB)
+      -> faces.bin  (13776 faces)
+    SKIP low — BVH missing: None
+
+  [age_waist_rom_transition_A257]  transition · waist_rom  (r=-0.352)
+    [3/28 · age_waist_rom_transition_A257 · high] gender=female 77kg @ 168cm
+      truncate 640 -> 600 (5.0s)
+  Running FK...
+  Loading SMPL  : basicModel_f_lbs_10_207_0_v1.0.0.pkl
+  Loading VPoser: C:\Users\sihat\Downloads\BVH2SMPL\vposer_v1_0
+Found Trained Model: C:\Users\sihat\Downloads\BVH2SMPL\vposer_v1_0\snapshots\TR00_E096.pt
+  Fitting SMPL+VPoser (600 frames, batch=64, 120 steps, z_prior=0.0010)...
+    64 / 600 frames done
+      fit done in 41.5s -> 100 frames @ 20.0 fps
+      -> age_waist_rom_transition_A257_high.bin  (100 frames @ 20.0 fps, 8.3 MB)
+    SKIP low — BVH missing: None
+
+  [age_waist_rom_jumping_turning_A018]  jumping, turning · waist_rom  (r=-0.278)
+    [5/28 · age_waist_rom_jumping_turning_A018 · high] gender=female 45kg @ 148cm
+      truncate 4352 -> 600 (5.0s)
+  Running FK...
+  Loading SMPL  : basicModel_f_lbs_10_207_0_v1.0.0.pkl
+  Loading VPoser: C:\Users\sihat\Downloads\BVH2SMPL\vposer_v1_0
+Found Trained Model: C:\Users\sihat\Downloads\BVH2SMPL\vposer_v1_0\snapshots\TR00_E096.pt
+  Fitting SMPL+VPoser (600 frames, batch=64, 120 steps, z_prior=0.0010)...
+    64 / 600 frames done
+      fit done in 57.6s -> 100 frames @ 20.0 fps
+      -> age_waist_rom_jumping_turning_A018_high.bin  (100 frames @ 20.0 fps, 8.3 MB)
+    SKIP low — BVH missing: None
+
+  [age_waist_rom_jumping_turning_A029]  jumping, turning · waist_rom  (r=-0.278)
+    [7/28 · age_waist_rom_jumping_turning_A029 · high] gender=female 41kg @ 155cm
+  Running FK...
+  Loading SMPL  : basicModel_f_lbs_10_207_0_v1.0.0.pkl
+  Loading VPoser: C:\Users\sihat\Downloads\BVH2SMPL\vposer_v1_0
+Found Trained Model: C:\Users\sihat\Downloads\BVH2SMPL\vposer_v1_0\snapshots\TR00_E096.pt
+  Fitting SMPL+VPoser (485 frames, batch=64, 120 steps, z_prior=0.0010)...
+    64 / 485 frames done
+      fit done in 52.3s -> 100 frames @ 24.7 fps
+      -> age_waist_rom_jumping_turning_A029_high.bin  (100 frames @ 24.7 fps, 8.3 MB)
+    SKIP low — BVH missing: None
+
+  [age_waist_rom_jumping_turning_A025]  jumping, turning · waist_rom  (r=-0.278)
+    [9/28 · age_waist_rom_jumping_turning_A025 · high] gender=male 102kg @ 199cm
+  Running FK...
+  Loading SMPL  : basicmodel_m_lbs_10_207_0_v1.0.0.pkl
+  Loading VPoser: C:\Users\sihat\Downloads\BVH2SMPL\vposer_v1_0
+Found Trained Model: C:\Users\sihat\Downloads\BVH2SMPL\vposer_v1_0\snapshots\TR00_E096.pt
+  Fitting SMPL+VPoser (434 frames, batch=64, 120 steps, z_prior=0.0010)...
+    64 / 434 frames done
+      fit done in 25.7s -> 100 frames @ 27.6 fps
+      -> age_waist_rom_jumping_turning_A025_high.bin  (100 frames @ 27.6 fps, 8.3 MB)
+    SKIP low — BVH missing: None
+
+  [age_waist_rom_jumping_turning_A093]  jumping, turning · waist_rom  (r=-0.278)
+    [11/28 · age_waist_rom_jumping_turning_A093 · high] gender=male 89kg @ 188cm
+  Running FK...
+  Loading SMPL  : basicmodel_m_lbs_10_207_0_v1.0.0.pkl
+  Loading VPoser: C:\Users\sihat\Downloads\BVH2SMPL\vposer_v1_0
+Found Trained Model: C:\Users\sihat\Downloads\BVH2SMPL\vposer_v1_0\snapshots\TR00_E096.pt
+  Fitting SMPL+VPoser (339 frames, batch=64, 120 steps, z_prior=0.0010)...
+    64 / 339 frames done
+      fit done in 13.3s -> 100 frames @ 35.4 fps
+      -> age_waist_rom_jumping_turning_A093_high.bin  (100 frames @ 35.4 fps, 8.3 MB)
+    SKIP low — BVH missing: None
+
+  [age_waist_rom_jumping_turning_A040]  jumping, turning · waist_rom  (r=-0.278)
+    [13/28 · age_waist_rom_jumping_turning_A040 · high] gender=male 67kg @ 164cm
+  Running FK...
+  Loading SMPL  : basicmodel_m_lbs_10_207_0_v1.0.0.pkl
+  Loading VPoser: C:\Users\sihat\Downloads\BVH2SMPL\vposer_v1_0
+Found Trained Model: C:\Users\sihat\Downloads\BVH2SMPL\vposer_v1_0\snapshots\TR00_E096.pt
+  Fitting SMPL+VPoser (550 frames, batch=64, 120 steps, z_prior=0.0010)...
+    64 / 550 frames done
+      fit done in 22.0s -> 100 frames @ 21.8 fps
+      -> age_waist_rom_jumping_turning_A040_high.bin  (100 frames @ 21.8 fps, 8.3 MB)
+    SKIP low — BVH missing: None
+
+  [age_waist_rom_jumping_turning_A039]  jumping, turning · waist_rom  (r=-0.278)
+    [15/28 · age_waist_rom_jumping_turning_A039 · high] gender=male 90kg @ 188cm
+  Running FK...
+  Loading SMPL  : basicmodel_m_lbs_10_207_0_v1.0.0.pkl
+  Loading VPoser: C:\Users\sihat\Downloads\BVH2SMPL\vposer_v1_0
+Found Trained Model: C:\Users\sihat\Downloads\BVH2SMPL\vposer_v1_0\snapshots\TR00_E096.pt
+  Fitting SMPL+VPoser (420 frames, batch=64, 120 steps, z_prior=0.0010)...
+    64 / 420 frames done
+      fit done in 15.6s -> 100 frames @ 28.6 fps
+      -> age_waist_rom_jumping_turning_A039_high.bin  (100 frames @ 28.6 fps, 8.3 MB)
+    SKIP low — BVH missing: None
+
+  [weight_ankle_peak_vel_jogging_turning_A064]  jogging, turning · ankle_peak_vel  (r=-0.236)
+    [17/28 · weight_ankle_peak_vel_jogging_turning_A064 · high] gender=female 43kg @ 155cm
+  Running FK...
+  Loading SMPL  : basicModel_f_lbs_10_207_0_v1.0.0.pkl
+  Loading VPoser: C:\Users\sihat\Downloads\BVH2SMPL\vposer_v1_0
+Found Trained Model: C:\Users\sihat\Downloads\BVH2SMPL\vposer_v1_0\snapshots\TR00_E096.pt
+  Fitting SMPL+VPoser (512 frames, batch=64, 120 steps, z_prior=0.0010)...
+    64 / 512 frames done
+      fit done in 20.8s -> 100 frames @ 23.4 fps
+      -> weight_ankle_peak_vel_jogging_turning_A064_high.bin  (100 frames @ 23.4 fps, 8.3 MB)
+    SKIP low — BVH missing: None
+
+  [weight_ankle_peak_vel_jogging_turning_A021]  jogging, turning · ankle_peak_vel  (r=-0.236)
+    [19/28 · weight_ankle_peak_vel_jogging_turning_A021 · high] gender=female 41kg @ 155cm
+  Running FK...
+  Loading SMPL  : basicModel_f_lbs_10_207_0_v1.0.0.pkl
+  Loading VPoser: C:\Users\sihat\Downloads\BVH2SMPL\vposer_v1_0
+Found Trained Model: C:\Users\sihat\Downloads\BVH2SMPL\vposer_v1_0\snapshots\TR00_E096.pt
+  Fitting SMPL+VPoser (597 frames, batch=64, 120 steps, z_prior=0.0010)...
+    64 / 597 frames done
+      fit done in 22.0s -> 100 frames @ 20.1 fps
+      -> weight_ankle_peak_vel_jogging_turning_A021_high.bin  (100 frames @ 20.1 fps, 8.3 MB)
+    SKIP low — BVH missing: None
+
+  [weight_ankle_peak_vel_jogging_turning_A256]  jogging, turning · ankle_peak_vel  (r=-0.236)
+    [21/28 · weight_ankle_peak_vel_jogging_turning_A256 · high] gender=male 95kg @ 182cm
+  Running FK...
+  Loading SMPL  : basicmodel_m_lbs_10_207_0_v1.0.0.pkl
+  Loading VPoser: C:\Users\sihat\Downloads\BVH2SMPL\vposer_v1_0
+Found Trained Model: C:\Users\sihat\Downloads\BVH2SMPL\vposer_v1_0\snapshots\TR00_E096.pt
+  Fitting SMPL+VPoser (444 frames, batch=64, 120 steps, z_prior=0.0010)...
+    64 / 444 frames done
+      fit done in 17.6s -> 100 frames @ 27.0 fps
+      -> weight_ankle_peak_vel_jogging_turning_A256_high.bin  (100 frames @ 27.0 fps, 8.3 MB)
+    SKIP low — BVH missing: None
+
+  [weight_ankle_peak_vel_jogging_turning_A255]  jogging, turning · ankle_peak_vel  (r=-0.236)
+    [23/28 · weight_ankle_peak_vel_jogging_turning_A255 · high] gender=male 120kg @ 174cm
+  Running FK...
+  Loading SMPL  : basicmodel_m_lbs_10_207_0_v1.0.0.pkl
+  Loading VPoser: C:\Users\sihat\Downloads\BVH2SMPL\vposer_v1_0
+Found Trained Model: C:\Users\sihat\Downloads\BVH2SMPL\vposer_v1_0\snapshots\TR00_E096.pt
+  Fitting SMPL+VPoser (454 frames, batch=64, 120 steps, z_prior=0.0010)...
+    64 / 454 frames done
+      fit done in 17.6s -> 100 frames @ 26.4 fps
+      -> weight_ankle_peak_vel_jogging_turning_A255_high.bin  (100 frames @ 26.4 fps, 8.3 MB)
+    SKIP low — BVH missing: None
+
+  [weight_ankle_peak_vel_jogging_turning_A072]  jogging, turning · ankle_peak_vel  (r=-0.236)
+    [25/28 · weight_ankle_peak_vel_jogging_turning_A072 · high] gender=male 97kg @ 191cm
+  Running FK...
+  Loading SMPL  : basicmodel_m_lbs_10_207_0_v1.0.0.pkl
+  Loading VPoser: C:\Users\sihat\Downloads\BVH2SMPL\vposer_v1_0
+Found Trained Model: C:\Users\sihat\Downloads\BVH2SMPL\vposer_v1_0\snapshots\TR00_E096.pt
+  Fitting SMPL+VPoser (465 frames, batch=64, 120 steps, z_prior=0.0010)...
+    64 / 465 frames done
+      fit done in 17.5s -> 100 frames @ 25.8 fps
+      -> weight_ankle_peak_vel_jogging_turning_A072_high.bin  (100 frames @ 25.8 fps, 8.3 MB)
+    SKIP low — BVH missing: None
+
+  [weight_ankle_peak_vel_kneeling_A193]  kneeling · ankle_peak_vel  (r=-0.116)
+    [27/28 · weight_ankle_peak_vel_kneeling_A193 · high] gender=female 57kg @ 168cm
+      truncate 641 -> 600 (5.0s)
+  Running FK...
+  Loading SMPL  : basicModel_f_lbs_10_207_0_v1.0.0.pkl
+  Loading VPoser: C:\Users\sihat\Downloads\BVH2SMPL\vposer_v1_0
+Found Trained Model: C:\Users\sihat\Downloads\BVH2SMPL\vposer_v1_0\snapshots\TR00_E096.pt
+  Fitting SMPL+VPoser (600 frames, batch=64, 120 steps, z_prior=0.0010)...
+    64 / 600 frames done
+      fit done in 22.1s -> 100 frames @ 20.0 fps
+      -> weight_ankle_peak_vel_kneeling_A193_high.bin  (100 frames @ 20.0 fps, 8.3 MB)
+    SKIP low — BVH missing: None
+
+Done — wrote outputs under C:\Users\sihat\Downloads\invert\feature-analysis-animation\data\smpl_feature_matrix_instances.

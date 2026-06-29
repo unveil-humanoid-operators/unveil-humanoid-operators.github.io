@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>UNVEIL · final feature-leak matrix</title>
+<style>
+* { margin:0; padding:0; box-sizing: border-box; }
+html, body {
+  background: #f5f7fa;
+  color: #1c232e;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.wrap { max-width: 1280px; margin: 0 auto; padding: 24px 22px 40px 22px; }
+
+/* Each attribute lives in its own section: centered title row + 3-col panel grid. */
+.attr-section { margin-bottom: 36px; }
+.attr-section + .attr-section { padding-top: 24px; border-top: 1px solid #d6dde6; }
+
+.attr-heading {
+  text-align: center;
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: #1c232e;
+  margin-bottom: 16px;
+}
+
+.attr-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-auto-rows: 470px;
+  gap: 12px;
+}
+
+.panel-cell {
+  position: relative;
+  background: #ffffff;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #d6dde6;
+  box-shadow: 0 2px 8px rgba(20, 30, 50, 0.08),
+              0 1px 3px rgba(20, 30, 50, 0.05);
+}
+.panel-cell iframe {
+  width: 100%; height: 100%;
+  border: 0;
+  display: block;
+}
+
+.placeholder {
+  color: #6e7382; font-size: 12px; text-align: center;
+  padding: 30px; background: #eef2f7; border: 1px dashed #c6cfdb;
+  border-radius: 12px;
+}
+</style>
+</head>
+<body>
+<div class="wrap" id="wrap"></div>
+<script>
+// Per-attribute clip manifest. Each entry pins (row_id, source-config) so
+// rows from different config files (e.g. final_matrix vs extreme-pick matrix)
+// can be mixed within the same attribute section.
+// gender is currently expanded to all 10 clips from the extreme-pick matrix;
+// the other three attributes still show the curated 2-panel set from
+// final_matrix_config.json (to be expanded similarly later).
+const MANIFEST = {
+  age: [
+    { row: 'age_jogging_waist_rom',           config: 'data/feature_matrix_config_extreme.json' },
+    { row: 'age_turning_waist_mean_vel',      config: 'data/feature_matrix_config_extreme.json' },
+    { row: 'age_transition_elbow_peak_vel',   config: 'data/feature_matrix_config_extreme.json' },
+    { row: 'age_jogging_turning_ankle_rom',   config: 'data/feature_matrix_config_extreme.json' },
+    { row: 'age_dancing_elbow_rom',           config: 'data/feature_matrix_config_extreme.json' },
+    { row: 'age_walking_turning_wrist_rom',   config: 'data/feature_matrix_config_extreme.json' },
+    { row: 'age_climbing_box_shoulder_rom',   config: 'data/feature_matrix_config_extreme.json' },
+    { row: 'age_jumping_turning_wrist_mean_vel', config: 'data/feature_matrix_config_extreme.json' },
+    { row: 'age_gesture_elbow_mean_vel',      config: 'data/feature_matrix_config_extreme.json' },
+    // Skipped: age_standing_idle_wrist_peak_vel.
+  ],
+  weight: [
+    // Skipped: weight_gesture_dancing_waist_rom (first clip in matrix-extreme).
+    { row: 'weight_climbing_box_hip_rom',                config: 'data/feature_matrix_config_extreme.json' },
+    { row: 'weight_jogging_shoulder_rom',                config: 'data/feature_matrix_config_extreme.json' },
+    { row: 'weight_kneeling_shoulder_peak_vel',          config: 'data/feature_matrix_config_extreme.json' },
+    { row: 'weight_jogging_turning_ankle_rom',           config: 'data/feature_matrix_config_extreme.json' },
+    { row: 'weight_dancing_elbow_rom',                   config: 'data/feature_matrix_config_extreme.json' },
+    { row: 'weight_jumping_turning_root_translate_peak_vel', config: 'data/feature_matrix_config_extreme.json' },
+    { row: 'weight_walking_turning_root_rotate_mean_vel',config: 'data/feature_matrix_config_extreme.json' },
+    { row: 'weight_standing_wrist_mean_vel',             config: 'data/feature_matrix_config_extreme.json' },
+    { row: 'weight_jumping_ankle_peak_vel',              config: 'data/feature_matrix_config_extreme.json' },
+  ],
+  height: [
+    { row: 'height_climbing_box_root_translate_rom',     config: 'data/feature_matrix_config_extreme.json' },
+    { row: 'height_jogging_turning_root_translate_peak_vel', config: 'data/feature_matrix_config_extreme.json' },
+    { row: 'height_jogging_ankle_rom',                   config: 'data/feature_matrix_config_extreme.json' },
+    { row: 'height_kneeling_elbow_rom',                  config: 'data/feature_matrix_config_extreme.json' },
+    // Skipped: height_gesture_dancing_hip_mean_vel.
+    { row: 'height_jumping_turning_ankle_peak_vel',      config: 'data/feature_matrix_config_extreme.json' },
+    { row: 'height_walking_root_translate_mean_vel',     config: 'data/feature_matrix_config_extreme.json' },
+    { row: 'height_turning_waist_rom',                   config: 'data/feature_matrix_config_extreme.json' },
+    { row: 'height_dancing_elbow_peak_vel',              config: 'data/feature_matrix_config_extreme.json' },
+    { row: 'height_sitting_hip_peak_vel',                config: 'data/feature_matrix_config_extreme.json' },
+  ],
+  gender: [
+    { row: 'gender_climbing_box_knee_rom',          config: 'data/feature_matrix_config_extreme.json' },
+    { row: 'gender_jogging_shoulder_mean_vel',      config: 'data/feature_matrix_config_extreme.json' },
+    { row: 'gender_dancing_elbow_rom',              config: 'data/feature_matrix_config_extreme.json' },
+    { row: 'gender_jogging_turning_ankle_rom',      config: 'data/feature_matrix_config_extreme.json' },
+    { row: 'gender_kneeling_waist_mean_vel',        config: 'data/feature_matrix_config_extreme.json' },
+    { row: 'gender_jumping_elbow_mean_vel',         config: 'data/feature_matrix_config_extreme.json' },
+    { row: 'gender_gesture_dancing_waist_rom',      config: 'data/feature_matrix_config_extreme.json' },
+    // Skipped: gender_standing_shoulder_rom.
+    { row: 'gender_jumping_turning_waist_peak_vel', config: 'data/feature_matrix_config_extreme.json' },
+    { row: 'gender_walking_root_translate_peak_vel',config: 'data/feature_matrix_config_extreme.json' },
+  ],
+};
+
+const ATTR_ORDER = ['age', 'weight', 'height', 'gender'];
+const ATTR_LABEL = { age: 'Age', weight: 'Weight', height: 'Height', gender: 'Gender' };
+
+function init() {
+  const wrap = document.getElementById('wrap');
+  const ts = Date.now();
+  for (const attr of ATTR_ORDER) {
+    const entries = MANIFEST[attr] || [];
+    if (entries.length === 0) continue;
+
+    const section = document.createElement('section');
+    section.className = 'attr-section';
+    section.dataset.attr = attr;
+
+    const heading = document.createElement('h2');
+    heading.className = 'attr-heading';
+    heading.textContent = ATTR_LABEL[attr] || attr;
+    section.appendChild(heading);
+
+    const grid = document.createElement('div');
+    grid.className = 'attr-grid';
+    for (const { row, config } of entries) {
+      const cell = document.createElement('div');
+      cell.className = 'panel-cell';
+      const iframe = document.createElement('iframe');
+      iframe.loading = 'lazy';
+      iframe.src = `./panel.html?row=${encodeURIComponent(row)}`
+                 + `&config=${encodeURIComponent(config)}&t=${ts}`;
+      cell.appendChild(iframe);
+      grid.appendChild(cell);
+    }
+    section.appendChild(grid);
+    wrap.appendChild(section);
+  }
+}
+
+try { init(); }
+catch (err) {
+  document.body.innerHTML = `<pre style="color:#c0394b;padding:30px">${err.message}</pre>`;
+}
+</script>
+</body>
+</html>

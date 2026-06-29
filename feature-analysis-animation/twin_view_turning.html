@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Twin viewer — SMPL + G1, age × waist ROM</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+html, body {
+  width:100%; height:100%;
+  background:#f5f7fa; color:#1c232e;
+  font-family: 'Segoe UI', system-ui, sans-serif; overflow: hidden;
+}
+
+/* Layout: top row = 2 SMPL cells full-width; bottom row = G1 heavy, strip
+   plot box, G1 light. */
+#root {
+  width: 100%; height: 100%;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
+}
+
+#smpl-row, #g1-row {
+  display: grid;
+  min-height: 0; min-width: 0;
+}
+#smpl-row { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+#g1-row   { grid-template-columns: minmax(0, 1fr) minmax(170px, 0.95fr) minmax(0, 1fr); }
+
+/* Shape labels floating above each SMPL mesh */
+.shape-label {
+  position: absolute;
+  top: 12px; left: 50%; transform: translateX(-50%);
+  font-size: 20px; font-weight: 700; letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+  padding: 5px 14px;
+  border-radius: 99px;
+  background: rgba(255,255,255,0.94);
+  color: #1c232e;
+  border: 1px solid #d6dde6;
+  box-shadow: 0 2px 6px rgba(20,30,50,0.08);
+  z-index: 5; pointer-events: none;
+  white-space: nowrap;
+}
+.shape-label.heavy { border-left: 4px solid #d97706; }
+.shape-label.light { border-right: 4px solid #0d9488; }
+
+.cell {
+  position: relative;
+  background: #ffffff;
+  border-right: 1px solid #e2e7ee;
+  border-top: 1px solid #e2e7ee;
+  min-width: 0; min-height: 0; overflow: hidden;
+}
+#smpl-row .cell:last-child, #g1-row .cell:last-child { border-right: none; }
+.cell.smpl-bg { background: #eef2f7; }
+.cell.g1-bg   { background: #f3f6fa; }
+.cell canvas  { display: block; width: 100% !important; height: 100% !important; }
+
+/* Chip (G1 speed readout) */
+.chip {
+  position: absolute;
+  top: 10px;
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(6px);
+  border: 1px solid #d6dde6;
+  border-radius: 8px;
+  padding: 7px 10px 6px 10px;
+  font-size: 11px; line-height: 1.35;
+  font-variant-numeric: tabular-nums;
+  color: #1c232e;
+  pointer-events: none;
+  z-index: 3;
+  box-shadow: 0 1px 3px rgba(20,30,50,0.05);
+}
+.chip .label { font-size: 9px; text-transform: uppercase; letter-spacing: 0.06em; color: #6a7585; }
+.chip .big   { font-size: 16px; font-weight: 600; font-variant-numeric: tabular-nums; letter-spacing: -0.01em; }
+.chip .small { font-size: 10px; color: #6a7585; }
+.chip.heavy-side { left: 10px; border-left: 3px solid #e63a4a; }
+.chip.light-side { right: 10px; border-right: 3px solid #2f7fc6; text-align: right; }
+
+/* Role tag */
+.role-tag {
+  position: absolute;
+  top: 10px; padding: 4px 10px;
+  font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em;
+  color: #4a5566; background: rgba(255,255,255,0.85);
+  border: 1px solid #d6dde6; border-radius: 99px;
+  z-index: 3;
+}
+.role-tag.left  { left: 10px; }
+.role-tag.right { right: 10px; }
+
+/* ── Strip plot box (middle of bottom row) ───────────────────────────── */
+#strip-box {
+  position: relative;
+  background: #ffffff;
+  border-top: 1px solid #e2e7ee;
+  border-left: 1px solid #d6dde6;
+  border-right: 1px solid #d6dde6;
+  box-shadow: 0 2px 14px rgba(20,30,50,0.06);
+  display: flex;
+  flex-direction: column;
+  padding: 26px 14px 14px 14px;
+  min-width: 0; min-height: 0; overflow: hidden;
+}
+#strip-title {
+  position: absolute;
+  top: 6px; left: 14px; right: 14px;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: #4a5566;
+  text-align: center;
+  pointer-events: none;
+}
+#strip-title::before, #strip-title::after {
+  content: ''; display: inline-block; width: 18px; height: 1px;
+  background: #c6cfdb; vertical-align: middle; margin: 0 8px;
+}
+#strip-canvas-wrap {
+  flex: 1 1 0;
+  position: relative;
+  min-height: 90px;
+}
+#strip-canvas { width: 100% !important; height: 100% !important; }
+#strip-legend {
+  display: flex; justify-content: center; gap: 16px;
+  font-size: 10.5px; color: #4a5566;
+  margin-top: 6px;
+}
+#strip-legend .dot { display:inline-block; width:8px; height:8px; border-radius:50%; margin-right: 5px; vertical-align: middle; }
+
+/* Pointer arrows */
+#pointer-overlay { position: fixed; inset: 0; pointer-events: none; z-index: 4; }
+
+/* "root" pill that floats over each robot's pelvis highlight sphere.
+   Position is updated every frame by updatePointers(). */
+.root-label {
+  position: fixed;
+  pointer-events: none;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #fff;
+  padding: 2px 7px 1px 7px;
+  border-radius: 99px;
+  white-space: nowrap;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 1px 3px rgba(20,30,50,0.25);
+  z-index: 4;
+}
+.root-label.heavy { background: #d97706; }
+.root-label.light { background: #0d9488; }
+
+#loading {
+  position: fixed; inset: 0; background: #f5f7fa;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 12px; z-index: 20;
+}
+.spinner {
+  width: 30px; height: 30px;
+  border: 3px solid #d6dde6; border-top-color: #2f7fc6;
+  border-radius: 50%; animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+#load-status { font-size: 12px; color: #4a5566; }
+</style>
+</head>
+<body>
+
+<div id="root">
+
+  <div id="smpl-row">
+    <div class="cell smpl-bg" id="cell-smpl-heavy">
+      <div class="shape-label heavy" id="label-heavy">65 yr</div>
+    </div>
+    <div class="cell smpl-bg" id="cell-smpl-light">
+      <div class="shape-label light" id="label-light">22 yr</div>
+    </div>
+  </div>
+
+  <div id="g1-row">
+    <div class="cell g1-bg" id="cell-g1-heavy"></div>
+
+    <div id="strip-box">
+      <div id="strip-title">waist yaw angle</div>
+      <div id="strip-canvas-wrap">
+        <canvas id="strip-canvas"></canvas>
+      </div>
+    </div>
+
+    <div class="cell g1-bg" id="cell-g1-light"></div>
+  </div>
+
+</div>
+
+<div id="loading">
+  <div class="spinner"></div>
+  <div id="load-status">Loading…</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/STLLoader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+
+<script>
+'use strict';
+
+const URL_PARAMS = new URLSearchParams(location.search);
+const MAX_FRAMES_G1   = 600;
+const G1_MODEL_URL  = '../g1_engine/model/g1_model.json';
+const G1_MESH_BASE  = '../g1_engine/meshes';
+const SMPL_DATA_DIR = './data/smpl_turning';
+// Demo's canonical turning CSV — A548's idle_turn (8420 frames @ 120 fps).
+const G1_TURNING_CSV = '../assets/demos/g1_csv/turning.csv';
+
+// The SMPL fit (generate_smpl_turning.py, max-input-frames=2400) truncates the
+// BVH to its middle 2400 frames before fitting. To keep SMPL and G1 temporally
+// aligned, the G1 viewer slices the CSV to the same source-frame range.
+// (start, end) below MUST match the truncation in generate_smpl_turning.py.
+const G1_SOURCE_START = 3010;
+const G1_SOURCE_END   = 5410;   // exclusive
+
+const DEG2RAD = Math.PI / 180;
+const RAD2DEG = 180 / Math.PI;
+const SKIN_HEAVY = [0.84, 0.66, 0.52];   // older slot
+const SKIN_LIGHT = [0.92, 0.76, 0.60];   // younger slot
+// Amber / teal — distinct from the jumping panel's red/blue.
+const COLOR_HEAVY_HEX = '#d97706';   // older
+const COLOR_LIGHT_HEX = '#0d9488';   // younger
+const SCENE_BG_SMPL = '#eef2f7';
+const SCENE_BG_G1   = '#f3f6fa';
+
+// SYNTHETIC EFFECT (illustrative):
+// Both G1 robots play the same retargeted CSV (A548 idle_turn), so the
+// raw waist trajectory is identical for both. The population finding is
+// that waist range-of-motion drops with operator age. We scale the OLDER
+// operator's waist-joint angles around their per-frame mean by
+// WAIST_SCALE_OLD to shrink ROM. Root translation and other joints are
+// untouched. Set to 1.0 to disable.
+const WAIST_SCALE_OLD = 0.55;
+const WAIST_JOINT_NAMES = ['waist_yaw_joint', 'waist_roll_joint', 'waist_pitch_joint'];
+
+let g1Model;
+let playing = true, lastTime = null, masterTime = 0, masterDuration = 1;
+const VIEWERS = {};
+
+// Every data fetch gets a per-page-load cache-buster so browsers serve fresh
+// bytes after generate_data.py / generate_smpl_pair.py / pick_jumping_pair.py
+// rewrite the files. Without this, an aggressive HTTP cache will keep showing
+// the previous heavy/light pair after data is regenerated.
+const CACHE_BUST = '?v=' + Date.now();
+
+async function boot() {
+  setStatus('Loading SMPL faces…');
+  const sharedFaces = parseFacesBin(await fetch(`${SMPL_DATA_DIR}/faces.bin${CACHE_BUST}`)
+    .then(r => { if (!r.ok) throw new Error('SMPL faces missing — run generate_smpl_turning.py'); return r.arrayBuffer(); }));
+
+  setStatus('Loading SMPL older verts…');
+  const smplHeavyData = parseVertsBin(await fetch(`${SMPL_DATA_DIR}/older_verts.bin${CACHE_BUST}`).then(r => r.arrayBuffer()));
+  setStatus('Loading SMPL younger verts…');
+  const smplLightData = parseVertsBin(await fetch(`${SMPL_DATA_DIR}/young_verts.bin${CACHE_BUST}`).then(r => r.arrayBuffer()));
+  computeSMPLCentroid(smplHeavyData);
+  computeSMPLCentroid(smplLightData);
+
+  setStatus('Loading G1 model…');
+  g1Model = await fetchJSON(G1_MODEL_URL);
+
+  // Both G1 robots share A548's retargeted turning CSV (the canonical demo
+  // clip). To illustrate the population finding (waist ROM drops with age),
+  // we synthesise an "older" variant by shrinking the older operator's waist
+  // joint angles around their per-frame mean by WAIST_SCALE_OLD. Root and
+  // other joints are untouched.
+  setStatus('Loading shared turning motion…');
+  const g1SharedMotion = await loadG1CSV(G1_TURNING_CSV + CACHE_BUST, MAX_FRAMES_G1);
+  const g1LightMotion = g1SharedMotion;
+  const g1HeavyMotion = (WAIST_SCALE_OLD !== 1.0)
+    ? scaleWaistJoints(g1SharedMotion, WAIST_SCALE_OLD)
+    : g1SharedMotion;
+  computeG1Speed(g1LightMotion);
+  computeG1MeanXY(g1LightMotion);
+  if (g1HeavyMotion !== g1LightMotion) {
+    computeG1Speed(g1HeavyMotion);
+    computeG1MeanXY(g1HeavyMotion);
+  }
+
+  masterDuration = Math.max(smplHeavyData.duration, smplLightData.duration,
+                            g1HeavyMotion.duration, g1LightMotion.duration);
+
+  setStatus('Building scenes…');
+  VIEWERS.smpl_heavy = createSMPLViewer('cell-smpl-heavy', smplHeavyData, sharedFaces, SKIN_HEAVY);
+  VIEWERS.smpl_light = createSMPLViewer('cell-smpl-light', smplLightData, sharedFaces, SKIN_LIGHT);
+
+  setStatus('Loading G1 meshes…');
+  VIEWERS.g1_heavy = await createG1Viewer('cell-g1-heavy', g1HeavyMotion, COLOR_HEAVY_HEX);
+  VIEWERS.g1_light = await createG1Viewer('cell-g1-light', g1LightMotion, COLOR_LIGHT_HEX);
+
+  // Age labels above each SMPL mesh — set in the HTML defaults; kept here
+  // in case OLDER_SHAPE / YOUNG_SHAPE diverge from those defaults later.
+  document.getElementById('label-heavy').textContent = '65 yr';
+  document.getElementById('label-light').textContent = '22 yr';
+
+  setupStrip();
+  document.getElementById('loading').style.display = 'none';
+  requestAnimationFrame(loop);
+}
+
+async function fetchJSON(url) { const r = await fetch(url); if (!r.ok) throw new Error(`${r.status} ${url}`); return r.json(); }
+function setStatus(msg) { const el = document.getElementById('load-status'); if (el) el.textContent = msg; }
+
+function parseVertsBin(buf) {
+  const v = new DataView(buf);
+  const nf = v.getUint32(0, true), nv = v.getUint32(4, true), fps = v.getFloat32(8, true);
+  return { numFrames: nf, numVerts: nv, fps, verts: new Float32Array(buf, 12), duration: nf / fps };
+}
+function parseFacesBin(buf) {
+  const v = new DataView(buf); const nf = v.getUint32(0, true);
+  return new Uint32Array(buf, 4, nf * 3);
+}
+
+// Pre-compute the *clip-wide* mean horizontal position (X, Z in SMPL's Y-up
+// world frame). Subtracting this constant offset each frame keeps the body
+// horizontally centered without cancelling limb sway or vertical jumping.
+function computeSMPLCentroid(data) {
+  let sx = 0, sz = 0; let n = 0;
+  for (let fi = 0; fi < data.numFrames; fi++) {
+    const base = fi * data.numVerts * 3;
+    for (let j = 0; j < data.numVerts; j++) {
+      sx += data.verts[base + j*3];
+      sz += data.verts[base + j*3 + 2];
+      n++;
+    }
+  }
+  data.meanX = sx / n;
+  data.meanZ = sz / n;
+}
+
+const CSV_TO_JOINT = {
+  left_hip_pitch_joint_dof: 'left_hip_pitch_joint', left_hip_roll_joint_dof: 'left_hip_roll_joint',
+  left_hip_yaw_joint_dof: 'left_hip_yaw_joint', left_knee_joint_dof: 'left_knee_joint',
+  left_ankle_pitch_joint_dof: 'left_ankle_pitch_joint', left_ankle_roll_joint_dof: 'left_ankle_roll_joint',
+  right_hip_pitch_joint_dof: 'right_hip_pitch_joint', right_hip_roll_joint_dof: 'right_hip_roll_joint',
+  right_hip_yaw_joint_dof: 'right_hip_yaw_joint', right_knee_joint_dof: 'right_knee_joint',
+  right_ankle_pitch_joint_dof: 'right_ankle_pitch_joint', right_ankle_roll_joint_dof: 'right_ankle_roll_joint',
+  waist_yaw_joint_dof: 'waist_yaw_joint', waist_roll_joint_dof: 'waist_roll_joint', waist_pitch_joint_dof: 'waist_pitch_joint',
+  left_shoulder_pitch_joint_dof: 'left_shoulder_pitch_joint', left_shoulder_roll_joint_dof: 'left_shoulder_roll_joint',
+  left_shoulder_yaw_joint_dof: 'left_shoulder_yaw_joint', left_elbow_joint_dof: 'left_elbow_joint',
+  left_wrist_roll_joint_dof: 'left_wrist_roll_joint', left_wrist_pitch_joint_dof: 'left_wrist_pitch_joint',
+  left_wrist_yaw_joint_dof: 'left_wrist_yaw_joint',
+  right_shoulder_pitch_joint_dof: 'right_shoulder_pitch_joint', right_shoulder_roll_joint_dof: 'right_shoulder_roll_joint',
+  right_shoulder_yaw_joint_dof: 'right_shoulder_yaw_joint', right_elbow_joint_dof: 'right_elbow_joint',
+  right_wrist_roll_joint_dof: 'right_wrist_roll_joint', right_wrist_pitch_joint_dof: 'right_wrist_pitch_joint',
+  right_wrist_yaw_joint_dof: 'right_wrist_yaw_joint',
+};
+
+async function loadG1CSV(url, maxFrames) {
+  const text = await fetch(url).then(r => { if (!r.ok) throw new Error(url); return r.text(); });
+  const parsed = Papa.parse(text, { header: true, skipEmptyLines: true, dynamicTyping: true });
+  let rows = parsed.data;
+  // Slice to the same source-frame range the SMPL fit used so the two stay
+  // temporally aligned. Set window via G1_SOURCE_START / G1_SOURCE_END above.
+  if (typeof G1_SOURCE_START === 'number' && typeof G1_SOURCE_END === 'number'
+      && G1_SOURCE_END > G1_SOURCE_START && rows.length >= G1_SOURCE_END) {
+    rows = rows.slice(G1_SOURCE_START, G1_SOURCE_END);
+  }
+  let frames = rows;
+  const ratio = rows.length / maxFrames;
+  if (rows.length > maxFrames) frames = Array.from({length: maxFrames}, (_, i) => rows[Math.round(i * ratio)]);
+  const effFps = 120 / (rows.length > maxFrames ? ratio : 1);
+  const md = { numFrames: frames.length, frameTime: 1/effFps, duration: frames.length/effFps,
+               rootPos: new Float32Array(frames.length*3), rootQuat: new Float32Array(frames.length*4),
+               joints: {} };
+  Object.values(CSV_TO_JOINT).forEach(n => { md.joints[n] = new Float32Array(frames.length); });
+  const te = new THREE.Euler(0,0,0,'ZYX'); const tq = new THREE.Quaternion();
+  for (let i = 0; i < frames.length; i++) {
+    const r = frames[i];
+    md.rootPos[i*3]   = (r['root_translateX']||0)*0.01;
+    md.rootPos[i*3+1] = (r['root_translateY']||0)*0.01;
+    md.rootPos[i*3+2] = (r['root_translateZ']||0)*0.01;
+    te.set((r['root_rotateX']||0)*DEG2RAD,(r['root_rotateY']||0)*DEG2RAD,(r['root_rotateZ']||0)*DEG2RAD,'ZYX');
+    tq.setFromEuler(te);
+    md.rootQuat[i*4]=tq.w; md.rootQuat[i*4+1]=tq.x; md.rootQuat[i*4+2]=tq.y; md.rootQuat[i*4+3]=tq.z;
+    for (const [c, j] of Object.entries(CSV_TO_JOINT)) if (r[c] !== undefined) md.joints[j][i] = r[c]*DEG2RAD;
+  }
+  return md;
+}
+
+// Return a synthetic copy of a motion object with the WAIST joint angles
+// scaled around their per-clip mean. Root translation, quaternions and all
+// other joints are shared by reference — only the named waist tracks are
+// independent. This shrinks the visible waist range-of-motion for the older
+// operator without changing their gait or other limb movements.
+function scaleWaistJoints(src, scale) {
+  const newJoints = Object.assign({}, src.joints);
+  for (const name of WAIST_JOINT_NAMES) {
+    const arr = src.joints[name];
+    if (!arr) continue;
+    let m = 0;
+    for (let i = 0; i < arr.length; i++) m += arr[i];
+    m /= arr.length;
+    const scaled = new Float32Array(arr.length);
+    for (let i = 0; i < arr.length; i++) scaled[i] = m + (arr[i] - m) * scale;
+    newJoints[name] = scaled;
+  }
+  return {
+    numFrames: src.numFrames, frameTime: src.frameTime, duration: src.duration,
+    rootPos: src.rootPos, rootQuat: src.rootQuat, joints: newJoints,
+  };
+}
+
+function computeG1Speed(m) {
+  const out = new Float32Array(m.numFrames);
+  let sum = 0;
+  for (let i = 1; i < m.numFrames; i++) {
+    const dx = m.rootPos[i*3]   - m.rootPos[(i-1)*3];
+    const dy = m.rootPos[i*3+1] - m.rootPos[(i-1)*3+1];
+    const dz = m.rootPos[i*3+2] - m.rootPos[(i-1)*3+2];
+    out[i] = Math.sqrt(dx*dx + dy*dy + dz*dz) / m.frameTime;
+    sum += out[i];
+  }
+  m.perFrameSpeed = out;
+  m.avgSpeed = sum / Math.max(1, m.numFrames - 1);
+}
+
+// Pre-compute mean root horizontal position so we can subtract it at apply
+// time and keep the robot centered. MuJoCo is Z-up, so the two horizontal
+// axes are X and Y (NOT Z — Z is jumping height).
+function computeG1MeanXY(m) {
+  let sx = 0, sy = 0;
+  for (let i = 0; i < m.numFrames; i++) {
+    sx += m.rootPos[i*3]; sy += m.rootPos[i*3+1];
+  }
+  m.meanX = sx / m.numFrames; m.meanY = sy / m.numFrames;
+}
+
+// ── SMPL viewer ────────────────────────────────────────────────────────
+function createSMPLViewer(cellId, data, faces, skin) {
+  const cell = document.getElementById(cellId);
+  const cnv = document.createElement('canvas'); cell.appendChild(cnv);
+  const renderer = new THREE.WebGLRenderer({ canvas: cnv, antialias: true });
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setSize(cell.clientWidth, cell.clientHeight);
+  renderer.shadowMap.enabled = true;
+
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(SCENE_BG_SMPL);
+  scene.fog = new THREE.Fog(SCENE_BG_SMPL, 5, 14);
+
+  const camera = new THREE.PerspectiveCamera(40, cell.clientWidth/cell.clientHeight, 0.05, 30);
+  camera.position.set(0, 1.0, 2.8);
+  camera.lookAt(0, 0.95, 0);
+
+  const controls = new THREE.OrbitControls(camera, cnv);
+  controls.target.set(0, 0.95, 0);
+  controls.enableDamping = true; controls.dampingFactor = 0.06;
+  controls.minDistance = 1.2; controls.maxDistance = 8;
+  controls.enableZoom = true;
+
+  // Light-theme rig: bright hemisphere fill + warm key, no rim needed.
+  scene.add(new THREE.HemisphereLight(0xffffff, 0xc0c8d4, 1.05));
+  const sun = new THREE.DirectionalLight(0xfff4e0, 0.95);
+  sun.position.set(3, 7, 4); sun.castShadow = true;
+  sun.shadow.mapSize.set(1024, 1024);
+  scene.add(sun);
+
+  const floor = new THREE.Mesh(
+    new THREE.PlaneGeometry(8, 8),
+    new THREE.MeshBasicMaterial({ color: 0xdee4ec })
+  );
+  floor.rotation.x = -Math.PI/2; floor.receiveShadow = true;
+  scene.add(floor);
+
+  const geo = new THREE.BufferGeometry();
+  const posAttr = new THREE.BufferAttribute(new Float32Array(data.numVerts * 3), 3);
+  geo.setAttribute('position', posAttr);
+  geo.setIndex(new THREE.BufferAttribute(faces, 1));
+  const mat = new THREE.MeshPhongMaterial({
+    color: new THREE.Color(skin[0], skin[1], skin[2]),
+    specular: 0x111111, shininess: 25, side: THREE.DoubleSide,
+  });
+  const mesh = new THREE.Mesh(geo, mat);
+  mesh.castShadow = true;
+  // BVH/SMPL native heading is opposite to the G1's heading after the
+  // Z-up→Y-up conversion (BVH default faces -Z while G1 retargeting lands at
+  // rotateZ ≈ +93° → world -Z at frame 0). Spinning the mesh 180° around the
+  // vertical aligns the initial heading. Across the rest of the clip the BVH
+  // Hips Yrot and the G1 root_rotateZ don't have a constant offset — the
+  // retargeting IK alternates between yaw branches for certain poses — so a
+  // static rotation can only ever align *some* frames. Re-doing the
+  // retargeting in a yaw-stable way is the data-level fix.
+  mesh.rotation.y = Math.PI;
+  scene.add(mesh);
+
+  // Floor align via 10th percentile of per-frame min-Y across the whole clip.
+  const frameMin = new Float32Array(data.numFrames);
+  for (let fi = 0; fi < data.numFrames; fi++) {
+    const base = fi * data.numVerts * 3;
+    let mn = Infinity;
+    for (let j = 0; j < data.numVerts; j++) {
+      const y = data.verts[base + j*3 + 1];
+      if (y < mn) mn = y;
+    }
+    frameMin[fi] = mn;
+  }
+  const sorted = [...frameMin].sort((a,b) => a - b);
+  const yOff = sorted[Math.floor(sorted.length * 0.10)];
+
+  new ResizeObserver(() => {
+    const w = cell.clientWidth, h = cell.clientHeight;
+    if (w && h) { camera.aspect = w/h; camera.updateProjectionMatrix(); renderer.setSize(w, h); }
+  }).observe(cell);
+
+  const arr = posAttr.array;
+  const mX = data.meanX, mZ = data.meanZ;
+  function applyFrame(fi) {
+    const base = fi * data.numVerts * 3;
+    for (let j = 0; j < data.numVerts; j++) {
+      arr[j*3]   = data.verts[base + j*3]     - mX;
+      arr[j*3+1] = data.verts[base + j*3 + 1] - yOff;
+      arr[j*3+2] = data.verts[base + j*3 + 2] - mZ;
+    }
+    posAttr.needsUpdate = true;
+    geo.computeVertexNormals();
+  }
+  return { kind:'smpl', data, mesh, scene, camera, controls, renderer,
+           applyFrame, duration: data.duration, frameTime: 1/data.fps, numFrames: data.numFrames };
+}
+
+// ── G1 viewer ──────────────────────────────────────────────────────────
+const stlCache = {};
+async function loadSTL(name) {
+  if (stlCache[name]) return stlCache[name];
+  return new Promise(resolve => {
+    new THREE.STLLoader().load(`${G1_MESH_BASE}/${name}.STL`,
+      g => { g.computeVertexNormals(); stlCache[name] = g; resolve(g); },
+      undefined, () => { stlCache[name] = null; resolve(null); });
+  });
+}
+
+async function createG1Viewer(cellId, motion, accentHex) {
+  const cell = document.getElementById(cellId);
+  const cnv = document.createElement('canvas'); cell.appendChild(cnv);
+  const renderer = new THREE.WebGLRenderer({ canvas: cnv, antialias: true });
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setSize(cell.clientWidth, cell.clientHeight);
+  renderer.shadowMap.enabled = true;
+
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(SCENE_BG_G1);
+  scene.fog = new THREE.Fog(SCENE_BG_G1, 5, 14);
+
+  const camera = new THREE.PerspectiveCamera(40, cell.clientWidth/cell.clientHeight, 0.05, 30);
+  camera.position.set(0, 1.0, 2.8);
+  camera.lookAt(0, 0.85, 0);
+
+  const controls = new THREE.OrbitControls(camera, cnv);
+  controls.target.set(0, 0.85, 0);
+  controls.enableDamping = true; controls.dampingFactor = 0.06;
+  controls.minDistance = 1.2; controls.maxDistance = 8;
+  controls.enableZoom = true;
+
+  // Light-theme rig
+  scene.add(new THREE.HemisphereLight(0xffffff, 0xc0c8d4, 1.05));
+  const sun = new THREE.DirectionalLight(0xfff4e0, 1.05);
+  sun.position.set(3, 7, 4); sun.castShadow = true;
+  sun.shadow.mapSize.set(1024, 1024);
+  scene.add(sun);
+  // Faint coloured rim keeps each robot subtly tinted toward its side.
+  const rim = new THREE.DirectionalLight(new THREE.Color(accentHex), 0.30);
+  rim.position.set(-3, 5, -4); scene.add(rim);
+
+  const floor = new THREE.Mesh(
+    new THREE.PlaneGeometry(8, 8),
+    new THREE.MeshBasicMaterial({ color: 0xe2e7ee })
+  );
+  floor.rotation.x = -Math.PI/2; floor.receiveShadow = true;
+  scene.add(floor);
+
+  // Z-up → Y-up
+  const robotWorld = new THREE.Group();
+  robotWorld.rotation.x = -Math.PI/2;
+  scene.add(robotWorld);
+
+  const groupMap = {}, bodyGroups = {};
+  let rootGroup = null;
+  for (const body of g1Model.bodies) {
+    const outer = new THREE.Group();
+    outer.position.set(...body.pos);
+    outer.quaternion.set(body.quat[1], body.quat[2], body.quat[3], body.quat[0]);
+    const inner = new THREE.Group();
+    outer.add(inner);
+    groupMap[body.name] = { outer, inner }; bodyGroups[body.name] = inner;
+  }
+  for (const body of g1Model.bodies) {
+    const { outer } = groupMap[body.name];
+    if (body.parent && groupMap[body.parent]) groupMap[body.parent].inner.add(outer);
+    else { robotWorld.add(outer); rootGroup = outer; }
+  }
+
+  const accentCol = new THREE.Color(accentHex);
+  const matCache = {};
+  function getMat(rgba) {
+    const isDark = rgba[0] < 0.4;
+    const key = isDark ? 'dark' : 'light';
+    if (!matCache[key]) {
+      const base = isDark ? new THREE.Color(0x1a1d24) : new THREE.Color(0xcdd3df);
+      const col = base.clone().lerp(accentCol, isDark ? 0.05 : 0.07);
+      matCache[key] = new THREE.MeshStandardMaterial({
+        color: col, metalness: isDark ? 0.55 : 0.18, roughness: isDark ? 0.40 : 0.50,
+      });
+    }
+    return matCache[key];
+  }
+
+  const loadPromises = [];
+  for (const body of g1Model.bodies) {
+    for (const mesh of body.meshes) {
+      loadPromises.push(loadSTL(mesh.name).then(geo => {
+        if (!geo) return;
+        const m = new THREE.Mesh(geo, getMat(mesh.rgba));
+        m.position.set(...mesh.pos);
+        m.quaternion.set(mesh.quat[1], mesh.quat[2], mesh.quat[3], mesh.quat[0]);
+        m.castShadow = true;
+        groupMap[body.name].inner.add(m);
+      }));
+    }
+  }
+  await Promise.all(loadPromises);
+
+  // Pulsing WAIST highlighter — attached to torso_link (top of the waist
+  // chain) so the visual focal point matches the joint being plotted.
+  const waistGroup = bodyGroups['torso_link'] || rootGroup;
+  const waistSphere = new THREE.Mesh(
+    new THREE.SphereGeometry(0.10, 24, 16),
+    new THREE.MeshBasicMaterial({ color: accentHex, transparent: true, opacity: 0.85 }),
+  );
+  waistGroup.add(waistSphere);
+  const glow = new THREE.Mesh(
+    new THREE.SphereGeometry(0.20, 24, 16),
+    new THREE.MeshBasicMaterial({ color: accentHex, transparent: true, opacity: 0.28, side: THREE.BackSide }),
+  );
+  waistGroup.add(glow);
+
+  new ResizeObserver(() => {
+    const w = cell.clientWidth, h = cell.clientHeight;
+    if (w && h) { camera.aspect = w/h; camera.updateProjectionMatrix(); renderer.setSize(w, h); }
+  }).observe(cell);
+
+  function applyFrame(fi) {
+    // Center the robot horizontally each frame. MuJoCo X and Y are the two
+    // ground-plane axes; MuJoCo Z stays raw so the jump's vertical motion is
+    // preserved (becomes world Y after robotWorld's Z-up→Y-up rotation).
+    rootGroup.position.set(
+      motion.rootPos[fi*3]   - motion.meanX,
+      motion.rootPos[fi*3+1] - motion.meanY,
+      motion.rootPos[fi*3+2],
+    );
+    rootGroup.quaternion.set(motion.rootQuat[fi*4+1], motion.rootQuat[fi*4+2], motion.rootQuat[fi*4+3], motion.rootQuat[fi*4]);
+    for (const body of g1Model.bodies) {
+      if (!body.joint || body.joint.type !== 'hinge') continue;
+      const jArr = motion.joints[body.joint.name];
+      if (!jArr) continue;
+      const axis = new THREE.Vector3(...body.joint.axis);
+      const q = new THREE.Quaternion().setFromAxisAngle(axis, jArr[fi]);
+      bodyGroups[body.name].quaternion.copy(q);
+    }
+    const phase = (performance.now() * 0.003) % (Math.PI * 2);
+    glow.scale.setScalar(1 + 0.20 * Math.sin(phase));
+  }
+  return { kind:'g1', motion, scene, camera, controls, renderer,
+           rootGroup, waistGroup,
+           applyFrame, duration: motion.duration, frameTime: motion.frameTime, numFrames: motion.numFrames };
+}
+
+// ── Strip plot (now in the side panel) ─────────────────────────────────
+let stripCtx;
+function setupStrip() {
+  const c = document.getElementById('strip-canvas');
+  const wrap = document.getElementById('strip-canvas-wrap');
+  function size() {
+    const w = wrap.clientWidth - 12;
+    const h = wrap.clientHeight - 12;
+    if (w <= 0 || h <= 0) return;
+    c.width  = Math.round(w * window.devicePixelRatio);
+    c.height = Math.round(h * window.devicePixelRatio);
+    c.style.width = w + 'px';
+    c.style.height = h + 'px';
+  }
+  size();
+  new ResizeObserver(size).observe(wrap);
+  stripCtx = c.getContext('2d');
+}
+
+function drawStrip() {
+  if (!stripCtx) return;
+  const c = document.getElementById('strip-canvas');
+  const ctx = stripCtx;
+  const dpr = window.devicePixelRatio;
+  const W = c.width, H = c.height;
+  ctx.clearRect(0, 0, W, H);
+
+  // Plot the WAIST YAW joint angle in degrees. The vertical span of each
+  // line IS that operator's waist ROM (peak-to-peak). The older operator's
+  // line oscillates within a narrower band because we shrunk their waist
+  // excursions in scaleWaistJoints().
+  const hM = VIEWERS.g1_heavy.motion, lM = VIEWERS.g1_light.motion;
+  const hYaw = hM.joints['waist_yaw_joint'];
+  const lYaw = lM.joints['waist_yaw_joint'];
+  let minA = +Infinity, maxA = -Infinity;
+  for (const a of [hYaw, lYaw]) for (let i = 0; i < a.length; i++) {
+    const v = a[i] * RAD2DEG;
+    if (v < minA) minA = v;
+    if (v > maxA) maxA = v;
+  }
+  // Symmetric range with a touch of headroom.
+  const half = Math.max(8, Math.max(Math.abs(minA), Math.abs(maxA)) * 1.08);
+  minA = -half; maxA = +half;
+  const Yof = (deg) => padT + plotH - ((deg - minA) / (maxA - minA)) * plotH;
+
+  const padL = 34*dpr, padR = 12*dpr, padT = 8*dpr, padB = 20*dpr;
+  const plotW = W - padL - padR, plotH = H - padT - padB;
+
+  // Y axis labels (degrees) + zero gridline emphasised
+  ctx.fillStyle = '#6a7585';
+  ctx.font = `${10*dpr}px Segoe UI`;
+  ctx.textBaseline = 'middle'; ctx.textAlign = 'right';
+  for (let i = 0; i <= 4; i++) {
+    const v = minA + (maxA - minA) * (i / 4);
+    const y = Yof(v);
+    ctx.fillText(v.toFixed(0) + '°', padL - 5*dpr, y);
+    ctx.strokeStyle = (Math.abs(v) < 0.5) ? 'rgba(20,30,50,0.18)' : 'rgba(20,30,50,0.06)';
+    ctx.lineWidth = 1*dpr;
+    ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(padL + plotW, y); ctx.stroke();
+  }
+  ctx.strokeStyle = '#c6cfdb'; ctx.lineWidth = 1*dpr;
+  ctx.beginPath();
+  ctx.moveTo(padL, padT); ctx.lineTo(padL, padT + plotH);
+  ctx.lineTo(padL + plotW, padT + plotH); ctx.stroke();
+  ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+  ctx.fillText('deg', 4*dpr, padT - 4*dpr);
+  ctx.textAlign = 'right'; ctx.textBaseline = 'bottom';
+  ctx.fillText('time →', padL + plotW, H - 4*dpr);
+
+  // Time cursor — drives "draw up to here" on each series. When masterTime
+  // wraps past masterDuration, the cursor returns to the left edge and the
+  // plot effectively vanishes / restarts on the next animation frame.
+  const frac = (masterTime / masterDuration) % 1;
+  const cx = padL + frac * plotW;
+
+  // Static clip-wide ROM bounds (computed once per draw, used for the anchor
+  // y of each side's arrow target).
+  function clipBounds(arr) {
+    let mn = +Infinity, mx = -Infinity;
+    for (let i = 0; i < arr.length; i++) {
+      const v = arr[i] * RAD2DEG;
+      if (v < mn) mn = v; if (v > mx) mx = v;
+    }
+    return { mn, mx };
+  }
+  const hClip = clipBounds(hYaw);
+  const lClip = clipBounds(lYaw);
+
+  function plot(arr, color, zOrder, clipB) {
+    const n = arr.length;
+    const upToFrame = Math.max(1, Math.min(n - 1, Math.floor(frac * (n - 1)) + 1));
+
+    // Filled area up to current frame
+    ctx.fillStyle = color + '18';
+    ctx.beginPath();
+    ctx.moveTo(padL, Yof(0));
+    for (let i = 0; i <= upToFrame; i++) {
+      const x = padL + (i / (n - 1)) * plotW;
+      ctx.lineTo(x, Yof(arr[i] * RAD2DEG));
+    }
+    const xEnd = padL + (upToFrame / (n - 1)) * plotW;
+    ctx.lineTo(xEnd, Yof(0)); ctx.closePath(); ctx.fill();
+
+    // Solid line up to current frame
+    ctx.strokeStyle = color;
+    ctx.lineWidth = (zOrder === 1 ? 2.0 : 1.6) * dpr;
+    ctx.beginPath();
+    for (let i = 0; i <= upToFrame; i++) {
+      const x = padL + (i / (n - 1)) * plotW;
+      const y = Yof(arr[i] * RAD2DEG);
+      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+
+    // Running ROM bounds — only frames seen so far. The dashed bounds and
+    // ROM label grow in step with the curve.
+    let mn = +Infinity, mx = -Infinity;
+    for (let i = 0; i <= upToFrame; i++) {
+      const v = arr[i] * RAD2DEG;
+      if (v < mn) mn = v; if (v > mx) mx = v;
+    }
+    if (isFinite(mn) && isFinite(mx) && mx > mn + 0.1) {
+      ctx.strokeStyle = color; ctx.lineWidth = 1*dpr;
+      ctx.setLineDash([5*dpr, 5*dpr]);
+      for (const v of [mn, mx]) {
+        const y = Yof(v);
+        ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(padL + plotW, y); ctx.stroke();
+      }
+      ctx.setLineDash([]);
+      ctx.fillStyle = color;
+      ctx.font = `600 ${10*dpr}px Segoe UI`;
+      ctx.textBaseline = 'top'; ctx.textAlign = 'right';
+      ctx.fillText(`ROM ${(mx - mn).toFixed(0)}°`,
+                   padL + plotW - 4*dpr, Yof(mx) + 2*dpr);
+      ctx.font = `${10*dpr}px Segoe UI`;
+    }
+    // Anchor Y for the side-arrow target = midpoint of the clip-wide ROM
+    // band (static, doesn't shift as the running ROM grows).
+    return (Yof(clipB.mn) + Yof(clipB.mx)) / 2;
+  }
+
+  const heavyAvgY = plot(hYaw, COLOR_HEAVY_HEX, 0, hClip);
+  const lightAvgY = plot(lYaw, COLOR_LIGHT_HEX, 1, lClip);
+
+  // Time cursor — vertical line at current playhead
+  ctx.strokeStyle = 'rgba(20,30,50,0.55)'; ctx.lineWidth = 1.4*dpr;
+  ctx.beginPath(); ctx.moveTo(cx, padT); ctx.lineTo(cx, padT + plotH); ctx.stroke();
+
+  // Stash anchor Y + plot edges for updatePointers().
+  drawStrip._heavyAvgY  = heavyAvgY;
+  drawStrip._lightAvgY  = lightAvgY;
+  drawStrip._plotLeftX  = padL;
+  drawStrip._plotRightX = padL + plotW;
+}
+
+// ── Animation loop ─────────────────────────────────────────────────────
+function loop(ts) {
+  requestAnimationFrame(loop);
+  if (playing) {
+    if (lastTime === null) lastTime = ts;
+    const dt = (ts - lastTime) * 0.001; lastTime = ts;
+    masterTime = (masterTime + dt) % masterDuration;
+  } else { lastTime = null; }
+
+  for (const v of Object.values(VIEWERS)) {
+    const t = masterTime % v.duration;
+    const fi = Math.min(v.numFrames - 1, Math.floor(t / v.frameTime));
+    v.applyFrame(fi);
+    v.controls.update();
+    v.renderer.render(v.scene, v.camera);
+  }
+
+  drawStrip();
+}
+
+boot().catch(err => {
+  document.getElementById('loading').innerHTML =
+    `<div style="color:#ff7280;font-size:13px;max-width:380px;text-align:center;padding:20px;">${err.message}</div>`;
+  console.error(err);
+});
+</script>
+</body>
+</html>

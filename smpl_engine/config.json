@@ -1,0 +1,38 @@
+{
+  "_comment": "Edit predicted/groundTruth height+weight+gender, then re-run generate_smpl.py",
+
+  "bvhFile": "./data/bvh/macarena_001__A545_M.bvh",
+  "bvhScale": 100.0,
+  "maxFrames": 300,
+
+  "predicted": {
+    "height": 168,
+    "weight": 68,
+    "age": 29,
+    "gender": "male",
+    "vertsFile": "./data/predicted_verts.bin",
+    "bgColor": "#7E8082"
+  },
+
+  "groundTruth": {
+    "height": 162,
+    "weight": 73,
+    "age": 28,
+    "gender": "male",
+    "vertsFile": "./data/groundtruth_verts.bin",
+    "bgColor": "#A3A8AD"
+  },
+
+  "facesFile": "./data/smpl_faces.bin",
+
+  "camera": {
+    "position": [0.0, 1.1, 4.5],
+    "target":   [0.0, 0.85, 0.0]
+  },
+
+  "skinColor": [0.94, 0.76, 0.58],
+  "backgroundColor": "#7E8082",
+  "floorColor": "#CED0D6",
+  "gridColor": "#9FA3AA",
+  "fps": 120.0
+}

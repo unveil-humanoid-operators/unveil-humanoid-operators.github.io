@@ -1,0 +1,8 @@
+torch>=2.0
+numpy
+pandas
+scikit-learn
+# mmcv is required only for the proto-mem spatial backbone.
+mmcv
+# triton is required by torch.compile (enabled by default); pass --no-compile to skip.
+triton

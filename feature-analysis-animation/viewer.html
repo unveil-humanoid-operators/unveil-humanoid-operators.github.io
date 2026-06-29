@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Body weight survives retargeting — UNVEIL</title>
+<style>
+* { margin:0; padding:0; box-sizing: border-box; }
+html, body {
+  background: #0d1017;
+  color: #e8ecf4;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  font-size: 14px;
+  line-height: 1.55;
+}
+.wrap { max-width: 1180px; margin: 0 auto; padding: 28px 22px 60px 22px; }
+
+/* ── Header ──────────────────────────────────────── */
+header { margin-bottom: 24px; }
+.eyebrow {
+  font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em;
+  color: #88c0ff; margin-bottom: 4px;
+}
+h1 { font-size: 28px; font-weight: 700; letter-spacing: -0.01em; margin-bottom: 10px;}
+h1 em { font-style: normal; color: #ffba6e; }
+.sub { color: #98a0ad; font-size: 14px; max-width: 820px; }
+
+/* ── Section card ───────────────────────────────── */
+.card {
+  background: #141823;
+  border: 1px solid #1c2230;
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 22px;
+}
+.card h2 { font-size: 17px; font-weight: 600; margin-bottom: 4px; }
+.card .deck { color:#98a0ad; font-size:12.5px; margin-bottom:14px; max-width: 780px; }
+.row { display:flex; gap: 14px; align-items: center; flex-wrap: wrap; }
+
+/* ── Category dropdown ──────────────────────────── */
+select {
+  background: #1c2230; color: #e8ecf4; border: 1px solid #2a3040;
+  border-radius: 6px; padding: 6px 8px; font-size: 13px;
+  font-family: inherit;
+}
+.pill {
+  background: #1c2230; border: 1px solid #2a3040; color: #c8cfdb;
+  padding: 4px 10px; border-radius: 99px; font-size: 11.5px;
+  font-variant-numeric: tabular-nums;
+}
+.pill strong { color: #ffba6e; }
+
+/* ── Twin viewer (two side-by-side iframes) ───────────── */
+#viewer-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  width: 100%;
+}
+.viewer-frame {
+  width: 100%; height: 700px;
+  border: 0; border-radius: 10px;
+  background: #f5f7fa;
+  display: block;
+}
+.viewer-frame-title {
+  font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em;
+  color: #88909d; margin-bottom: 6px; padding-left: 4px;
+}
+
+/* ── Scatter ────────────────────────────────────── */
+#scatter-wrap { position: relative; }
+svg#scatter { display:block; width:100%; height: 380px; }
+svg#scatter .axis line, svg#scatter .axis path { stroke: #2a3040; }
+svg#scatter .axis text { fill: #88909d; font: 11px Segoe UI; }
+svg#scatter .axis-label { fill: #c8cfdb; font: 12px Segoe UI; }
+svg#scatter circle.actor { fill: #6e7382; opacity: 0.55; transition: opacity .15s; cursor: pointer; }
+svg#scatter circle.actor:hover { opacity: 1; }
+svg#scatter circle.pair-heavy { fill: #ff5b6e; stroke: #fff; stroke-width: 1.5; opacity: 1; r: 7; }
+svg#scatter circle.pair-light { fill: #5db7ff; stroke: #fff; stroke-width: 1.5; opacity: 1; r: 7; }
+svg#scatter .reg-line { stroke: #ffba6e; stroke-width: 2; fill: none; opacity: 0.75; }
+svg#scatter .partial-label {
+  fill: #ffba6e; font: 600 12px Segoe UI; font-variant-numeric: tabular-nums;
+}
+#scatter-tooltip {
+  position: absolute; pointer-events: none;
+  background: rgba(15,18,25,0.96); border:1px solid #2a3040;
+  padding: 6px 8px; border-radius: 6px;
+  font-size: 11px; line-height: 1.4;
+  display: none; white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  z-index: 5;
+}
+
+/* ── Bars ───────────────────────────────────────── */
+.bar-row {
+  display: grid;
+  grid-template-columns: 200px 1fr 70px;
+  gap: 10px;
+  align-items: center;
+  padding: 5px 0;
+  border-bottom: 1px dashed #1c2230;
+  font-size: 12.5px;
+  cursor: pointer;
+  transition: background .12s;
+}
+.bar-row:hover { background: rgba(255,255,255,0.025); }
+.bar-row .name { color: #c8cfdb; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; }
+.bar-row .bar-cell { position: relative; height: 18px; background: rgba(255,255,255,0.02); border-radius: 3px; }
+.bar-row .bar-cell .zero { position:absolute; top:0; bottom:0; width:1px; left:50%; background:#2a3040; }
+.bar-row .bar { position:absolute; top:0; bottom:0; border-radius: 2px; }
+.bar-row .partial-val { text-align: right; color: #98a0ad; font-variant-numeric: tabular-nums; }
+.bar-row.active { background: rgba(95,183,255,0.08); }
+.bar-row.active .name { color: #fff; font-weight: 600; }
+.bar-row .ncount {
+  position: absolute; right: 4px; top: 50%; transform: translateY(-50%);
+  font-size: 10px; color: #6e7382;
+}
+.bars-section-title {
+  font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em;
+  color: #88909d; margin: 14px 0 6px 0; cursor: pointer; user-select: none;
+}
+.bars-section-title:before { content:'▾ '; color:#5db7ff; }
+.bars-section-title.collapsed:before { content:'▸ '; }
+.bars-body.hidden { display: none; }
+.footnote { color: #6e7382; font-size: 11px; margin-top: 10px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">UNVEIL · interactive figure</div>
+  <h1>The robot has no body shape. Its motion <em>remembers</em> the operator's anyway.</h1>
+  <div class="sub" id="headline-sub">Loading the data…</div>
+</header>
+
+<!-- LAYER 1 -->
+<section class="card">
+  <div style="margin-bottom: 12px;">
+    <h2>Same robot. Same motion. Different operator.</h2>
+    <div class="deck">Both robots are <strong>identical Unitree G1 meshes</strong> — retargeting overwrote every body shape. Yet the heavier operator's root translation runs visibly slower than the lighter operator's, frame for frame; and the older operator's waist range-of-motion is visibly narrower than the younger's.</div>
+  </div>
+  <div id="viewer-pair">
+    <div>
+      <div class="viewer-frame-title">jumping · weight × root velocity</div>
+      <iframe id="viewer-frame" class="viewer-frame" src="" loading="lazy"></iframe>
+    </div>
+    <div>
+      <div class="viewer-frame-title">turning · age × waist ROM</div>
+      <iframe id="viewer-frame-turning" class="viewer-frame"
+              src="./twin_view_turning.html?embed=1" loading="lazy"></iframe>
+    </div>
+  </div>
+  <div class="row" style="margin-top: 12px;">
+    <span class="pill">partial r = <strong id="hl-partial">—</strong></span>
+    <span class="pill" id="pill-n">n = — operators</span>
+    <span class="pill" id="pill-pearson">Pearson r = —</span>
+    <span class="pill" id="pill-pval">p = —</span>
+  </div>
+</section>
+
+<!-- LAYER 2 -->
+<section class="card">
+  <h2>Across every operator in this activity</h2>
+  <div class="deck">One dot per operator, x = body weight, y = average G1 root translation speed. The orange line is the OLS fit; the partial r removes age, height, and gender from both axes first.</div>
+  <div id="scatter-wrap">
+    <svg id="scatter" viewBox="0 0 900 380" preserveAspectRatio="none"></svg>
+    <div id="scatter-tooltip"></div>
+  </div>
+  <div class="footnote" id="scatter-foot">—</div>
+</section>
+
+<!-- LAYER 3 -->
+<section class="card">
+  <h2>The pattern isn't a one-clip artefact</h2>
+  <div class="deck" id="bars-deck">—</div>
+
+  <div class="bars-section-title" data-target="bars-jump">jumping subcategories</div>
+  <div class="bars-body" id="bars-jump"></div>
+
+  <div class="bars-section-title collapsed" data-target="bars-coarse">all activity categories (background)</div>
+  <div class="bars-body hidden" id="bars-coarse"></div>
+
+  <div class="footnote">Bar length = partial r controlling for age, height, gender. Negatives left (matches the hypothesis), positives right. Click any bar to load that category above.</div>
+</section>
+
+</div>
+
+<script>
+'use strict';
+
+// ── State ────────────────────────────────────────────────────────────────
+const state = { category: 'jumping' };
+let pairs, partials, actors;
+
+// ── Boot ─────────────────────────────────────────────────────────────────
+async function boot() {
+  [pairs, partials, actors] = await Promise.all([
+    fetch('./data/pairs.json').then(r => r.json()),
+    fetch('./data/partials.json').then(r => r.json()),
+    fetch('./data/actors.json').then(r => r.json()),
+  ]);
+
+  populateBars();
+  setCategory(state.category, true);
+  setupSectionToggles();
+
+  fillHeadline();
+}
+
+function prettyName(k) { return k.replace(/_/g, ' '); }
+
+// ── Set category — fans out to iframe, scatter, headline ────────────────
+function setCategory(cat, initial) {
+  if (!pairs[cat]) { console.warn('No pair for', cat); return; }
+  state.category = cat;
+  // Update iframe — twin_view.html is the 2x2 page (SMPL on top, G1 on bottom).
+  // It only ships SMPL fits for the 'jumping' pair right now, so other categories
+  // fall back to the G1-only twin_g1.html. Cache-bust the iframe URL with a
+  // per-load timestamp so a parent reload always re-fetches the iframe's HTML.
+  const isHero = cat === 'jumping';
+  const bust = '&t=' + Date.now();
+  const src = isHero
+    ? `./twin_view.html?embed=1${bust}`
+    : `./twin_g1.html?category=${encodeURIComponent(cat)}&embed=1${bust}`;
+  document.getElementById('viewer-frame').src = src;
+  // Update scatter
+  drawScatter(cat);
+  // Update headline pills
+  fillHeadline();
+  // Highlight active bar
+  document.querySelectorAll('.bar-row').forEach(el => {
+    el.classList.toggle('active', el.dataset.key === cat || el.dataset.key === 'coarse:' + cat);
+  });
+}
+
+// ── Headline ────────────────────────────────────────────────────────────
+function fillHeadline() {
+  const info = partials[state.category];
+  if (!info) return;
+  const pair = pairs[state.category];
+  const fmt = (x, fn) => (typeof x === 'number' && isFinite(x)) ? fn(x) : '—';
+  document.getElementById('hl-partial').textContent = fmt(info.partial, x => x.toFixed(3));
+  document.getElementById('pill-n').textContent = `n = ${info.n} operators`;
+  document.getElementById('pill-pearson').textContent = `Pearson r = ${fmt(info.pearson, x => x.toFixed(3))}`;
+  document.getElementById('pill-pval').textContent = `p = ${fmt(info.p_partial, x => x.toExponential(1))}`;
+
+  // Headline subtitle — count jumping subcategories with negative partial
+  const isNum = x => typeof x === 'number' && isFinite(x);
+  const jumpStats = Object.values(partials).filter(v => v.kind === 'jumping' && isNum(v.partial));
+  const neg = jumpStats.filter(v => v.partial < 0).length;
+  const sub = document.getElementById('headline-sub');
+  // For the 'jumping' showcase we use the demos_config canonical clip
+  // (A534 / neutral_dancecard_jump_002), with both robots playing the SAME
+  // retargeted CSV — so we don't quote a per-clip "X% gap" (it would be 0).
+  // Other categories still pick distinct heavy/light operator clips, so the
+  // gap copy stays meaningful there.
+  const isHero = state.category === 'jumping';
+  const pairCopy = (!isHero && pair)
+    ? ` In the showcased pair, a <strong style="color:#ff5b6e">${pair.heavy.weight.toFixed(0)} kg ${pair.heavy.gender}</strong> operator drives the robot at an average ${(pair.heavy.root_avg_speed/100).toFixed(2)} m/s while a <strong style="color:#5db7ff">${pair.light.weight.toFixed(0)} kg ${pair.light.gender}</strong> operator pushes it to ${(pair.light.root_avg_speed/100).toFixed(2)} m/s — a ${((pair.light.root_avg_speed - pair.heavy.root_avg_speed)/pair.heavy.root_avg_speed*100).toFixed(0)}% gap, even though retargeting strips all body shape.`
+    : (isHero
+        ? ' Above, the SAME jumping motion is shown on two different operator body shapes (57 kg vs 51 kg male). Retargeting collapses both into the SAME G1 trajectory — that is why both robots move identically. The weight effect surfaces only when you average over the whole population, plotted below.'
+        : '');
+  sub.innerHTML =
+    `Across <strong>${info.n} operators</strong> performing <em>${prettyName(info.category)}</em>, body weight ↔ G1 root translation speed has <strong>partial r = ${fmt(info.partial, x => x.toFixed(3))}</strong> (controlling age, height, gender). ${neg}/${jumpStats.length} jumping subcategories share that negative sign.` +
+    pairCopy;
+}
+
+// ── Scatter ─────────────────────────────────────────────────────────────
+function drawScatter(cat) {
+  const svg = document.getElementById('scatter');
+  while (svg.firstChild) svg.removeChild(svg.firstChild);
+  const data = actors[cat] || [];
+  if (!data.length) return;
+
+  const W = 900, H = 380;
+  const pad = { l: 64, r: 24, t: 14, b: 44 };
+  const plotW = W - pad.l - pad.r;
+  const plotH = H - pad.t - pad.b;
+
+  const xs = data.map(d => d.weight);
+  const ys = data.map(d => d.root_avg_speed);
+  const xMin = Math.floor(Math.min(...xs) - 2), xMax = Math.ceil(Math.max(...xs) + 2);
+  const yMin = 0, yMax = Math.max(...ys) * 1.08;
+
+  const X = w => pad.l + ((w - xMin) / (xMax - xMin)) * plotW;
+  const Y = s => pad.t + plotH - ((s - yMin) / (yMax - yMin)) * plotH;
+
+  const NS = 'http://www.w3.org/2000/svg';
+  const g = document.createElementNS(NS, 'g'); svg.appendChild(g);
+
+  // Y axis
+  const axisG = document.createElementNS(NS, 'g'); axisG.setAttribute('class', 'axis');
+  for (let i = 0; i <= 4; i++) {
+    const yv = yMin + (yMax - yMin) * i / 4;
+    const t = document.createElementNS(NS, 'text');
+    t.setAttribute('x', pad.l - 8); t.setAttribute('y', Y(yv));
+    t.setAttribute('text-anchor', 'end'); t.setAttribute('dominant-baseline', 'central');
+    t.textContent = yv.toFixed(0);
+    axisG.appendChild(t);
+    const gl = document.createElementNS(NS, 'line');
+    gl.setAttribute('x1', pad.l); gl.setAttribute('x2', pad.l + plotW);
+    gl.setAttribute('y1', Y(yv)); gl.setAttribute('y2', Y(yv));
+    gl.setAttribute('stroke', '#1c2230'); gl.setAttribute('stroke-width', '1');
+    axisG.appendChild(gl);
+  }
+  // X axis
+  for (let i = 0; i <= 5; i++) {
+    const xv = xMin + (xMax - xMin) * i / 5;
+    const t = document.createElementNS(NS, 'text');
+    t.setAttribute('x', X(xv)); t.setAttribute('y', pad.t + plotH + 18);
+    t.setAttribute('text-anchor', 'middle');
+    t.textContent = xv.toFixed(0);
+    axisG.appendChild(t);
+  }
+  // Axis labels
+  const xl = document.createElementNS(NS, 'text');
+  xl.setAttribute('class', 'axis-label');
+  xl.setAttribute('x', pad.l + plotW / 2);
+  xl.setAttribute('y', H - 6);
+  xl.setAttribute('text-anchor', 'middle');
+  xl.textContent = 'operator weight (kg)';
+  axisG.appendChild(xl);
+  const yl = document.createElementNS(NS, 'text');
+  yl.setAttribute('class', 'axis-label');
+  yl.setAttribute('transform', `rotate(-90, 14, ${pad.t + plotH/2})`);
+  yl.setAttribute('x', 14);
+  yl.setAttribute('y', pad.t + plotH / 2);
+  yl.setAttribute('text-anchor', 'middle');
+  yl.textContent = 'G1 root translation speed (cm/s)';
+  axisG.appendChild(yl);
+  g.appendChild(axisG);
+
+  // OLS fit
+  const n = xs.length;
+  const mx = xs.reduce((a,b)=>a+b,0)/n;
+  const my = ys.reduce((a,b)=>a+b,0)/n;
+  let sxy = 0, sxx = 0;
+  for (let i = 0; i < n; i++) { const dx = xs[i]-mx; sxy += dx*(ys[i]-my); sxx += dx*dx; }
+  const slope = sxx > 0 ? sxy/sxx : 0;
+  const intercept = my - slope*mx;
+  const line = document.createElementNS(NS, 'line');
+  line.setAttribute('x1', X(xMin)); line.setAttribute('y1', Y(intercept + slope*xMin));
+  line.setAttribute('x2', X(xMax)); line.setAttribute('y2', Y(intercept + slope*xMax));
+  line.setAttribute('class', 'reg-line');
+  g.appendChild(line);
+
+  // Identify pair members (if both in this category's actor pool)
+  const pair = pairs[cat];
+  const pairUidH = pair ? pair.heavy.uid : null;
+  const pairUidL = pair ? pair.light.uid : null;
+
+  // Dots
+  const tooltip = document.getElementById('scatter-tooltip');
+  const scatterRect = document.getElementById('scatter-wrap').getBoundingClientRect();
+  for (const a of data) {
+    const c = document.createElementNS(NS, 'circle');
+    c.setAttribute('cx', X(a.weight));
+    c.setAttribute('cy', Y(a.root_avg_speed));
+    let cls = 'actor';
+    let r = 3.2;
+    if (a.uid === pairUidH) { cls = 'pair-heavy'; r = 7; }
+    else if (a.uid === pairUidL) { cls = 'pair-light'; r = 7; }
+    c.setAttribute('class', cls);
+    c.setAttribute('r', r);
+    c.addEventListener('mouseenter', e => {
+      tooltip.style.display = 'block';
+      tooltip.innerHTML =
+        `<strong>${a.uid}</strong> · ${a.gender} · ${a.height.toFixed(0)} cm · age ${a.age.toFixed(0)}<br>` +
+        `weight <strong>${a.weight.toFixed(0)} kg</strong> · root speed <strong>${a.root_avg_speed.toFixed(1)} cm/s</strong>`;
+    });
+    c.addEventListener('mousemove', e => {
+      const r2 = document.getElementById('scatter-wrap').getBoundingClientRect();
+      tooltip.style.left = (e.clientX - r2.left + 10) + 'px';
+      tooltip.style.top  = (e.clientY - r2.top  + 10) + 'px';
+    });
+    c.addEventListener('mouseleave', () => { tooltip.style.display = 'none'; });
+    g.appendChild(c);
+  }
+
+  // Partial-r label, anchored to top-right of plot area
+  const info = partials[cat];
+  if (info) {
+    const lab = document.createElementNS(NS, 'text');
+    lab.setAttribute('class', 'partial-label');
+    lab.setAttribute('x', pad.l + plotW - 8);
+    lab.setAttribute('y', pad.t + 14);
+    lab.setAttribute('text-anchor', 'end');
+    lab.textContent = `partial r = ${info.partial.toFixed(3)}  ·  Pearson r = ${info.pearson.toFixed(3)}`;
+    g.appendChild(lab);
+  }
+
+  document.getElementById('scatter-foot').textContent =
+    `${data.length} operators · pair shown above marked red (heavy) / blue (light) · partial correlation controls for age, height, gender.`;
+}
+
+// ── Bars (Layer 3) ──────────────────────────────────────────────────────
+function populateBars() {
+  const jumpKeys = Object.keys(partials).filter(k => partials[k].kind === 'jumping');
+  const coarseKeys = Object.keys(partials).filter(k => partials[k].kind === 'coarse');
+
+  // Headline deck for bars
+  const isNum = x => typeof x === 'number' && isFinite(x);
+  const finite = jumpKeys.map(k => partials[k]).filter(v => isNum(v.partial));
+  const neg = finite.filter(v => v.partial < 0).length;
+  document.getElementById('bars-deck').innerHTML =
+    `Re-computing the partial correlation independently within each jumping subcategory: <strong>${neg} of ${finite.length}</strong> with at least 5 operators show the same negative sign. Across the broader 8 activity categories below, the partial is much weaker, since heavier operators *also* tend to be taller and male — confounders that the partial removes.`;
+
+  const maxAbs = Math.max(
+    ...[...jumpKeys, ...coarseKeys]
+      .map(k => partials[k].partial)
+      .filter(isNum)
+      .map(Math.abs),
+    0.2
+  );
+
+  function renderBar(key, container) {
+    const info = partials[key];
+    if (!isNum(info.partial)) return;
+    const row = document.createElement('div');
+    row.className = 'bar-row';
+    row.dataset.key = key;
+    const target = (info.kind === 'coarse') ? null : info.category;  // coarse cats have no pair right now
+    if (target && pairs[target]) {
+      row.addEventListener('click', () => setCategory(target));
+    } else {
+      row.style.cursor = 'default';
+      row.title = 'No heavy/light pair available for this category.';
+    }
+
+    const name = document.createElement('div');
+    name.className = 'name';
+    name.textContent = prettyName(info.category);
+    row.appendChild(name);
+
+    const bc = document.createElement('div');
+    bc.className = 'bar-cell';
+    const zero = document.createElement('div'); zero.className = 'zero'; bc.appendChild(zero);
+    const b = document.createElement('div'); b.className = 'bar';
+    const w = Math.abs(info.partial) / maxAbs * 50; // 50% of bar width per unit
+    b.style.width = w + '%';
+    if (info.partial < 0) {
+      b.style.right = '50%';
+      b.style.background = 'linear-gradient(90deg,#3a8a4a 0%, #66c47e 100%)';
+    } else {
+      b.style.left = '50%';
+      b.style.background = '#4a4f5b';
+    }
+    bc.appendChild(b);
+    const nl = document.createElement('span'); nl.className = 'ncount';
+    nl.textContent = `n=${info.n}`;
+    bc.appendChild(nl);
+    row.appendChild(bc);
+
+    const pv = document.createElement('div');
+    pv.className = 'partial-val';
+    pv.textContent = (info.partial >= 0 ? '+' : '') + info.partial.toFixed(3);
+    row.appendChild(pv);
+
+    container.appendChild(row);
+  }
+
+  jumpKeys.sort((a,b) => partials[a].partial - partials[b].partial);
+  coarseKeys.sort((a,b) => partials[a].partial - partials[b].partial);
+  const jbody = document.getElementById('bars-jump');
+  const cbody = document.getElementById('bars-coarse');
+  for (const k of jumpKeys)   renderBar(k, jbody);
+  for (const k of coarseKeys) renderBar(k, cbody);
+}
+
+function setupSectionToggles() {
+  document.querySelectorAll('.bars-section-title').forEach(el => {
+    el.addEventListener('click', () => {
+      const t = document.getElementById(el.dataset.target);
+      const collapsed = t.classList.toggle('hidden');
+      el.classList.toggle('collapsed', collapsed);
+    });
+  });
+}
+
+boot().catch(err => {
+  document.body.innerHTML = `<div style="padding:30px;color:#ff7280;font-family:Segoe UI">Load error: ${err.message}</div>`;
+  console.error(err);
+});
+</script>
+</body>
+</html>

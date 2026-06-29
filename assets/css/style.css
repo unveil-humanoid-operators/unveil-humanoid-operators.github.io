@@ -1,0 +1,1599 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,600;0,700;1,400&family=Source+Sans+3:wght@300;400;600;700&display=swap');
+
+/* ── Reset & Base ─────────────────────────────────────────── */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 1.05rem;
+  color: #333333;
+  background: #ffffff;
+  line-height: 1.75;
+}
+
+h1, h2, h3, h4, h5 {
+  font-family: 'Noto Serif', serif;
+  color: #2c3e6b;
+}
+
+a {
+  color: #2c3e6b;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #e74c3c;
+  text-decoration: underline;
+}
+
+/* ── Layout ───────────────────────────────────────────────── */
+/* Width matches the horizontal span of the THREE video panels in the demo
+   row (lower-left of the robot viewer to lower-right of the GT SMPL viewer):
+     content     = 1500 − 64                 = 1436 px
+     1fr         = (1436 − 54 gaps) / 3.45fr ≈ 400.6 px
+     3-video span = 3 × 400.6 + 2 × 18      ≈ 1238 px
+   So 1240 px is the centered "video-row" width used by abstract, teaser,
+   method, results, bibtex, and footer. */
+.container {
+  max-width: 1240px;
+}
+
+section {
+  padding: 80px 0;
+}
+
+section:nth-of-type(even) {
+  background: #f8f9fa;
+}
+
+.section-heading {
+  font-size: 1.85rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #2c3e6b;
+  display: inline-block;
+}
+
+/* ══════════════════════════════════════════════════════════
+   LEFT SECTION NAV (fixed sidebar + scrollspy)
+══════════════════════════════════════════════════════════ */
+#side-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 210px;
+  height: 100vh;
+  padding: 1.4rem 0.85rem;
+  background: #ffffff;
+  overflow-y: auto;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;   /* vertically center the section links */
+}
+
+.side-nav-list { list-style: none; padding: 0; margin: 0; }
+.side-nav-list li { margin: 0; }
+
+.side-nav-list a {
+  display: block;
+  padding: 0.5rem 0.75rem;
+  margin-bottom: 3px;
+  border-radius: 7px;
+  border-left: 3px solid transparent;
+  color: #5a6275;
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1.3;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+.side-nav-list a:hover {
+  background: #f5f8ff;
+  color: #2c3e6b;
+  text-decoration: none;
+}
+.side-nav-list a.active {
+  background: #eef2ff;
+  color: #2c3e6b;
+  border-left-color: #2c3e6b;
+}
+
+/* Reserve space for the sidebar on wide screens so content never hides under it. */
+@media (min-width: 1200px) {
+  body { padding-left: 210px; }
+}
+/* Hide the sidebar on narrower screens (it would crowd the content). */
+@media (max-width: 1199.98px) {
+  #side-nav { display: none; }
+}
+
+/* ══════════════════════════════════════════════════════════
+   DEMO — 3-PANEL VIDEO COMPARISON
+══════════════════════════════════════════════════════════ */
+#demo {
+  background: #f8f9fa;
+  padding: 30px 0 60px;
+}
+
+.demo-container {
+  width: 100%;
+  max-width: 1500px;
+  margin: 0 auto;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  box-sizing: border-box;
+}
+
+.demo-tldr {
+  font-size: 18px;
+  line-height: 1.65;
+  color: #444;
+  margin: 0 auto 1rem;
+  max-width: 100%;
+  text-align: left;
+}
+
+.demo-tldr-tag {
+  display: inline-block;
+  font-family: 'Noto Serif', serif;
+  font-weight: 700;
+  color: #e74c3c;
+  letter-spacing: 0.04em;
+  margin-right: 0.5rem;
+}
+
+/* ── Multi-row demo blocks ───────────────────────────────── */
+.demo-block {
+  margin-bottom: 3rem;
+  padding-bottom: 2.5rem;
+  border-bottom: 1px solid #e5e9f2;
+}
+.demo-block:last-of-type {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.unveil-kw {
+  color: #2c3e6b;
+  font-style: normal;
+}
+
+/* ── 2-row × 3-col grid ──────────────────────────────────
+   Row 1 (auto): column headers — tallest drives row height
+   Row 2 (fr):   equal video cards, always start at same Y  */
+.demo-panels {
+  display: grid;
+  grid-template-columns: minmax(130px, 0.45fr) 1fr 1fr 1fr;
+  grid-template-rows: auto 1fr auto;
+  column-gap: 18px;
+  row-gap: 0;
+  align-items: end;     /* headers align to bottom → videos flush */
+}
+
+/* ── Column headers (row 1) ──────────────────────────────── */
+.demo-col-header {
+  padding-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* Robot column: center itself in the row height */
+.demo-col-header--robot {
+  align-self: center;
+  padding-bottom: 0;
+}
+
+/* ── Robot trajectory labelled box ──────────────────────── */
+.robot-traj-box {
+  display: inline-block;
+  background: #eef2ff;
+  border: 1.5px solid #b8c8f0;
+  border-radius: 10px;
+  padding: 0.65rem 1.2rem;
+  font-family: 'Noto Serif', serif;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #2c3e6b;
+  text-align: center;
+  line-height: 1.4;
+}
+
+/* ── Attr panel — the single box wrapping title + chips ──── */
+.attr-panel {
+  width: 100%;
+  border-radius: 12px;
+  padding: 0.85rem 0.75rem 0.8rem;
+  box-shadow: 0 2px 10px rgba(44,62,107,0.07);
+  margin-bottom: 0;
+}
+
+.attr-panel--pred {
+  background: #fafffe;
+  border: 1.5px solid #b8ddc6;
+}
+
+.attr-panel--gt {
+  background: #f7f8ff;
+  border: 1.5px solid #b8c6e8;
+}
+
+.attr-panel-title {
+  font-family: 'Noto Serif', serif;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #2c3e6b;
+  margin-bottom: 0.65rem;
+  text-align: center;
+  line-height: 1.4;
+}
+
+/* ── Attribute chips ─────────────────────────────────────── */
+.attr-row {
+  display: flex;
+  gap: 6px;
+  width: 100%;
+}
+
+.attr-chip {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #f2fbf5;
+  border: 1.5px solid #c0dfc9;
+  border-radius: 8px;
+  padding: 0.38rem 0.3rem;
+  transition: background 0.4s ease, border-color 0.4s ease;
+}
+
+.attr-chip--gt {
+  background: #f0f3fa;
+  border-color: #c4cde8;
+}
+
+.attr-chip-label {
+  font-size: 0.63rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #999;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+
+.attr-chip-value {
+  font-size: 0.95rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: #27ae60;
+  line-height: 1.3;
+  white-space: nowrap;
+  transition: color 0.4s ease;
+}
+
+.attr-chip--gt .attr-chip-value { color: #2c3e6b; }
+
+/* ══════════════════════════════════════════════════════════
+   ATTRIBUTE COMPARISON — pred ⌒Δ⌒ gt
+   Each attribute row shows pred (green pill) → arched connector
+   with a Δ badge in the middle → gt (blue pill). Match (pred=gt)
+   switches the row to a green theme with a ✓ badge.
+══════════════════════════════════════════════════════════ */
+.attr-comparison {
+  display: grid;
+  grid-template-rows: auto repeat(4, auto);
+  row-gap: 0.18rem;
+  padding: 0.3rem 0.4rem 0.35rem;
+  background: rgba(255,255,255,0.4);
+  border-radius: 14px;
+  border: 1px solid #e5e9f2;
+}
+
+/* Column headers above the predicted/ground-truth pills */
+.comparison-headers {
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr) minmax(90px, 1.2fr) minmax(0, 1fr);
+  column-gap: 0.3rem;
+  padding-bottom: 0.15rem;
+  border-bottom: 1px solid #edf0f7;
+  margin-bottom: 0.05rem;
+}
+
+.comparison-header {
+  font-family: 'Noto Serif', serif;
+  font-size: 0.92rem;
+  font-weight: 600;
+  text-align: center;
+  letter-spacing: 0.01em;
+  line-height: 1.3;
+}
+
+.comparison-header-pred { color: #1f8a4d; }
+.comparison-header-gt   { color: #2c3e6b; }
+
+.comparison-row {
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr) minmax(90px, 1.2fr) minmax(0, 1fr);
+  align-items: center;
+  column-gap: 0.3rem;
+}
+
+/* Display order: age, gender, height, weight (headers stay first at order: 0) */
+.comparison-row[data-attr="age"]    { order: 1; }
+.comparison-row[data-attr="gender"] { order: 2; }
+.comparison-row[data-attr="height"] { order: 3; }
+.comparison-row[data-attr="weight"] { order: 4; }
+
+.comparison-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #8a8f9c;
+  white-space: nowrap;
+}
+
+.comparison-pred,
+.comparison-gt {
+  text-align: center;
+  padding: 0.3rem 0.45rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  line-height: 1.2;
+  transition: background 0.4s ease, border-color 0.4s ease, color 0.4s ease;
+}
+
+.comparison-pred {
+  background: #f2fbf5;
+  border: 1.5px solid #c0dfc9;
+  color: #1f8a4d;
+}
+
+.comparison-gt {
+  background: #f0f3fa;
+  border: 1.5px solid #c4cde8;
+  color: #2c3e6b;
+}
+
+/* ── Connector cell: straight SVG line + floating Δ badge ──── */
+.comparison-connector {
+  position: relative;
+  height: 28px;
+  min-width: 90px;
+}
+
+.comparison-connector svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;
+}
+
+.connector-path {
+  fill: none;
+  stroke: #cbd2e0;
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  transition: stroke 0.35s ease;
+}
+
+.comparison-row.match .connector-path {
+  stroke: #b8ddc6;
+}
+
+.comparison-delta {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  background: #ffffff;
+  border: 1.5px solid #cbd2e0;
+  border-radius: 16px;
+  padding: 0.16rem 0.65rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #555;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  letter-spacing: 0.01em;
+  box-shadow: 0 1px 3px rgba(20,30,60,0.07);
+  transition: background 0.35s ease, border-color 0.35s ease, color 0.35s ease;
+}
+
+.comparison-delta .delta-icon {
+  font-weight: 800;
+  opacity: 0.75;
+  font-size: 0.85em;
+}
+
+.comparison-row.match .comparison-delta {
+  background: #fafffe;
+  border-color: #b8ddc6;
+  color: #1f8a4d;
+}
+
+/* Hide the Δ symbol on a match — the ✓ stands alone */
+.comparison-row.match .delta-icon { display: none; }
+
+/* On phones the connector squeezes; keep it readable */
+@media (max-width: 900px) {
+  .comparison-row {
+    grid-template-columns: 56px minmax(0, 1fr) minmax(80px, 1fr) minmax(0, 1fr);
+  }
+  .comparison-pred,
+  .comparison-gt {
+    font-size: 0.85rem;
+    padding: 0.35rem 0.4rem;
+  }
+  .comparison-connector {
+    height: 26px;
+    min-width: 70px;
+  }
+  .comparison-delta {
+    font-size: 0.74rem;
+    padding: 0.12rem 0.5rem;
+  }
+}
+
+/* ── Render arrow (dots + chevron SVG) ───────────────────── */
+.render-arrow {
+  display: flex;
+  justify-content: center;
+  margin-top: 8px;
+}
+
+.render-arrow-svg {
+  width: 36px;
+  height: 46px;
+}
+
+.render-arrow-svg--pred { color: #27ae60; }
+.render-arrow-svg--gt  { color: #2c3e6b; }
+
+/* ── Video panel cards (row 2, equal height) ─────────────── */
+.demo-panel {
+  border-radius: 12px;
+  overflow: hidden;
+  background: #1a1a1a;
+  border: 1px solid #2e2e2e;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.18);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.demo-panel:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 32px rgba(0,0,0,0.28);
+}
+
+/* ── Video wrapper ───────────────────────────────────────── */
+.panel-video-wrap {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background: #1a1a1a;
+  line-height: 0;
+}
+
+.panel-video-wrap video {
+  width: 100%;
+  height: 520px;
+  object-fit: contain;
+  display: block;
+  background: #1a1a1a;
+}
+
+.panel-iframe-wrap { background: #1a1a1a; }
+
+.g1-viewer-iframe {
+  display: block;
+  width: 100%;
+  height: 520px;
+  border: none;
+}
+
+/* ── Responsive ──────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .demo-panels {
+    grid-template-columns: 1fr;
+    grid-template-rows: unset;
+    max-width: 520px;
+    margin: 0 auto;
+    row-gap: 12px;
+  }
+  .panel-video-wrap video,
+  .g1-viewer-iframe { height: 380px; }
+  .demo-col-header { padding-bottom: 4px; }
+  .demo-selector {
+    grid-column: 1;
+    grid-row: auto;
+    align-self: stretch;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+    transform: none;   /* no vertical nudge in the stacked mobile layout */
+    margin-top: 0;
+  }
+  .demo-selector-label { text-align: left; }
+  /* Activity list becomes a horizontal, swipeable strip on phones */
+  .activity-list {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    max-height: none;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 4px;
+  }
+  .activity-item { flex: 0 0 auto; width: auto; white-space: nowrap; }
+  .attr-comparison-wrap { grid-column: 1 / -1 !important; }
+  .sync-bar {
+    grid-column: 1;
+    grid-row: auto;
+    margin-top: 6px;
+  }
+}
+
+/* ── Activity selector (sidebar in 4-col grid) ─── */
+.demo-selector {
+  grid-column: 1;
+  grid-row: 1 / 3;
+  align-self: center;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.55rem;
+  margin-top: 34px;   /* nudge the selector down a bit */
+  margin-bottom: 0;
+  transform: translateY(1.6cm);   /* move the whole panel ~1.6cm lower */
+}
+
+.demo-selector-label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #2c3e6b;
+  text-align: center;
+  font-family: 'Noto Serif', serif;
+  margin-bottom: 0.1rem;
+}
+
+.demo-selector-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.demo-select {
+  appearance: none;
+  -webkit-appearance: none;
+  background: #fff;
+  border: 1.5px solid #d0d8f0;
+  border-radius: 8px;
+  padding: 0.45rem 2rem 0.45rem 0.7rem;
+  font-family: 'Noto Serif', serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #2c3e6b;
+  cursor: pointer;
+  outline: none;
+  width: 100%;
+  min-width: 0;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.demo-select:hover  { border-color: #7a9adc; }
+.demo-select:focus  { border-color: #2c3e6b; box-shadow: 0 0 0 3px rgba(44,62,107,0.12); }
+
+.demo-select-arrow {
+  position: absolute;
+  right: 0.7rem;
+  font-size: 1rem;
+  color: #2c3e6b;
+  pointer-events: none;
+  line-height: 1;
+}
+
+.demo-selector-count {
+  font-size: 0.75rem;
+  color: #aaa;
+  white-space: nowrap;
+}
+
+/* ── Activity list (vertical, replaces the dropdown) ───────── */
+.activity-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+}
+
+.activity-item {
+  appearance: none;
+  -webkit-appearance: none;
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  width: 100%;
+  text-align: left;
+  background: #fff;
+  border: 1.5px solid #d0d8f0;
+  border-radius: 8px;
+  padding: 0.42rem 0.7rem;
+  font-family: 'Noto Serif', serif;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #2c3e6b;
+  cursor: pointer;
+  outline: none;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+/* Icon to the left of the activity label */
+.activity-icon {
+  flex: 0 0 auto;
+  width: 1.4em;
+  text-align: center;
+  font-size: 1.05rem;
+  line-height: 1;
+}
+
+.activity-text { flex: 1 1 auto; }
+
+.activity-item:hover  { border-color: #7a9adc; background: #f5f8ff; }
+.activity-item:focus-visible { border-color: #2c3e6b; box-shadow: 0 0 0 3px rgba(44,62,107,0.12); }
+
+.activity-item.active {
+  background: #2c3e6b;
+  border-color: #2c3e6b;
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(44,62,107,0.18);
+}
+
+/* Loading state while switching demo */
+.demo-panel.loading { opacity: 0.4; transition: opacity 0.2s; }
+
+/* ── Master sync bar ────────────────────────────────────── */
+.sync-bar {
+  grid-column: 2 / 5;
+  grid-row: 3;
+  margin-top: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #fff;
+  border: 1px solid #e0e4ed;
+  border-radius: 10px;
+  padding: 0.65rem 1.1rem;
+  box-shadow: 0 1px 6px rgba(44,62,107,0.06);
+}
+
+.sync-btn {
+  flex-shrink: 0;
+  width: 30px; height: 30px;
+  border: none;
+  background: #2c3e6b;
+  color: #fff;
+  border-radius: 50%;
+  font-size: 12px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .15s;
+}
+.sync-btn:hover { background: #e74c3c; }
+
+.sync-progress {
+  flex: 1;
+  -webkit-appearance: none;
+  height: 4px;
+  background: #e0e4ed;
+  border-radius: 99px;
+  outline: none;
+  cursor: pointer;
+}
+.sync-progress::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 13px; height: 13px;
+  border-radius: 50%;
+  background: #2c3e6b;
+  cursor: pointer;
+}
+
+.sync-time {
+  flex-shrink: 0;
+  font-size: 11px;
+  color: #888;
+  min-width: 70px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.sync-speed {
+  flex-shrink: 0;
+  font-size: 11px;
+  padding: 3px 6px;
+  border: 1px solid #dde;
+  border-radius: 4px;
+  background: #fff;
+  color: #444;
+  cursor: pointer;
+}
+
+.sync-hint {
+  flex-shrink: 0;
+  font-size: 10px;
+  color: #aaa;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+
+
+/* ── Responsive ──────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .demo-panels {
+    grid-template-columns: 1fr;
+    max-width: 520px;
+    margin: 0 auto;
+  }
+
+  .panel-video-wrap video { height: 420px; }
+
+  .demo-panel--with-card {
+    flex-direction: column;
+  }
+
+  .bio-card--side {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid #edf0f7;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    justify-content: space-around;
+  }
+
+  .bio-card--side .bio-row { margin-bottom: 0; }
+}
+
+/* ── Navbar ───────────────────────────────────────────────── */
+#main-nav {
+  transition: background 0.3s, box-shadow 0.3s;
+  background: transparent;
+}
+
+#main-nav.scrolled {
+  background: #ffffff !important;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+
+#main-nav .navbar-brand {
+  font-family: 'Noto Serif', serif;
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: #2c3e6b;
+  letter-spacing: 0.04em;
+}
+
+#main-nav .nav-link {
+  font-weight: 600;
+  color: #2c3e6b;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+#main-nav .nav-link:hover {
+  color: #e74c3c;
+}
+
+/* ── Hero ─────────────────────────────────────────────────── */
+#hero {
+  padding: 30px 0 25px;
+  text-align: center;
+  background: #ffffff;
+}
+
+#hero .container { max-width: 1280px; }
+
+#hero h1.paper-title {
+  font-size: 35.4px;   /* was 2.15rem (34.4px); +1px per request */
+  font-weight: 700;
+  line-height: 1.3;
+  margin-bottom: 0.55rem;
+  color: #2c3e6b;
+  white-space: normal;
+}
+
+#hero h1.paper-title .unveil-keyword {
+  color: #e74c3c;
+}
+
+#hero .authors-line {
+  font-size: 1.05rem;
+  color: #666;
+  margin-top: 0.6rem !important;
+  margin-bottom: 0.15rem;
+}
+
+#hero .venue-line {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #2c3e6b;
+  margin-bottom: 0.85rem;
+}
+
+#hero .d-flex { margin-top: 0.5rem !important; }
+
+.btn-pill {
+  border-radius: 50px;
+  padding: 0.5rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0.25rem;
+  border-width: 1.5px;
+  cursor: default;
+  opacity: 0.55;
+  pointer-events: none;
+  line-height: 1.4;
+}
+
+.btn-pill-enabled {
+  opacity: 1;
+  pointer-events: auto;
+  cursor: pointer;
+  background: #111 !important;
+  color: #fff !important;
+  border-color: #111 !important;
+}
+
+.btn-pill-enabled:hover,
+.btn-pill-enabled:focus {
+  background: #2c3e6b !important;
+  color: #fff !important;
+  border-color: #2c3e6b !important;
+}
+
+.btn-pill-icon {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.pill-icon {
+  width: 19px;
+  height: 19px;
+  flex-shrink: 0;
+  vertical-align: middle;
+}
+
+/* ── Teaser Pipeline ──────────────────────────────────────── */
+.teaser-pipeline {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  flex-wrap: nowrap;
+  padding: 2rem 0;
+}
+
+.pipeline-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+  flex: 0 0 auto;
+}
+
+.pipeline-node.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.node-icon {
+  width: 100px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  margin-bottom: 0.75rem;
+  font-size: 2.8rem;
+}
+
+.node-icon.human {
+  background: #eaf0ff;
+  border: 2px solid #2c3e6b;
+}
+
+.node-icon.robot {
+  background: #fff3f3;
+  border: 2px solid #e74c3c;
+}
+
+.node-icon.result {
+  background: #fff8e1;
+  border: 2px solid #f39c12;
+  width: auto;
+  height: auto;
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  font-size: 1rem;
+  text-align: left;
+  min-width: 200px;
+}
+
+.node-label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #2c3e6b;
+  margin-top: 0.25rem;
+}
+
+.node-sublabel {
+  font-size: 0.78rem;
+  color: #888;
+  max-width: 120px;
+}
+
+/* Pipeline arrows */
+.pipeline-arrow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0 1rem;
+  opacity: 0;
+  transition: opacity 0.6s ease 0.3s;
+  flex: 0 0 auto;
+}
+
+.pipeline-arrow.visible {
+  opacity: 1;
+}
+
+.arrow-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #888;
+  margin-bottom: 0.25rem;
+  white-space: nowrap;
+}
+
+.arrow-line {
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+.arrow-dash {
+  width: 60px;
+  height: 2px;
+  background: repeating-linear-gradient(
+    90deg,
+    #aaa 0,
+    #aaa 6px,
+    transparent 6px,
+    transparent 12px
+  );
+  animation: dash-flow 1.2s linear infinite;
+}
+
+@keyframes dash-flow {
+  from { background-position: 0 0; }
+  to   { background-position: 24px 0; }
+}
+
+.arrow-head {
+  width: 0;
+  height: 0;
+  border-top: 7px solid transparent;
+  border-bottom: 7px solid transparent;
+  border-left: 10px solid #aaa;
+}
+
+/* Inferred attributes card */
+.attr-card {
+  background: #fff;
+  border: 2px solid #e74c3c;
+  border-radius: 12px;
+  padding: 1.1rem 1.4rem;
+  min-width: 200px;
+  box-shadow: 0 4px 18px rgba(231,76,60,0.12);
+}
+
+.attr-title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #e74c3c;
+  margin-bottom: 0.7rem;
+  border-bottom: 1px solid #fde;
+  padding-bottom: 0.3rem;
+}
+
+.attr-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  margin-bottom: 0.4rem;
+  color: #333;
+}
+
+.attr-row .emoji {
+  font-size: 1rem;
+  width: 1.4rem;
+  text-align: center;
+}
+
+.attr-value {
+  font-weight: 700;
+  color: #2c3e6b;
+}
+
+.teaser-caption {
+  text-align: center;
+  font-style: italic;
+  color: #555;
+  font-size: 18px;
+  max-width: 820px;
+  margin: 1.5rem auto 0;
+  line-height: 1.65;
+}
+
+/* Teaser video placeholder */
+.video-placeholder {
+  border: 2px dashed #ccc;
+  border-radius: 8px;
+  padding: 2.5rem;
+  text-align: center;
+  color: #999;
+  font-size: 0.9rem;
+  margin-top: 2rem;
+}
+
+/* ── PDF figures rendered via PDF.js ──────────────────────── */
+.pdf-figure-wrap {
+  width: 100%;
+  margin: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.pdf-canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  min-height: 200px;   /* visible while rendering */
+  background: #f8f9fa;
+}
+
+/* PDF fallback link — hidden once canvas renders */
+.pdf-fallback {
+  text-align: center;
+  padding: 0.5rem;
+  font-size: 0.85rem;
+  color: #888;
+  margin: 0;
+}
+.pdf-canvas.rendered + .pdf-fallback { display: none; }
+
+/* ── Overview teaser (moved up to sit with the TL;DR) ─────── */
+.teaser-figure { margin: 1.25rem auto 0; max-width: 1150px; }
+
+/* Animated pipeline teaser (iframe to teaser-animation.html) */
+.teaser-anim { width: 100%; }
+.teaser-anim-frame {
+  display: block;
+  width: 100%;
+  height: 600px;
+  border: 0;
+  border-radius: 8px;
+  background: #ffffff;
+}
+@media (max-width: 760px) {
+  .teaser-anim-frame { height: 1180px; }
+}
+
+/* Larger caption under the overview teaser so it doesn't read much smaller
+   than the text baked into the figure itself (per review). Scoped to #demo
+   so the method/results captions keep their 18px size. */
+#demo .teaser-caption { font-size: 18px; max-width: 1000px; }
+
+/* Separate the demo panel from the teaser caption above it. */
+.demo-block--after-teaser { margin-top: 2.75rem; }
+
+/* ── Interactive framework visualization (iframe embed) ───── */
+/* The wrapper fills the (now wide) .container. The iframe matches the
+   standalone panel's aspect ratio (1640 × 630 ≈ 2.60) so at the container's
+   1240 px the panel reads at ~477 px tall. We let the height grow up to
+   ~600 px on tall windows so the visualization gets the same generous canvas
+   it has on the dedicated page. */
+.viz-embed-wrap {
+  width: 100%;
+  margin: 0 auto;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid #e6ebf2;
+  box-shadow: 0 2px 8px rgba(20, 30, 50, 0.06);
+}
+.viz-embed-frame {
+  display: block;
+  width: 100%;
+  height: min(72vh, 600px);
+  min-height: 460px;
+  border: 0;
+  background: #ffffff;
+}
+@media (max-width: 720px) {
+  /* On narrow viewports favor a taller panel so labels stay readable. */
+  .viz-embed-frame { height: 60vw; min-height: 340px; }
+}
+
+/* ── Visualization method note (top of demo container) ────── */
+.viz-method-row {
+  display: grid;
+  grid-template-columns: minmax(130px, 0.45fr) 1fr 1fr 1fr;
+  column-gap: 18px;
+  margin-top: 0.9rem;
+}
+
+.viz-method-card {
+  grid-column: 2 / 5;
+  padding: 0.8rem 1.2rem;
+  background: #f6f7fb;
+  border-left: 3px solid #b8c8f0;
+  border-radius: 6px;
+  font-size: 18px;
+  line-height: 1.6;
+  color: #555;
+}
+
+@media (max-width: 900px) {
+  .viz-method-row { grid-template-columns: 1fr; max-width: 520px; margin: 0.9rem auto 0; }
+  .viz-method-card { grid-column: 1; }
+}
+.viz-method-label {
+  display: inline-block;
+  font-family: 'Noto Serif', serif;
+  font-weight: 700;
+  color: #2c3e6b;
+  font-size: 0.74rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-right: 0.55rem;
+}
+
+/* ══════════════════════════════════════════════════════════
+   INTERPRETABLE FEATURES — one panel per attribute, mirrors
+   the per-cell size used in feature-analysis-animation/final-matrix.html
+   (110px label column + 1fr panel, 470px row height).
+══════════════════════════════════════════════════════════ */
+.interpretable-intro {
+  font-size: 18px;
+  line-height: 1.7;
+  color: #444;
+  margin-bottom: 1.5rem;
+}
+
+.interpretable-grid {
+  display: grid;
+  grid-template-columns: 110px minmax(0, 700px);
+  grid-auto-rows: 470px;
+  column-gap: 16px;
+  row-gap: 16px;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+/* ── Side-by-side demo pairs (Age + Gender) ────────────────── */
+.interp-demos-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  column-gap: 24px;
+  row-gap: 16px;
+  justify-content: center;
+  max-width: 1280px;
+  margin: 0 auto 1.25rem;
+}
+.interp-demo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.interp-demo-label {
+  font-family: 'Noto Serif', serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #2c3e6b;
+  text-align: center;
+  letter-spacing: 0.02em;
+}
+.interp-demo-iframe {
+  position: relative;
+  height: 470px;
+  background: #ffffff;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #d6dde6;
+  box-shadow: 0 2px 8px rgba(20, 30, 50, 0.08),
+              0 1px 3px rgba(20, 30, 50, 0.05);
+}
+.interp-demo-iframe iframe {
+  width: 100%; height: 100%; border: 0; display: block;
+}
+/* Two rows: centred "UNVEIL prediction:" lead, then the two predictions
+   each anchored under its corresponding clip in the panel above. */
+.interp-demo-pred {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.98rem;
+  line-height: 1.4;
+  padding: 6px 12px;
+}
+.interp-demo-pred .pred-lead {
+  font-weight: 600;
+  color: #1c232e;
+}
+.interp-demo-pred .pred-row {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 14%;            /* nudges each value under its clip column */
+  box-sizing: border-box;
+}
+.interp-demo-pred .pred-val {
+  font-weight: 800;
+  padding: 2px 10px;
+  border-radius: 5px;
+}
+/* Match panel.html badge colours (.role.heavy = #ff8c19 on the LEFT,
+   .role.light = #1e90ff on the RIGHT). */
+.interp-demo-pred .pred-clip-left  { color: #b35a00; background: #fff3e0; }
+.interp-demo-pred .pred-clip-right { color: #0b5fb0; background: #e6f0fb; }
+
+/* ── Aggregated bar plots (Age + Gender) ───────────────────── */
+.interp-bars-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  column-gap: 24px;
+  row-gap: 16px;
+  justify-content: center;
+  max-width: 1280px;
+  margin: 0 auto 1rem;
+}
+.interp-bars-cell {
+  position: relative;
+  /* Tall enough to fit the bar plot panel without a vertical scrollbar;
+     measured against the rendered panel's scrollHeight (~640 px at our
+     iframe width). Width still matches the demo cells via the parent
+     grid's equal columns. */
+  height: 660px;
+  overflow: hidden;
+  /* No border/background — the bar plot's own panel chrome provides the
+     visual frame inside the iframe. */
+}
+.interp-bars-cell iframe {
+  width: 100%; height: 100%; border: 0; display: block;
+}
+
+.interpretable-stats-intro {
+  font-size: 18px;
+  line-height: 1.7;
+  text-align: center;
+  color: #444;
+  max-width: 960px;
+  margin: 1.75rem auto 1rem;
+}
+
+.interpretable-attr-cell {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 12px;
+  font-family: 'Noto Serif', serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #2c3e6b;
+  letter-spacing: 0.02em;
+}
+
+.interpretable-panel-cell {
+  position: relative;
+  background: #ffffff;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #d6dde6;
+  box-shadow: 0 2px 8px rgba(20, 30, 50, 0.08),
+              0 1px 3px rgba(20, 30, 50, 0.05);
+}
+
+.interpretable-iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+
+.interpretable-more {
+  margin-top: 1.25rem;
+  text-align: center;
+  font-size: 18px;
+  color: #555;
+}
+.interpretable-more a { font-weight: 600; }
+
+/* Feature Statistics section: left-align the text so it lines up with the heading,
+   and let it span the full width (same as the bar plots below) instead of wrapping
+   early at the inherited 960px cap. */
+#statistics .interpretable-stats-intro {
+  text-align: left;
+  max-width: none;
+  margin-left: 0;
+  margin-right: 0;
+}
+#statistics .interpretable-more { text-align: center; }
+
+@media (max-width: 720px) {
+  .interpretable-grid {
+    grid-template-columns: 1fr;
+    grid-auto-rows: auto;
+  }
+  .interpretable-attr-cell {
+    justify-content: flex-start;
+    padding-right: 0;
+    padding-top: 6px;
+  }
+  .interpretable-panel-cell { height: 440px; }
+  /* Stack the new rows vertically on narrow screens. */
+  .interp-demos-row, .interp-bars-row {
+    grid-template-columns: 1fr;
+  }
+  .interp-demo-iframe { height: 440px; }
+  .interp-bars-cell   { height: 680px; }
+}
+
+/* ── Abstract ─────────────────────────────────────────────── */
+#abstract .abstract-text {
+  font-size: 1.02rem;
+  line-height: 1.85;
+  color: #444;
+  border-left: 4px solid #2c3e6b;
+  padding-left: 1.5rem;
+}
+
+/* ── Method ───────────────────────────────────────────────── */
+#method .method-placeholder {
+  border: 2px dashed #ccc;
+  border-radius: 8px;
+  background: #f8f9fa;
+  height: 350px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #999;
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+/* ── Results Table ────────────────────────────────────────── */
+.results-caption {
+  font-size: 18px;
+  color: #555;
+  margin-bottom: 0.75rem;
+  line-height: 1.6;
+}
+
+.results-table {
+  font-size: 18px;
+  border-collapse: separate;
+  border-spacing: 0;
+  border: 1px solid #dde3f0;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.results-table thead th {
+  background: #2c3e6b;
+  color: #fff;
+  font-weight: 600;
+  font-size: 18px;
+  text-align: center;
+  vertical-align: middle;
+  padding: 0.8rem 0.9rem;
+  border: none;
+  line-height: 1.35;
+  white-space: nowrap;
+}
+
+.results-table thead th small {
+  display: block;
+  font-weight: 400;
+  font-size: 18px;
+  opacity: 0.85;
+  margin-top: 3px;
+}
+
+/* Corner cell with diagonal label split */
+.results-corner {
+  background: #1e2d52 !important;
+  padding: 0.55rem 0.8rem !important;
+  min-width: 200px;
+  line-height: 1.3;
+}
+
+.corner-task {
+  display: block;
+  text-align: right;
+  font-size: 18px;
+  color: #a8c0ff;
+  font-weight: 600;
+}
+
+.corner-setting {
+  display: block;
+  text-align: left;
+  font-size: 18px;
+  color: #7dcfa8;
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+.results-table tbody td {
+  vertical-align: middle;
+  text-align: center;
+  padding: 0.65rem 0.85rem;
+  border-top: 1px solid #edf0f7;
+}
+
+.results-setting {
+  text-align: left !important;
+  font-weight: 500;
+  color: #1b5c3a;
+  white-space: nowrap;
+}
+
+.results-section-header td {
+  background: #f4f7f4;
+  text-align: center !important;
+  color: #555;
+  font-size: 0.82rem;
+  padding: 0.45rem 0.75rem;
+  border-top: 2px solid #d0e0d0 !important;
+  border-bottom: 1px solid #d0e0d0;
+}
+
+#results .highlight-cell {
+  font-weight: 600;
+}
+
+.results-note {
+  font-size: 0.88rem;
+  color: #666;
+  font-style: italic;
+  margin-top: 0.75rem;
+}
+
+/* ── Dataset Stat Cards ───────────────────────────────────── */
+#dataset .stat-card {
+  text-align: center;
+  padding: 1.5rem 1rem;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 2px 12px rgba(44,62,107,0.09);
+  border-top: 4px solid #2c3e6b;
+}
+
+#dataset .stat-number {
+  font-family: 'Noto Serif', serif;
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: #2c3e6b;
+  line-height: 1.1;
+}
+
+#dataset .stat-label {
+  font-size: 0.88rem;
+  color: #666;
+  margin-top: 0.3rem;
+}
+
+#dataset .dataset-placeholder {
+  border: 2px dashed #ccc;
+  border-radius: 8px;
+  height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #bbb;
+  font-size: 0.95rem;
+  margin-top: 2rem;
+}
+
+/* ── BibTeX ───────────────────────────────────────────────── */
+#bibtex pre {
+  background: #1e2433;
+  color: #cdd3e0;
+  border-radius: 8px;
+  padding: 1.5rem 1.75rem;
+  font-size: 0.88rem;
+  line-height: 1.7;
+  overflow-x: auto;
+  white-space: pre;
+}
+
+/* ── Footer ───────────────────────────────────────────────── */
+footer {
+  background: #f0f2f7;
+  border-top: 1px solid #dde;
+  padding: 2.5rem 0;
+  text-align: center;
+  font-size: 0.88rem;
+  color: #888;
+}
+
+/* ── Fade-in animations (IntersectionObserver driven) ──────── */
+.fade-in {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.65s ease, transform 0.65s ease;
+}
+
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Responsive ───────────────────────────────────────────── */
+@media (max-width: 1100px) {
+  #hero h1.paper-title {
+    white-space: normal;
+  }
+}
+
+@media (max-width: 768px) {
+  #hero h1.paper-title {
+    font-size: 1.5rem;
+  }
+
+  .teaser-pipeline {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .pipeline-arrow {
+    transform: rotate(90deg);
+  }
+
+  .arrow-dash {
+    width: 40px;
+  }
+
+  section {
+    padding: 55px 0;
+  }
+
+  .section-heading {
+    font-size: 1.5rem;
+  }
+}

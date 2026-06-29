@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SMPL Viewer</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+html, body { width:100%; height:100%; overflow:hidden; background:#7E8082; }
+
+#canvas-wrap { position:absolute; inset:0 0 52px 0; }
+canvas { display:block; width:100% !important; height:100% !important; }
+
+#controls {
+  position:absolute; bottom:0; left:0; right:0; height:52px;
+  background:rgba(255,255,255,0.92); backdrop-filter:blur(8px);
+  border-top:1px solid #e0e4ed;
+  display:flex; align-items:center; gap:10px; padding:0 14px;
+}
+#btn-play {
+  flex-shrink:0; width:32px; height:32px; border:none;
+  background:#2c3e6b; color:#fff; border-radius:50%; font-size:13px;
+  cursor:pointer; display:flex; align-items:center; justify-content:center;
+  transition:background .15s;
+}
+#btn-play:hover { background:#e74c3c; }
+#progress {
+  flex:1; -webkit-appearance:none; height:4px;
+  background:#e0e4ed; border-radius:99px; outline:none; cursor:pointer;
+}
+#progress::-webkit-slider-thumb {
+  -webkit-appearance:none; width:14px; height:14px;
+  border-radius:50%; background:#2c3e6b; cursor:pointer;
+}
+#time-label {
+  flex-shrink:0; font-size:11px; color:#888;
+  min-width:70px; text-align:right; font-variant-numeric:tabular-nums;
+  font-family:'Segoe UI',sans-serif;
+}
+#speed-select {
+  flex-shrink:0; font-size:11px; padding:3px 6px;
+  border:1px solid #dde; border-radius:4px; background:#fff; color:#444; cursor:pointer;
+}
+
+/* hide own controls when embedded (parent sends sync) */
+body.embedded #controls { display:none; }
+body.embedded #canvas-wrap { inset:0; }
+
+/* ── Zoom controls (bottom-right corner of canvas) ── */
+#zoom-controls {
+  position: absolute;
+  right: 10px;
+  bottom: 62px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  z-index: 5;
+}
+body.embedded #zoom-controls { bottom: 10px; }
+.zoom-btn {
+  width: 30px; height: 30px;
+  border: 1px solid rgba(255,255,255,0.18);
+  background: rgba(20,25,40,0.55);
+  color: #fff;
+  border-radius: 6px;
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.15s, transform 0.1s;
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  user-select: none;
+}
+.zoom-btn:hover  { background: rgba(231,76,60,0.85); }
+.zoom-btn:active { transform: scale(0.94); }
+
+/* switch loading overlay */
+#switch-overlay {
+  display: none;
+  position: absolute;
+  inset: 0;
+  background: rgba(127,128,130,0.72);
+  backdrop-filter: blur(3px);
+  z-index: 8;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 10px;
+}
+#switch-overlay.visible { display: flex; }
+#switch-overlay .sw-spinner {
+  width: 28px; height: 28px;
+  border: 3px solid rgba(255,255,255,0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin .7s linear infinite;
+}
+#switch-overlay .sw-label {
+  font-size: 11px; color: rgba(255,255,255,0.8);
+  font-family: 'Segoe UI', sans-serif;
+}
+
+#loading {
+  position:absolute; inset:0; background:#7E8082;
+  display:flex; flex-direction:column; align-items:center;
+  justify-content:center; gap:14px; z-index:10;
+  font-family:'Segoe UI',sans-serif;
+}
+.spinner {
+  width:34px; height:34px; border:3px solid #dde;
+  border-top-color:#2c3e6b; border-radius:50%;
+  animation:spin .8s linear infinite;
+}
+@keyframes spin { to { transform:rotate(360deg); } }
+#load-status { font-size:12px; color:#888; max-width:220px; text-align:center; }
+</style>
+</head>
+<body>
+<div id="canvas-wrap"></div>
+<div id="zoom-controls">
+  <button id="zoom-in"  class="zoom-btn" title="Zoom in">&#43;</button>
+  <button id="zoom-out" class="zoom-btn" title="Zoom out">&minus;</button>
+</div>
+<div id="switch-overlay">
+  <div class="sw-spinner"></div>
+  <div class="sw-label">Loading motion…</div>
+</div>
+<div id="controls">
+  <button id="btn-play">&#9646;&#9646;</button>
+  <input id="progress" type="range" min="0" max="1" step="0.001" value="0"/>
+  <span id="time-label">0.00 / 0.00s</span>
+  <select id="speed-select">
+    <option value="0.25">0.25×</option>
+    <option value="0.5">0.5×</option>
+    <option value="1" selected>1×</option>
+    <option value="2">2×</option>
+  </select>
+</div>
+<div id="loading">
+  <div class="spinner"></div>
+  <div id="load-status">Loading…</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+'use strict';
+
+// ── URL params ────────────────────────────────────────────────────────────
+const params         = new URLSearchParams(location.search);
+const SEQ            = params.get('seq') || 'predicted';   // 'predicted' | 'groundtruth'
+const EMBEDDED       = params.has('embed');
+const DEMO_OVERRIDE  = params.get('demo');                 // e.g. ?demo=walking — picks ../assets/demos/smpl/<id>_<gt|predicted>.bin
+const BIN_URL_OVERRIDE   = params.get('bin_url');          // explicit vertsFile URL (relative or absolute)
+const FACES_URL_OVERRIDE = params.get('faces_url');        // explicit faces URL
+if (EMBEDDED) document.body.classList.add('embedded');
+
+// Bump this string whenever .bin files change so browsers refetch instead of
+// serving the old mesh from disk cache.
+const BIN_VERSION    = '2026-06-26a';
+const withV          = (u) => u + (u.includes('?') ? '&' : '?') + 'v=' + BIN_VERSION;
+
+// ── State ─────────────────────────────────────────────────────────────────
+let cfg, vertData, facesData, numFrames, numVerts, seqFps;
+let renderer, scene, camera, controls, smplMesh, posAttr;
+let frameCenterXZ;  // Float32Array of per-frame [x,z] centroids (length 2*numFrames)
+let meshFloorY = 0; // constant Y offset so feet plant on the floor
+let playing  = true;
+let masterTime = 0;
+let lastTS   = null;
+
+// ── Demo cache — keyed by "<id>_pred" or "<id>_gt" ───────────────────────
+const demoCache    = new Map();
+let   sharedFaces  = null;   // faces.bin loaded once, reused for all demos
+let   loadingDemo  = false;  // prevent concurrent loads
+
+function showSwitchOverlay() {
+  document.getElementById('switch-overlay')?.classList.add('visible');
+}
+function hideSwitchOverlay() {
+  document.getElementById('switch-overlay')?.classList.remove('visible');
+}
+
+function setStatus(msg) {
+  const el = document.getElementById('load-status');
+  if (el) el.textContent = msg;
+}
+
+// ── Binary loaders ────────────────────────────────────────────────────────
+async function loadVertsBin(url) {
+  setStatus('Fetching vertices…');
+  const buf  = await fetch(url).then(r => { if (!r.ok) throw new Error(r.status+' '+url); return r.arrayBuffer(); });
+  const view = new DataView(buf);
+  const nf   = view.getUint32(0, true);
+  const nv   = view.getUint32(4, true);
+  const fps  = view.getFloat32(8, true);
+  return { numFrames:nf, numVerts:nv, fps, verts: new Float32Array(buf, 12) };
+}
+
+async function loadFacesBin(url) {
+  setStatus('Fetching faces…');
+  const buf  = await fetch(url).then(r => { if (!r.ok) throw new Error(r.status+' '+url); return r.arrayBuffer(); });
+  const view = new DataView(buf);
+  const nf   = view.getUint32(0, true);
+  return new Uint32Array(buf, 4, nf * 3);
+}
+
+// ── Three.js setup ────────────────────────────────────────────────────────
+function setupScene() {
+  const wrap = document.getElementById('canvas-wrap');
+
+  renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'low-power' });
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setSize(wrap.clientWidth, wrap.clientHeight);
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  wrap.appendChild(renderer.domElement);
+
+  // WebGL context-loss recovery — see matching note in g1_engine/viewer.html.
+  // Many simultaneous WebGL canvases (4 strip viewers + popup) can starve
+  // GPU resources; without this, the human mesh silently vanishes.
+  renderer.domElement.addEventListener('webglcontextlost', (e) => {
+    e.preventDefault();
+    console.warn('[smpl-viewer] WebGL context lost — reloading iframe');
+    setTimeout(() => { try { location.reload(); } catch {} }, 150);
+  });
+
+  const bg = cfg.backgroundColor || '#f8f9fa';
+  scene = new THREE.Scene();
+  scene.background = new THREE.Color(bg);
+  scene.fog = new THREE.Fog(bg, 10, 25);
+
+  const [cx, cy, cz] = cfg.camera.position;
+  const [tx, ty, tz] = cfg.camera.target;
+  camera = new THREE.PerspectiveCamera(42, wrap.clientWidth/wrap.clientHeight, 0.01, 30);
+  camera.position.set(cx, cy, cz);
+
+  // Orbit controls — rotate only; zoom is driven by the explicit +/- buttons
+  // so that holding the mouse button (or pinching) no longer dollies the camera.
+  controls = new THREE.OrbitControls(camera, renderer.domElement);
+  controls.target.set(tx, ty, tz);
+  controls.enableDamping = true;
+  controls.dampingFactor = 0.06;
+  controls.minDistance = 0.5;
+  controls.maxDistance = 12;
+  controls.enableZoom = false;
+  controls.update();
+
+  // Programmatic zoom via on-screen buttons
+  function zoomCamera(scale) {
+    const offset = new THREE.Vector3().subVectors(camera.position, controls.target);
+    const newLen = THREE.MathUtils.clamp(offset.length() * scale, controls.minDistance, controls.maxDistance);
+    offset.setLength(newLen);
+    camera.position.copy(controls.target).add(offset);
+    controls.update();
+  }
+  document.getElementById('zoom-in') ?.addEventListener('click', () => zoomCamera(0.85));
+  document.getElementById('zoom-out')?.addEventListener('click', () => zoomCamera(1.18));
+
+  // Lighting
+  scene.add(new THREE.HemisphereLight(0x606060, 0x202020, 0.9));
+  const sun = new THREE.DirectionalLight(0xffffff, 1.1);
+  sun.position.set(3, 7, 4);
+  sun.castShadow = true;
+  sun.shadow.mapSize.set(1024,1024);
+  scene.add(sun);
+  const fill = new THREE.DirectionalLight(0xffffff, 0.3);
+  fill.position.set(-3, 4, -4);
+  scene.add(fill);
+
+  // Floor — canvas-texture grid (supports arbitrary line width)
+  const gridC  = new THREE.Color(cfg.gridColor  || '#aaaaaa');
+  const floorC = new THREE.Color(cfg.floorColor || '#c8c8c8');
+  const texPx = 1024, divisions = 20;
+  const fCanvas = document.createElement('canvas');
+  fCanvas.width = fCanvas.height = texPx;
+  const fCtx = fCanvas.getContext('2d');
+  fCtx.fillStyle = '#' + floorC.getHexString();
+  fCtx.fillRect(0, 0, texPx, texPx);
+  fCtx.strokeStyle = '#' + gridC.getHexString();
+  fCtx.lineWidth = 4;
+  fCtx.lineCap = 'square';
+  const fStep = texPx / divisions;
+  for (let i = 0; i <= divisions; i++) {
+    const p = Math.round(i * fStep);
+    fCtx.beginPath(); fCtx.moveTo(p, 0);    fCtx.lineTo(p, texPx); fCtx.stroke();
+    fCtx.beginPath(); fCtx.moveTo(0, p);    fCtx.lineTo(texPx, p); fCtx.stroke();
+  }
+  const floorTex = new THREE.CanvasTexture(fCanvas);
+  const floor = new THREE.Mesh(
+    new THREE.PlaneGeometry(10, 10),
+    new THREE.MeshBasicMaterial({ map: floorTex })
+  );
+  floor.rotation.x = -Math.PI/2;
+  floor.receiveShadow = true;
+  scene.add(floor);
+
+  window.addEventListener('resize', () => {
+    const w = wrap.clientWidth, h = wrap.clientHeight;
+    camera.aspect = w/h;
+    camera.updateProjectionMatrix();
+    renderer.setSize(w, h);
+  });
+
+  // Broadcast camera changes to parent for cross-viewer sync
+  controls.addEventListener('change', () => {
+    if (!EMBEDDED) return;
+    const p = camera.position;
+    const t = controls.target;
+    window.parent.postMessage({
+      type:'CAMERA', source:'smpl',
+      pos:[p.x,p.y,p.z], target:[t.x,t.y,t.z]
+    }, '*');
+  });
+}
+
+// ── Build SMPL mesh ───────────────────────────────────────────────────────
+function buildMesh() {
+  const geo  = new THREE.BufferGeometry();
+  const skin = cfg.skinColor || [0.94, 0.76, 0.58];
+  const mat  = new THREE.MeshPhongMaterial({
+    color: new THREE.Color(...skin),
+    specular: 0x111111,
+    shininess: 25,
+    side: THREE.DoubleSide,
+  });
+
+  posAttr = new THREE.BufferAttribute(new Float32Array(numVerts * 3), 3);
+  geo.setAttribute('position', posAttr);
+  geo.setIndex(new THREE.BufferAttribute(facesData, 1));
+
+  applyFrame(0);
+  geo.computeVertexNormals();
+
+  smplMesh = new THREE.Mesh(geo, mat);
+  smplMesh.castShadow = true;
+
+  // Floor-align (Y) + per-frame horizontal centering (X/Z).
+  // Floor: take the 10th-percentile of per-frame min-Y so the feet plant
+  // without being dragged down by a stray hand vertex.
+  // X/Z: locomotion clips (jumping, transition, walking) carry global
+  // translation that walks the mesh off-camera. We store the per-frame
+  // centroid and offset smplMesh.position each frame so the body stays
+  // centered ("walk in place"). Body motion is preserved; only the path
+  // through the world is cancelled.
+  const frameMin = new Float32Array(numFrames);
+  frameCenterXZ  = new Float32Array(numFrames * 2);   // [x0,z0, x1,z1, ...]
+  for (let fi = 0; fi < numFrames; fi++) {
+    const base = fi * numVerts * 3;
+    let mn = Infinity, sx = 0, sz = 0;
+    for (let v = 0; v < numVerts; v++) {
+      const i = base + v * 3;
+      sx += vertData[i];
+      const y = vertData[i + 1];
+      if (y < mn) mn = y;
+      sz += vertData[i + 2];
+    }
+    frameMin[fi]            = mn;
+    frameCenterXZ[fi * 2]     = sx / numVerts;
+    frameCenterXZ[fi * 2 + 1] = sz / numVerts;
+  }
+  const sorted = Array.from(frameMin).sort((a, b) => a - b);
+  meshFloorY   = -sorted[Math.floor(numFrames * 0.10)];
+  smplMesh.position.set(0, meshFloorY, 0);
+
+  scene.add(smplMesh);
+}
+
+// ── Per-frame update ──────────────────────────────────────────────────────
+function applyFrame(fi) {
+  const offset = fi * numVerts * 3;
+  posAttr.array.set(vertData.subarray(offset, offset + numVerts * 3));
+  posAttr.needsUpdate = true;
+  if (smplMesh) {
+    smplMesh.geometry.computeVertexNormals();
+    if (frameCenterXZ) {
+      // Cancel the global XZ translation so locomotion clips don't walk
+      // off-camera. Body motion is preserved; only the path is removed.
+      smplMesh.position.x = -frameCenterXZ[fi * 2];
+      smplMesh.position.y =  meshFloorY;
+      smplMesh.position.z = -frameCenterXZ[fi * 2 + 1];
+    }
+  }
+}
+
+function timeToFrame(t) {
+  return Math.floor(t * seqFps) % numFrames;
+}
+
+// ── Animation loop ────────────────────────────────────────────────────────
+function loop(ts) {
+  requestAnimationFrame(loop);
+
+  if (!EMBEDDED && playing && vertData) {
+    if (lastTS === null) lastTS = ts;
+    const dt = (ts - lastTS) * 0.001;
+    lastTS = ts;
+    const speed = parseFloat(document.getElementById('speed-select').value);
+    masterTime += dt * speed;
+  } else {
+    lastTS = null;
+  }
+
+  if (vertData) {
+    const fi = timeToFrame(masterTime);
+    applyFrame(fi);
+
+    const prog = document.getElementById('progress');
+    const tl   = document.getElementById('time-label');
+    const dur  = numFrames / seqFps;
+    const cur  = (masterTime % dur).toFixed(2);
+    if (prog) prog.value  = (masterTime % dur) / dur;
+    if (tl)   tl.textContent = `${cur} / ${dur.toFixed(2)}s`;
+  }
+
+  controls.update();
+  renderer.render(scene, camera);
+}
+
+// ── Sync protocol ─────────────────────────────────────────────────────────
+window.addEventListener('message', e => {
+  const msg = e.data;
+  if (!msg || !msg.type) return;
+
+  if (msg.type === 'SYNC') {
+    masterTime = msg.time;
+    playing    = msg.playing;
+    const sel = document.getElementById('speed-select');
+    if (sel) sel.value = String(msg.speed || 1);
+  }
+
+  if (msg.type === 'CAMERA' && msg.source !== 'smpl') {
+    const [px, py, pz] = msg.pos;
+    const [tx, ty, tz] = msg.target;
+    camera.position.set(px, py, pz);
+    controls.target.set(tx, ty, tz);
+    controls.update();
+  }
+
+  if (msg.type === 'PRELOAD_DEMO' && msg.demo) {
+    const demo    = msg.demo;
+    const isGT    = SEQ === 'groundtruth';
+    const cacheKey = `${demo.id}_${isGT ? 'gt' : 'pred'}`;
+    if (!demoCache.has(cacheKey) && !loadingDemo) {
+      const binKey = isGT ? 'smplGtFile' : 'smplPredFile';
+      const binUrl = withV('../assets/demos/' + demo[binKey].replace('./',''));
+      loadVertsBin(binUrl)
+        .then(vd => demoCache.set(cacheKey, vd))
+        .catch(() => {});  // silent — preload is best-effort
+    }
+  }
+
+  if (msg.type === 'LOAD_DEMO' && msg.demo) {
+    if (loadingDemo) return;
+    loadingDemo = true;
+    showSwitchOverlay();
+
+    const demo    = msg.demo;
+    const isGT    = SEQ === 'groundtruth';
+    const cacheKey = `${demo.id}_${isGT ? 'gt' : 'pred'}`;
+    const binKey  = isGT ? 'smplGtFile' : 'smplPredFile';
+    const binUrl  = withV('../assets/demos/' + demo[binKey].replace('./',''));
+    const facesUrl = '../assets/demos/' + demo.smplFacesFile.replace('./','');
+
+    async function doLoad() {
+      // Faces shared — load once
+      if (!sharedFaces) {
+        sharedFaces = await loadFacesBin(facesUrl);
+      }
+
+      // Vertex data — use cache if available
+      let vd;
+      if (demoCache.has(cacheKey)) {
+        vd = demoCache.get(cacheKey);
+      } else {
+        vd = await loadVertsBin(binUrl);
+        demoCache.set(cacheKey, vd);
+      }
+
+      numFrames  = vd.numFrames;
+      numVerts   = vd.numVerts;
+      seqFps     = vd.fps;
+      vertData   = vd.verts;
+      facesData  = sharedFaces;
+      masterTime = 0;
+
+      // Re-align floor + recompute per-frame XZ centroids for the new demo
+      // so locomotion clips stay centered (see initial-load block above).
+      const frameMin = new Float32Array(numFrames);
+      frameCenterXZ  = new Float32Array(numFrames * 2);
+      for (let fi = 0; fi < numFrames; fi++) {
+        const base = fi * numVerts * 3;
+        let mn = Infinity, sx = 0, sz = 0;
+        for (let v = 0; v < numVerts; v++) {
+          const i = base + v * 3;
+          sx += vertData[i];
+          const y = vertData[i + 1];
+          if (y < mn) mn = y;
+          sz += vertData[i + 2];
+        }
+        frameMin[fi]              = mn;
+        frameCenterXZ[fi * 2]     = sx / numVerts;
+        frameCenterXZ[fi * 2 + 1] = sz / numVerts;
+      }
+      const sorted = Array.from(frameMin).sort((a, b) => a - b);
+      meshFloorY = -sorted[Math.floor(numFrames * 0.10)];
+      if (smplMesh) smplMesh.position.set(0, meshFloorY, 0);
+      smplMesh.geometry.setIndex(new THREE.BufferAttribute(facesData, 1));
+      applyFrame(0);
+      hideSwitchOverlay();
+    }
+
+    doLoad()
+      .catch(err => { console.error('LOAD_DEMO SMPL error:', err); hideSwitchOverlay(); })
+      .finally(() => { loadingDemo = false; });
+  }
+});
+
+// ── Local UI (standalone mode) ────────────────────────────────────────────
+function setupLocalControls() {
+  const btn  = document.getElementById('btn-play');
+  const prog = document.getElementById('progress');
+
+  btn.addEventListener('click', () => {
+    playing = !playing;
+    btn.innerHTML = playing ? '&#9646;&#9646;' : '&#9654;';
+    if (playing) lastTS = null;
+  });
+
+  prog.addEventListener('input', () => {
+    const dur = numFrames / seqFps;
+    masterTime = parseFloat(prog.value) * dur;
+  });
+}
+
+// ── Boot ──────────────────────────────────────────────────────────────────
+async function boot() {
+  setStatus('Loading config…');
+  cfg = await fetch('./config.json').then(r => r.json());
+
+  // Case-insensitive key lookup: URL param 'groundtruth' must match config key 'groundTruth'
+  const seqKey  = Object.keys(cfg).find(k => k.toLowerCase() === SEQ.toLowerCase());
+  const seqCfg  = seqKey ? cfg[seqKey] : null;
+  if (!seqCfg) { setStatus(`Unknown sequence: ${SEQ}`); return; }
+
+  // Update bg to sequence-specific color
+  const bg = seqCfg.bgColor || cfg.backgroundColor || '#f8f9fa';
+  document.body.style.background = bg;
+
+  const vertsUrl = withV(BIN_URL_OVERRIDE
+    ? BIN_URL_OVERRIDE
+    : (DEMO_OVERRIDE
+        ? `../assets/demos/smpl/${DEMO_OVERRIDE}_${SEQ === 'groundtruth' ? 'gt' : 'predicted'}.bin`
+        : seqCfg.vertsFile));
+  const facesUrl = FACES_URL_OVERRIDE
+    ? FACES_URL_OVERRIDE
+    : (DEMO_OVERRIDE
+        ? '../assets/demos/smpl/faces.bin'
+        : cfg.facesFile);
+
+  const [vd, fd] = await Promise.all([
+    loadVertsBin(vertsUrl),
+    loadFacesBin(facesUrl),
+  ]);
+
+  numFrames = vd.numFrames;
+  numVerts  = vd.numVerts;
+  seqFps    = vd.fps;
+  vertData  = vd.verts;
+  facesData = fd;
+
+  setStatus('Building scene…');
+  setupScene();
+  buildMesh();
+
+  document.getElementById('loading').style.display = 'none';
+  if (!EMBEDDED) setupLocalControls();
+  if (EMBEDDED) window.parent.postMessage({ type: 'READY' }, '*');
+  requestAnimationFrame(loop);
+}
+
+boot().catch(err => {
+  // Friendly placeholder when a clip's SMPL bin isn't yet on the server —
+  // the bar plot lets the user hover any dot, but fitting all 2400 clips
+  // takes hours and during that window many bins return 404. Match the
+  // popup viewer's neutral palette so it doesn't read as an error.
+  const isMissingBin = /^4\d\d/.test(String(err.message)) || /\.bin/.test(String(err.message));
+  document.getElementById('loading').innerHTML = `
+    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;
+                height:100%;color:#6e7382;font-size:13px;text-align:center;padding:24px;line-height:1.4;">
+      <div style="font-size:32px;margin-bottom:10px;opacity:0.45">⌛</div>
+      <div style="font-weight:600;color:#45556c;margin-bottom:4px;">
+        ${isMissingBin ? 'Mesh still being fit' : 'Mesh unavailable'}
+      </div>
+      <div style="max-width:240px;">
+        ${isMissingBin
+          ? 'The 3D human reconstruction for this clip is queued — refresh in a few hours.'
+          : 'This clip cannot be displayed right now.'}
+      </div>
+    </div>`;
+  console.warn('[smpl-viewer]', err.message);
+});
+</script>
+</body>
+</html>

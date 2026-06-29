@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>UNVEIL · feature-leak matrix</title>
+<style>
+* { margin:0; padding:0; box-sizing: border-box; }
+html, body {
+  background: #0d1017;
+  color: #e8ecf4;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.wrap { max-width: 1820px; margin: 0 auto; padding: 24px 22px 40px 22px; }
+
+.eyebrow {
+  font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em;
+  color: #88c0ff; margin-bottom: 4px;
+}
+h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin-bottom: 6px; }
+h1 em { font-style: normal; color: #ffba6e; }
+.sub { color: #98a0ad; font-size: 13px; max-width: 1100px; }
+
+.matrix-card {
+  background: #141823;
+  border: 1px solid #1c2230;
+  border-radius: 12px;
+  padding: 14px;
+  margin-top: 18px;
+}
+.matrix-card h2 {
+  font-size: 15px; font-weight: 600; margin-bottom: 10px;
+}
+.matrix-card .deck {
+  color:#98a0ad; font-size: 12px; margin-bottom: 12px; max-width: 1100px;
+}
+
+.matrix-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  width: 100%;
+}
+.panel-cell {
+  position: relative;
+  height: 560px;
+  background: #f5f7fa;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.panel-cell iframe {
+  width: 100%; height: 100%;
+  border: 0;
+  display: block;
+}
+
+.legend-note {
+  margin-top: 10px;
+  color: #6e7382;
+  font-size: 11px;
+}
+.legend-note strong { color: #c8cfdb; }
+.dot { display:inline-block; width:8px; height:8px; border-radius:50%; vertical-align: middle; margin: 0 4px 0 8px; }
+.dot.heavy { background:#ff8c19; }
+.dot.light { background:#1e90ff; }
+
+.placeholder {
+  color: #6e7382; font-size: 12px; text-align: center;
+  padding: 30px; background: #141823; border: 1px dashed #2a3040;
+  border-radius: 12px; margin-top: 18px;
+}
+
+/* Attribute tabs — switching tabs DROPS the inactive matrix's iframes from
+   the DOM so we never have more than one matrix's worth of WebGL contexts
+   alive at once (each panel uses 1 context, so 3 max). */
+.tabs {
+  display: inline-flex; gap: 0;
+  background: #141823;
+  border: 1px solid #1c2230;
+  border-radius: 999px;
+  padding: 4px;
+  margin-top: 14px;
+}
+.tab {
+  background: transparent;
+  color: #98a0ad;
+  border: 0;
+  padding: 7px 18px;
+  font: 600 12px/1 'Segoe UI', system-ui, sans-serif;
+  cursor: pointer;
+  border-radius: 999px;
+  letter-spacing: 0.02em;
+  transition: background .15s, color .15s;
+}
+.tab:hover { color: #e8ecf4; }
+.tab.active { background: #ffba6e; color: #1a1a1a; }
+.matrix-card.hidden { display: none; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="eyebrow">UNVEIL · feature-leak matrix</div>
+<h1>Operator attributes <em>leak</em> through retargeting</h1>
+<div class="sub">Each panel shows two different operators paired on a task where the per-actor mean of one motion feature is strongly correlated with the attribute. Red = side predicted to have larger feature value; blue = predicted lower. Per-clip values shown in the chips above each body — Pearson r and the per-task sample size are in each panel's header.</div>
+
+<div class="tabs" id="tabs"></div>
+
+<div id="cards-host"></div>
+
+</div>
+<script>
+let CFG = null;
+const STATE = { activeAttr: null };
+
+const ATTR_LABELS = {
+  age:    { tab: 'Age',    title: 'Age',    high: 'older predicted larger',    low: 'younger' },
+  weight: { tab: 'Weight', title: 'Weight', high: 'heavier predicted larger',  low: 'lighter' },
+  height: { tab: 'Height', title: 'Height', high: 'taller predicted larger',   low: 'shorter' },
+  gender: { tab: 'Gender', title: 'Gender', high: 'predicted larger',          low: 'predicted lower' },
+};
+
+async function init() {
+  CFG = await fetch('./data/feature_matrix_config.json?v=' + Date.now()).then(r => r.json());
+  if (CFG.schema !== 'feature_matrix_v1') {
+    throw new Error('feature_matrix_config.json schema mismatch (expected feature_matrix_v1)');
+  }
+  const tabsHost = document.getElementById('tabs');
+  const cardsHost = document.getElementById('cards-host');
+
+  const attrs = ['age', 'weight', 'height', 'gender'].filter(a => (CFG.groups[a] || []).length > 0);
+  if (attrs.length === 0) {
+    cardsHost.innerHTML = '<div class="placeholder">No rows in feature_matrix_config.json.</div>';
+    return;
+  }
+
+  for (const attr of attrs) {
+    const btn = document.createElement('button');
+    btn.className = 'tab';
+    btn.dataset.attr = attr;
+    btn.textContent = ATTR_LABELS[attr]?.tab || attr;
+    btn.addEventListener('click', () => switchTo(attr));
+    tabsHost.appendChild(btn);
+
+    const card = document.createElement('section');
+    card.className = 'matrix-card';
+    card.id = 'card-' + attr;
+    const meta = ATTR_LABELS[attr] || { title: attr, high: 'high', low: 'low' };
+    card.innerHTML = `
+      <div class="deck"></div>
+      <div class="matrix-grid"></div>
+      <div class="legend-note">
+        <span class="dot heavy"></span><strong>${meta.high}</strong>
+        <span class="dot light"></span><strong>${meta.low}</strong>
+        · Each panel uses a different operator pair, real CSVs (no synthetic scaling); the dashed line on the plot is the per-clip feature scalar reported in the chip.
+      </div>`;
+    cardsHost.appendChild(card);
+    // deck text: list the 3 (task, feature) pairs for context
+    const rows = CFG.groups[attr].map(rid => CFG.rows.find(r => r.row_id === rid)).filter(Boolean);
+    const decTxt = rows.map(r => `${r.task} · ${r.feature} (r=${r.r.toFixed(2)}, n=${r.n_actors})`).join('  ·  ');
+    card.querySelector('.deck').textContent = decTxt;
+  }
+
+  switchTo(attrs[0]);
+}
+
+function switchTo(attr) {
+  STATE.activeAttr = attr;
+  document.querySelectorAll('.tab').forEach(b => {
+    b.classList.toggle('active', b.dataset.attr === attr);
+  });
+  for (const card of document.querySelectorAll('.matrix-card')) {
+    const a = card.id.replace(/^card-/, '');
+    const grid = card.querySelector('.matrix-grid');
+    if (a === attr) {
+      card.classList.remove('hidden');
+      if (grid.childElementCount === 0) populate(a, grid);
+    } else {
+      card.classList.add('hidden');
+      // Drop iframes so their WebGL contexts are freed.
+      while (grid.firstChild) grid.removeChild(grid.firstChild);
+    }
+  }
+}
+
+function populate(attr, grid) {
+  const ts = Date.now();
+  for (const rid of (CFG.groups[attr] || [])) {
+    const cell = document.createElement('div');
+    cell.className = 'panel-cell';
+    const iframe = document.createElement('iframe');
+    iframe.loading = 'lazy';
+    iframe.src = `./panel.html?row=${encodeURIComponent(rid)}&t=${ts}`;
+    cell.appendChild(iframe);
+    grid.appendChild(cell);
+  }
+}
+
+init().catch(err => {
+  document.body.innerHTML = `<pre style="color:#ff7280;padding:30px">${err.message}</pre>`;
+});
+</script>
+</body>
+</html>
