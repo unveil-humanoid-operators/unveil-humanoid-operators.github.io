@@ -830,9 +830,9 @@ section:nth-of-type(even) {
 }
 
 #hero .affiliation-line {
-  font-size: 0.98rem;
+  font-size: 1.5rem;
   color: #888;
-  margin-top: 0.1rem;
+  margin-top: 0.15rem;
   margin-bottom: 0;
 }
 
