@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<meta name="robots" content="noindex, nofollow"/>
 <title>UNVEIL — Framework Walkthrough</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1116,7 +1115,7 @@ canvas#three-canvas { width: 100% !important; height: 100% !important; }
 // ─── Dev-only auto-reload (Option B) ────────────────────────────────────────
 // Polls this page's Last-Modified header once per second; if it changes,
 // reloads the page. Only active when served from localhost so the deployed
-// site on project-unveil.github.io never hits this.
+// site on unveil-humanoid-operators.github.io never hits this.
 (function autoReloadOnChange() {
   const isLocal = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
   if (!isLocal) return;

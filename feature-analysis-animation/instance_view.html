@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<meta name="robots" content="noindex, nofollow"/>
 <title>UNVEIL · instance view</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -74,8 +73,8 @@ const instanceId = params.get('instance_id');
 const CONFIG_URL = 'data/feature_matrix_config_instances.json';
 
 // SMPL bins live behind a Cloudflare Worker reverse proxy so the upstream
-// dataset host stays invisible to browser DevTools (required for anonymous
-// submission). Worker source: anonymized/cloudflare-worker-smpl.js.
+// dataset host stays invisible to browser DevTools.
+// Worker source: anonymized/cloudflare-worker-smpl.js.
 const SMPL_PROXY_BASE = 'https://smpl.unveil2000.workers.dev/file';
 
 async function boot() {
