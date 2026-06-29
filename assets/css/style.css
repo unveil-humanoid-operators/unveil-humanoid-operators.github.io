@@ -819,7 +819,7 @@ section:nth-of-type(even) {
 }
 
 #hero .authors-line {
-  font-size: 1.05rem;
+  font-size: 35.4px;   /* match h1.paper-title */
   color: #666;
   margin-top: 0.6rem !important;
   margin-bottom: 0.15rem;
@@ -1585,6 +1585,10 @@ footer {
 @media (max-width: 768px) {
   #hero h1.paper-title {
     font-size: 1.5rem;
+  }
+
+  #hero .authors-line {
+    font-size: 1.5rem;   /* match h1.paper-title on mobile */
   }
 
   .teaser-pipeline {
