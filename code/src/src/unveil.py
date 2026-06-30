@@ -110,25 +110,22 @@ EPS = 1e-4
 SUPCON_BIN_WIDTH = {"age": 5.0, "height": 5.0, "weight": 5.0}
 
 SPATIAL_BACKBONE_DEFAULTS: Dict[str, Dict] = {
-    "stream-attn": {
-        "lr": 3e-4, "batch_size": 64, "supcon_warmup": 20,
-        "dim1": 256, "seg": 64, "emb_dim": 256,
-        "variance_percentile": 10.0,
-    },
-    "dyn-graph": {
-        "lr": 1e-3, "batch_size": 32, "supcon_warmup": 20,
-        "base_channels": 64, "num_stages": 10, "emb_dim": 256,
-        "variance_percentile": 0.0,
-    },
-    "proto-mem": {
+    # ProtoGCN is the default UNVEIL backbone.
+    "protogcn": {
         "lr": 1e-3, "batch_size": 32, "supcon_warmup": 8,
         "base_channels": 96, "num_stages": 10, "num_prototype": 100,
         "emb_dim": 256, "lambda_proto": 0.1,
         "variance_percentile": 0.0,
     },
-    "unveil-vanilla": {
-        "lr": 1e-3, "batch_size": 128, "supcon_warmup": 20,
-        "emb_dim": 256, "variance_percentile": 0.0,
+    "sgn": {
+        "lr": 3e-4, "batch_size": 64, "supcon_warmup": 20,
+        "dim1": 256, "seg": 64, "emb_dim": 256,
+        "variance_percentile": 10.0,
+    },
+    "dsgcn": {
+        "lr": 1e-3, "batch_size": 32, "supcon_warmup": 20,
+        "base_channels": 64, "num_stages": 10, "emb_dim": 256,
+        "variance_percentile": 0.0,
     },
 }
 
@@ -184,7 +181,7 @@ BVH_NUM_JOINTS = 24
 BVH_NUM_CHANNELS = BVH_NUM_JOINTS * 3
 
 
-# === SECTION: GRAPH PATCHING (proto-mem) ===
+# === SECTION: GRAPH PATCHING (protogcn) ===
 # Patches the external graph utility to support BONES-SEED skeleton layouts.
 
 if _HAS_PROTOMEM and _pm_Graph is not None:
@@ -657,7 +654,7 @@ class SupConLoss(nn.Module):
 
 
 class MemoryContrastiveLoss(nn.Module):
-    """Per-class prototype memory updated with momentum; used by proto-mem spatial backbone."""
+    """Per-class prototype memory updated with momentum; used by the protogcn spatial backbone."""
 
     def __init__(self, n_class, n_channel=576, h_channel=256,
                  tmp=0.125, mom=0.9, pred_threshold=0.0):
@@ -710,7 +707,7 @@ class MemoryContrastiveLoss(nn.Module):
         return self.loss(score_cl, lbl.long()).mean()
 
 
-# === SECTION: STREAM-ATTN BACKBONE ===
+# === SECTION: SGN BACKBONE ===
 
 class _NormData(nn.Module):
     def __init__(self, dim: int, num_joint: int):
@@ -877,7 +874,7 @@ class StreamAttnBackbone(nn.Module):
         return logits, z
 
 
-# === SECTION: DYN-GRAPH BACKBONE ===
+# === SECTION: DSGCN BACKBONE ===
 
 class DynGraphBackbone(nn.Module):
     """Wraps the dynamic-adjacency spatiotemporal network for BONES-SEED."""
@@ -886,7 +883,7 @@ class DynGraphBackbone(nn.Module):
                  num_stages=10, dropout=0.5):
         super().__init__()
         if not _HAS_DYNGRAPH:
-            raise ImportError(f"dyn-graph dependency not found at {_DYNGRAPH_ROOT}")
+            raise ImportError(f"dsgcn dependency not found at {_DYNGRAPH_ROOT}")
         self.fmt = fmt
         self.num_classes = num_classes
         if fmt == "g1":
@@ -927,7 +924,7 @@ class DynGraphBackbone(nn.Module):
         return logits, z
 
 
-# === SECTION: PROTO-MEM BACKBONE ===
+# === SECTION: PROTOGCN BACKBONE ===
 
 class _GCNBlock(nn.Module):
     def __init__(self, in_channels, out_channels, A, stride=1, residual=True, **kwargs):
@@ -1059,7 +1056,7 @@ class ProtoMemBackbone(nn.Module):
                  num_stages=10, num_prototype=100, dropout=0.5):
         super().__init__()
         if not _HAS_PROTOMEM:
-            raise ImportError(f"proto-mem dependency not found at {_PROTOMEM_ROOT}")
+            raise ImportError(f"protogcn dependency not found at {_PROTOMEM_ROOT}")
         self.fmt = fmt
         self.num_classes = num_classes
         if fmt == "g1":
@@ -1102,238 +1099,6 @@ class ProtoMemBackbone(nn.Module):
         return logits, z, reconstructed_graph
 
 
-# === SECTION: UNVEIL-VANILLA BACKBONE ===
-#
-# Hierarchical spatiotemporal GCN operating on raw joint angles.
-# Two-level graph hierarchy: intra-limb (5 subgraphs) + limb-torso (4 subgraphs).
-# Kinematic encoder learns motion dynamics from position-only input (no precomputed vel/acc).
-#
-# Input format:
-#   G1  : (B, 3, 35, T) → position stream (B,35,T) → grouped to (B, 15, 3, T)
-#   BVH : (B, 3, 72, T) → position stream (B,72,T) → reshaped to (B, 24, 3, T)
-#
-# G1 joint grouping (15 joints × ≤3 DoFs each, zero-padded to 3):
-#   0:Pelvis(0-2)  1:PelvisRot(3-5)  2:LeftHip(6-8)    3:LeftKnee(9)
-#   4:LeftAnkle(10-11)  5:RightHip(12-14)  6:RightKnee(15)  7:RightAnkle(16-17)
-#   8:Waist(18-20)  9:LeftShoulder(21-23)  10:LeftElbow(24)  11:LeftWrist(25-27)
-#   12:RightShoulder(28-30)  13:RightElbow(31)  14:RightWrist(32-34)
-#
-# BVH joint order follows MAJOR_JOINT_CHANNELS (sorted by channel index), each with 3 rot channels.
-
-_VANILLA_G1_JOINT_DOFS: List[List[int]] = [
-    [0, 1, 2], [3, 4, 5], [6, 7, 8], [9], [10, 11],
-    [12, 13, 14], [15], [16, 17], [18, 19, 20], [21, 22, 23],
-    [24], [25, 26, 27], [28, 29, 30], [31], [32, 33, 34],
-]
-_VANILLA_G1_J = 15
-_VANILLA_BVH_J = 24
-_VANILLA_C_INPUT = 3   # per-joint input features for both formats
-
-
-def _build_vanilla_adj(num_joints: int, fmt: str) -> List[np.ndarray]:
-    """Return 9 symmetric-normalized (J,J) adjacency matrices for the two-level hierarchy."""
-    if fmt == "g1":
-        J = _VANILLA_G1_J
-        # Hierarchy 1: intra-limb
-        h1 = [
-            ([9, 10, 11],     [(9, 10), (10, 11)]),           # left arm
-            ([12, 13, 14],    [(12, 13), (13, 14)]),           # right arm
-            ([2, 3, 4],       [(2, 3), (3, 4)]),               # left leg
-            ([5, 6, 7],       [(5, 6), (6, 7)]),               # right leg
-            ([0, 1, 8],       [(0, 1), (1, 8)]),               # torso (pelvis→waist)
-        ]
-        # Hierarchy 2: limb + torso (connecting joint to waist=8)
-        h2 = [
-            ([9, 10, 11, 8],    [(9, 10), (10, 11), (9, 8)]),       # left arm + torso
-            ([12, 13, 14, 8],   [(12, 13), (13, 14), (12, 8)]),     # right arm + torso
-            ([2, 3, 4, 8],      [(2, 3), (3, 4), (2, 8)]),          # left leg + torso
-            ([5, 6, 7, 8],      [(5, 6), (6, 7), (5, 8)]),          # right leg + torso
-        ]
-    else:  # BVH: joints 0-7=torso, 8-11=L-arm, 12-15=R-arm, 16-19=L-leg, 20-23=R-leg
-        J = _VANILLA_BVH_J
-        h1 = [
-            ([8, 9, 10, 11],   [(8, 9), (9, 10), (10, 11)]),        # left arm
-            ([12, 13, 14, 15], [(12, 13), (13, 14), (14, 15)]),     # right arm
-            ([16, 17, 18, 19], [(16, 17), (17, 18), (18, 19)]),     # left leg
-            ([20, 21, 22, 23], [(20, 21), (21, 22), (22, 23)]),     # right leg
-            (list(range(8)),   [(i, i+1) for i in range(7)]),        # torso chain
-        ]
-        h2 = [
-            (list(range(8)) + [8, 9, 10, 11],
-             [(i, i+1) for i in range(7)] + [(8, 9), (9, 10), (10, 11), (8, 4)]),   # L-arm+torso (via chest=4)
-            (list(range(8)) + [12, 13, 14, 15],
-             [(i, i+1) for i in range(7)] + [(12, 13), (13, 14), (14, 15), (12, 4)]),
-            (list(range(8)) + [16, 17, 18, 19],
-             [(i, i+1) for i in range(7)] + [(16, 17), (17, 18), (18, 19), (16, 1)]),  # L-leg (via hips=1)
-            (list(range(8)) + [20, 21, 22, 23],
-             [(i, i+1) for i in range(7)] + [(20, 21), (21, 22), (22, 23), (20, 1)]),
-        ]
-
-    def _make_adj(joints, edges):
-        A = np.zeros((J, J), dtype=np.float32)
-        for j in joints:
-            A[j, j] = 1.0
-        for i, k in edges:
-            A[i, k] = 1.0; A[k, i] = 1.0
-        D = A.sum(axis=1)
-        D_inv_sqrt = np.where(D > 0, 1.0 / np.sqrt(np.maximum(D, 1e-12)), 0.0)
-        return (np.diag(D_inv_sqrt) @ A @ np.diag(D_inv_sqrt)).astype(np.float32)
-
-    return [_make_adj(js, es) for js, es in h1 + h2]  # 9 matrices
-
-
-class _VanillaKinematicEncoder(nn.Module):
-    """Per-joint temporal conv: (B, J, C_in, T) → (B, J, C_out, T)."""
-
-    def __init__(self, C_in: int, C_out: int):
-        super().__init__()
-        self.conv = nn.Conv1d(C_in, C_out, kernel_size=9, padding=4, bias=False)
-        self.bn = nn.BatchNorm1d(C_out)
-        self.relu = nn.ReLU(inplace=True)
-
-    def forward(self, x: torch.Tensor) -> torch.Tensor:
-        B, J, C, T = x.shape
-        x = x.reshape(B * J, C, T)
-        x = self.relu(self.bn(self.conv(x)))
-        return x.reshape(B, J, -1, T)
-
-
-class _VanillaSpatialGCN(nn.Module):
-    """Hierarchical spatial GCN: 9 subgraph weight matrices.
-
-    output = sum_k  A_k @ H @ W_k   then BN + ReLU
-    """
-
-    def __init__(self, C_in: int, C_out: int, adj_list: List[np.ndarray]):
-        super().__init__()
-        K = len(adj_list)
-        # Stack all weight matrices into one parameter: (K, C_in, C_out)
-        self.W = nn.Parameter(torch.zeros(K, C_in, C_out))
-        nn.init.kaiming_uniform_(self.W.view(K * C_in, C_out), a=math.sqrt(5))
-        for i, A in enumerate(adj_list):
-            self.register_buffer(f"A{i}", torch.from_numpy(A))
-        self.K = K
-        self.bn = nn.BatchNorm2d(C_out)
-        self.relu = nn.ReLU(inplace=True)
-
-    def forward(self, x: torch.Tensor) -> torch.Tensor:
-        # x: (B, J, C_in, T)
-        B, J, C_in, T = x.shape
-        C_out = self.W.shape[2]
-        out = x.new_zeros(B, J, C_out, T)
-        for k in range(self.K):
-            A = getattr(self, f"A{k}")          # (J, J)
-            W = self.W[k]                        # (C_in, C_out)
-            Ax = torch.einsum("jv,bvct->bjct", A, x)         # (B,J,C_in,T)
-            Ax = Ax.permute(0, 1, 3, 2).matmul(W)            # (B,J,T,C_out)
-            out = out + Ax.permute(0, 1, 3, 2)               # (B,J,C_out,T)
-        out = out.permute(0, 2, 1, 3)           # (B,C_out,J,T) for BN2d
-        out = self.relu(self.bn(out))
-        return out.permute(0, 2, 1, 3)          # (B,J,C_out,T)
-
-
-class _VanillaTemporalConv(nn.Module):
-    """1D temporal conv applied uniformly across all joints: (B,J,C,T) → (B,J,C_out,T_out)."""
-
-    def __init__(self, C_in: int, C_out: int, stride: int = 1):
-        super().__init__()
-        self.conv = nn.Conv2d(C_in, C_out, kernel_size=(1, 9), padding=(0, 4),
-                              stride=(1, stride), bias=False)
-        self.bn = nn.BatchNorm2d(C_out)
-
-    def forward(self, x: torch.Tensor) -> torch.Tensor:
-        # x: (B,J,C,T) → (B,C,J,T) → conv → (B,C_out,J,T) → (B,J,C_out,T)
-        x = x.permute(0, 2, 1, 3)
-        x = self.bn(self.conv(x))
-        return x.permute(0, 2, 1, 3)
-
-
-class _VanillaSTBlock(nn.Module):
-    def __init__(self, C_in: int, C_out: int, adj_list: List[np.ndarray],
-                 temporal_stride: int = 1):
-        super().__init__()
-        self.spatial = _VanillaSpatialGCN(C_in, C_out, adj_list)
-        self.temporal = _VanillaTemporalConv(C_out, C_out, stride=temporal_stride)
-        self.relu = nn.ReLU(inplace=True)
-        if C_in == C_out and temporal_stride == 1:
-            self.residual = nn.Identity()
-        else:
-            self.residual = nn.Sequential(
-                nn.Conv2d(C_in, C_out, 1, stride=(1, temporal_stride), bias=False),
-                nn.BatchNorm2d(C_out),
-            )
-
-    def forward(self, x: torch.Tensor) -> torch.Tensor:
-        # x: (B,J,C_in,T)
-        res = x.permute(0, 2, 1, 3)            # (B,C_in,J,T) for residual conv
-        res = self.residual(res).permute(0, 2, 1, 3)   # back to (B,J,C_out,T)
-        x = self.spatial(x)
-        x = self.temporal(x)
-        return self.relu(x + res)
-
-
-class VanillaBackbone(nn.Module):
-    """
-    Hierarchical spatiotemporal GCN baseline.
-
-    Processes raw position-stream joint angles (no velocity/acceleration) through:
-      1. Per-joint kinematic encoder (learns temporal dynamics from position)
-      2. Two-level hierarchical spatial GCN (intra-limb + limb-torso)
-      3. 10 spatiotemporal blocks with channel schedule 64→128→256
-      4. Global average pooling over joints and time
-    """
-
-    _CHANNEL_SCHEDULE = [
-        (64, 64, 1), (64, 64, 1), (64, 64, 1), (64, 64, 1),  # layers 1-4
-        (64, 128, 2),                                           # layer 5: downsample
-        (128, 128, 1), (128, 128, 1),                          # layers 6-7
-        (128, 256, 2),                                          # layer 8: downsample
-        (256, 256, 1), (256, 256, 1),                          # layers 9-10
-    ]
-
-    def __init__(self, fmt: str, num_classes: int, emb_dim: int = 256, dropout: float = 0.5):
-        super().__init__()
-        self.fmt = fmt
-        self.num_classes = num_classes
-        self.num_joints = _VANILLA_G1_J if fmt == "g1" else _VANILLA_BVH_J
-
-        adj_list = _build_vanilla_adj(self.num_joints, fmt)
-
-        self.kinematic_encoder = _VanillaKinematicEncoder(_VANILLA_C_INPUT, 64)
-        self.blocks = nn.ModuleList([
-            _VanillaSTBlock(ci, co, adj_list, stride)
-            for ci, co, stride in self._CHANNEL_SCHEDULE
-        ])
-        self.dropout = nn.Dropout(dropout) if dropout > 0 else None
-        self.fc = nn.Linear(256, num_classes)
-        self.z_proj = nn.Sequential(nn.Linear(256, emb_dim), nn.LayerNorm(emb_dim))
-
-    def _to_joints(self, x: torch.Tensor) -> torch.Tensor:
-        """(B, 3, C, T) → position stream → (B, J, 3, T) joint representation."""
-        pos = x[:, 0, :, :]    # (B, C, T) — position stream only
-        B, C, T = pos.shape
-        if self.fmt == "g1":
-            out = pos.new_zeros(B, _VANILLA_G1_J, _VANILLA_C_INPUT, T)
-            for j, dofs in enumerate(_VANILLA_G1_JOINT_DOFS):
-                out[:, j, :len(dofs), :] = pos[:, dofs, :]
-            return out
-        else:
-            # BVH: 72 channels = 24 joints × 3 rotation channels
-            return pos.reshape(B, _VANILLA_BVH_J, _VANILLA_C_INPUT, T)
-
-    def forward(self, x: torch.Tensor, lengths=None):
-        x = self._to_joints(x)              # (B, J, 3, T)
-        x = self.kinematic_encoder(x)       # (B, J, 64, T)
-        for block in self.blocks:
-            x = block(x)                    # (B, J, C, T) shrinks T at strides
-        feat = x.mean(dim=(1, 3))           # global avg pool over J and T → (B, 256)
-        if self.dropout is not None:
-            feat = self.dropout(feat)
-        logits = self.fc(feat)
-        z = F.normalize(self.z_proj(feat), dim=-1)
-        return logits, z
-
-
 # === SECTION: UNVEIL WRAPPER ===
 
 class UNVEIL(nn.Module):
@@ -1342,14 +1107,12 @@ class UNVEIL(nn.Module):
     def __init__(self, spatial_backbone: str, **kwargs):
         super().__init__()
         self.spatial_backbone = spatial_backbone
-        if spatial_backbone == "stream-attn":
+        if spatial_backbone == "sgn":
             self.backbone = StreamAttnBackbone(**kwargs)
-        elif spatial_backbone == "dyn-graph":
+        elif spatial_backbone == "dsgcn":
             self.backbone = DynGraphBackbone(**kwargs)
-        elif spatial_backbone == "proto-mem":
+        elif spatial_backbone == "protogcn":
             self.backbone = ProtoMemBackbone(**kwargs)
-        elif spatial_backbone == "unveil-vanilla":
-            self.backbone = VanillaBackbone(**kwargs)
         else:
             raise ValueError(f"Unknown spatial_backbone: {spatial_backbone!r}")
         self.num_classes = self.backbone.num_classes
@@ -1362,7 +1125,7 @@ class UNVEIL(nn.Module):
         if len(out) == 2:
             logits, z = out
             return logits, z, None
-        return out  # (logits, z, aux) for proto-mem
+        return out  # (logits, z, aux) for protogcn
 
 
 # === SECTION: DECONFOUNDING ===
@@ -1738,14 +1501,12 @@ def run_single_task(args: argparse.Namespace) -> Dict:
           f"sa_unseen={len(sa_unseen_ds):,} unseen={len(unseen_ds):,}")
 
     model_kwargs: Dict = dict(num_classes=num_classes, emb_dim=args.emb_dim)
-    if args.spatial_backbone == "stream-attn":
+    if args.spatial_backbone == "sgn":
         model_kwargs.update(num_joint=num_channels, dim1=args.dim1, seg=args.seg)
-    elif args.spatial_backbone == "unveil-vanilla":
-        model_kwargs.update(fmt=args.format, dropout=args.dropout)
     else:
         model_kwargs.update(fmt=args.format, base_channels=args.base_channels,
                             num_stages=args.num_stages, dropout=args.dropout)
-        if args.spatial_backbone == "proto-mem":
+        if args.spatial_backbone == "protogcn":
             model_kwargs["num_prototype"] = args.num_prototype
 
     model = UNVEIL(spatial_backbone=args.spatial_backbone, **model_kwargs).to(DEVICE)
@@ -1763,7 +1524,7 @@ def run_single_task(args: argparse.Namespace) -> Dict:
     ce_loss_fn = nn.MSELoss() if is_regression else nn.CrossEntropyLoss(label_smoothing=args.label_smoothing)
     supcon_fn = SupConLoss(temperature=args.supcon_temp)
     mem_contrast_fn = None
-    if args.spatial_backbone == "proto-mem" and not is_regression and num_classes > 1:
+    if args.spatial_backbone == "protogcn" and not is_regression and num_classes > 1:
         raw_m = getattr(model, "_orig_mod", model)
         n_joints_val = getattr(raw_m, "num_joints", 35)
         mem_contrast_fn = MemoryContrastiveLoss(
@@ -2073,8 +1834,8 @@ def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(description="UNVEIL: privacy modeling on BONES-SEED")
 
     p.add_argument("--spatial-backbone",
-                   choices=["stream-attn", "dyn-graph", "proto-mem", "unveil-vanilla"],
-                   default="stream-attn")
+                   choices=["protogcn", "sgn", "dsgcn"],
+                   default="protogcn")
     p.add_argument("--data-root", type=str, default=".")
     p.add_argument("--splits-dir", type=str, default=None)
     p.add_argument("--g1-cache-dir", type=str, default=None)
@@ -2142,10 +1903,10 @@ def parse_args() -> argparse.Namespace:
     if args.lambda_proto is None: args.lambda_proto = 0.0
 
     if args.reid_eval is None:
-        args.reid_eval = "centroid" if args.spatial_backbone == "stream-attn" else "closed-set"
+        args.reid_eval = "centroid" if args.spatial_backbone == "sgn" else "closed-set"
 
     # Graph-based spatial backbones need all BVH channels (exact joint count required)
-    if args.spatial_backbone in ("dyn-graph", "proto-mem", "unveil-vanilla") and args.format in ("uniform", "proportional"):
+    if args.spatial_backbone in ("dsgcn", "protogcn") and args.format in ("uniform", "proportional"):
         if args.variance_percentile != 0.0:
             print(f"[INFO] Forcing variance_percentile=0.0 for {args.spatial_backbone} (needs {BVH_NUM_JOINTS} joints)")
             args.variance_percentile = 0.0
