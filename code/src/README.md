@@ -1,3 +1,9 @@
+# Who Moved the Robot? Humanoid Datasets Remember Their Operators
+
+**Sihat Afnan, Unnat Jain\*, Habiba Farrukh\*** — University of California, Irvine
+
+---
+
 # UNVEIL
 
 **UNVEIL** is the training and evaluation framework from our paper *Who Moved the Robot? Humanoid Datasets Remember Their Operators*. It recovers operator attributes — gender, age, height, weight, and re-identification — directly from humanoid joint-angle trajectories, with no access to body shape. This page is the supplementary code: everything below is what you need to reproduce the paper's numbers, including the actor-disjoint data splits and the per-task evaluation harness.
