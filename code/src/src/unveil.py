@@ -110,7 +110,7 @@ EPS = 1e-4
 SUPCON_BIN_WIDTH = {"age": 5.0, "height": 5.0, "weight": 5.0}
 
 SPATIAL_BACKBONE_DEFAULTS: Dict[str, Dict] = {
-    # ProtoGCN is the default UNVEIL backbone.
+    # Default UNVEIL backbone (a prototype-learning network).
     "protogcn": {
         "lr": 1e-3, "batch_size": 32, "supcon_warmup": 8,
         "base_channels": 96, "num_stages": 10, "num_prototype": 100,

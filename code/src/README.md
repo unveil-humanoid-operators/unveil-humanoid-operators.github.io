@@ -10,7 +10,7 @@
 pip install -r requirements.txt
 ```
 
-Required: `torch >= 2.0`, `numpy`, `pandas`, `scikit-learn`. UNVEIL's default **ProtoGCN** backbone additionally needs `mmcv`. `torch.compile` (enabled by default) needs `triton`; pass `--no-compile` to skip it if `triton` is unavailable.
+Required: `torch >= 2.0`, `numpy`, `pandas`, `scikit-learn`. UNVEIL's default backbone — a prototype-learning network — additionally needs `mmcv`. `torch.compile` (enabled by default) needs `triton`; pass `--no-compile` to skip it if `triton` is unavailable.
 
 ---
 
@@ -33,7 +33,7 @@ python Motion_cache_builder/build_g1_motion_cache.py    # → float32 memmap of 
 # Quick dry-run (limited data, 1 epoch) — sanity-check that everything is wired up
 python src/unveil.py --task reid --max-train 200 --max-test 100 --epochs 1
 
-# UNVEIL on the full dataset, gender classification (ProtoGCN is the default backbone)
+# UNVEIL on the full dataset, gender classification (uses the default backbone)
 python src/unveil.py --format g1 --task gender
 
 # Same setup, all privacy tasks at once
@@ -48,13 +48,14 @@ python src/unveil.py --spatial-backbone dsgcn --format uniform --task gender
 
 ## Backbones
 
-`--spatial-backbone` selects the spatial model. **ProtoGCN is UNVEIL's default** and is the
-configuration reported as UNVEIL in the paper; `sgn` and `dsgcn` are two action-recognition
-architectures adapted into the same pipeline as comparison backbones.
+By default, UNVEIL uses a **prototype-learning network** as its spatial backbone — this is the
+configuration reported as UNVEIL in the paper, and you get it without passing any backbone flag.
+`sgn` and `dsgcn` are two action-recognition architectures adapted into the same pipeline as
+comparison backbones, selected via `--spatial-backbone`.
 
 | `--spatial-backbone` | Description |
 |---|---|
-| `protogcn` *(default)* | Prototype-memory GCN. The UNVEIL model reported in the paper. Needs `mmcv`. |
+| *(default — no flag needed)* | Prototype-learning network. The UNVEIL model reported in the paper. Needs `mmcv`. |
 | `sgn` | Semantics-guided network: consumes position + velocity + acceleration as three explicit input streams. |
 | `dsgcn` | Dynamic spatial GCN with body-part typing. |
 
@@ -91,7 +92,7 @@ max sequence length of `256` frames @ 30 fps (downsampled from 120 fps).
 | `--weight-decay` | 1e-4 | AdamW weight decay |
 | `--label-smoothing` | 0.05 | Cross-entropy label smoothing |
 | `--lambda-supcon` | 0.1 | SupCon loss weight (0 = CE only) |
-| `--lambda-proto` | 0.1 | Memory contrastive loss weight (protogcn only) |
+| `--lambda-proto` | 0.1 | Memory contrastive loss weight (default backbone only) |
 | `--supcon-warmup` | varies by `--spatial-backbone` | Epoch to start contrastive losses |
 | `--supcon-temp` | 0.07 | SupCon temperature |
 | `--early-stop` | 40 | Early stopping patience (eval cycles) |
@@ -105,10 +106,10 @@ max sequence length of `256` frames @ 30 fps (downsampled from 120 fps).
 | `--emb-dim` | all | 256 | Embedding dimension |
 | `--dim1` | sgn | 256 | Feature dimension |
 | `--seg` | sgn | 64 | Temporal segments |
-| `--base-channels` | dsgcn, protogcn | 64 / 96 | Base channel count |
-| `--num-stages` | dsgcn, protogcn | 10 | Number of spatiotemporal blocks |
-| `--num-prototype` | protogcn | 100 | Number of latent prototypes |
-| `--dropout` | dsgcn, protogcn | 0.5 | Dropout rate |
+| `--base-channels` | dsgcn, default | 64 / 96 | Base channel count |
+| `--num-stages` | dsgcn, default | 10 | Number of spatiotemporal blocks |
+| `--num-prototype` | default | 100 | Number of latent prototypes |
+| `--dropout` | dsgcn, default | 0.5 | Dropout rate |
 | `--variance-percentile` | all (BVH) | varies by `--spatial-backbone` | BVH channel variance filtering (0 = keep all) |
 
 ---
