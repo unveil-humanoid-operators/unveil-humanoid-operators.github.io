@@ -1612,3 +1612,35 @@ footer {
     font-size: 1.5rem;
   }
 }
+
+/* ══════════════════════════════════════════════════════════
+   MOBILE LAYOUT FIXES — placed last on purpose. The demo section's
+   base .demo-selector / .sync-bar rules live *after* the earlier
+   @media(max-width:900px) block, so at equal specificity they were
+   overriding it and forcing the 4-column viewer grid to persist on
+   phones (horizontal overflow). Switching .demo-panels to flex here
+   makes its children stack regardless of any grid-column placement
+   (desktop grid-column:2/5 on .sync-bar, inline grid-column:3/5 on
+   the comparison card — both ignored inside a flex container).
+══════════════════════════════════════════════════════════ */
+@media (max-width: 900px) {
+  .demo-panels {
+    display: flex;
+    flex-direction: column;
+    max-width: 520px;
+    margin: 0 auto;
+    gap: 12px;
+  }
+  .demo-panels > * {
+    grid-column: auto;
+    grid-row: auto;
+    align-self: stretch;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+  .demo-selector { transform: none; margin-top: 0; }
+  .g1-viewer-iframe,
+  .panel-video-wrap video { height: 62vw; min-height: 300px; max-height: 440px; }
+  .sync-bar { flex-wrap: wrap; margin-top: 6px; }
+}
