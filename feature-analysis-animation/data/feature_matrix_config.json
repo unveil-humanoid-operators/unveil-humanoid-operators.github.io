@@ -1,0 +1,2345 @@
+{
+  "version": 1,
+  "schema": "feature_matrix_v1",
+  "chrome": "minimal",
+  "smpl_dir": "./data/smpl_feature_matrix",
+  "rows": [
+    {
+      "row_id": "age_jogging_waist_rom",
+      "attribute": "actor_age_yr",
+      "attribute_short": "age",
+      "task": "jogging",
+      "feature": "waist_rom",
+      "feature_unit": "deg",
+      "feature_recipe": {
+        "name": "waist_rom",
+        "stat": "rom",
+        "kind": "joint_group",
+        "agg": "multi_axis",
+        "unit": "deg",
+        "joints": [
+          "waist_yaw_joint_dof",
+          "waist_roll_joint_dof",
+          "waist_pitch_joint_dof"
+        ]
+      },
+      "r": -0.3888520072659097,
+      "p": 5.680531723403537e-17,
+      "n_actors": 416,
+      "predicted_sign": -1,
+      "chosen": "gap",
+      "high": {
+        "label": "45 yr",
+        "actor_uid": "A019",
+        "actor_short": "A019 (M, 165 cm)",
+        "source_bvh": "soma_uniform/bvh/220705/Loop_Forward_Jog_001__A019.bvh",
+        "g1_csv": "./data/feature_matrix/age_jogging_waist_rom_high.csv",
+        "shape": {
+          "height_cm": 165,
+          "weight_kg": 68,
+          "gender": "male"
+        },
+        "expected_F": 84.40469360351562,
+        "per_actor_F": 84.40469360351562,
+        "n_frames": 13947
+      },
+      "low": {
+        "label": "65 yr",
+        "actor_uid": "A044",
+        "actor_short": "A044 (M, 167 cm)",
+        "source_bvh": "soma_uniform/bvh/220728/jog_forward_loop_001__A044.bvh",
+        "g1_csv": "./data/feature_matrix/age_jogging_waist_rom_low.csv",
+        "shape": {
+          "height_cm": 167,
+          "weight_kg": 75,
+          "gender": "male"
+        },
+        "expected_F": 19.650211334228516,
+        "per_actor_F": 19.650211334228516,
+        "n_frames": 1063
+      }
+    },
+    {
+      "row_id": "age_turning_waist_mean_vel",
+      "attribute": "actor_age_yr",
+      "attribute_short": "age",
+      "task": "turning",
+      "feature": "waist_mean_vel",
+      "feature_unit": "deg/s",
+      "feature_recipe": {
+        "name": "waist_mean_vel",
+        "stat": "mean_vel",
+        "kind": "joint_group",
+        "agg": "multi_axis",
+        "unit": "deg/s",
+        "joints": [
+          "waist_yaw_joint_dof",
+          "waist_roll_joint_dof",
+          "waist_pitch_joint_dof"
+        ]
+      },
+      "r": -0.35731188809815045,
+      "p": 2.3711561089152497e-07,
+      "n_actors": 166,
+      "predicted_sign": -1,
+      "chosen": "gap",
+      "high": {
+        "label": "25 yr",
+        "actor_uid": "A145",
+        "actor_short": "A145 (F, 177 cm)",
+        "source_bvh": "soma_uniform/bvh/230125/turn_crouch_270_003__A145.bvh",
+        "g1_csv": "./data/feature_matrix/age_turning_waist_mean_vel_high.csv",
+        "shape": {
+          "height_cm": 177,
+          "weight_kg": 68,
+          "gender": "female"
+        },
+        "expected_F": 65.3992919921875,
+        "per_actor_F": 65.3992919921875,
+        "n_frames": 330
+      },
+      "low": {
+        "label": "28 yr",
+        "actor_uid": "A196",
+        "actor_short": "A196 (M, 187 cm)",
+        "source_bvh": "soma_uniform/bvh/230215/turn_crouch_270_R_001__A196.bvh",
+        "g1_csv": "./data/feature_matrix/age_turning_waist_mean_vel_low.csv",
+        "shape": {
+          "height_cm": 187,
+          "weight_kg": 78,
+          "gender": "male"
+        },
+        "expected_F": 10.34566593170166,
+        "per_actor_F": 10.34566593170166,
+        "n_frames": 677
+      }
+    },
+    {
+      "row_id": "age_transition_elbow_peak_vel",
+      "attribute": "actor_age_yr",
+      "attribute_short": "age",
+      "task": "transition",
+      "feature": "elbow_peak_vel",
+      "feature_unit": "deg/s",
+      "feature_recipe": {
+        "name": "elbow_peak_vel",
+        "stat": "peak_vel",
+        "kind": "joint_group",
+        "agg": "lr_merge",
+        "unit": "deg/s",
+        "left": [
+          "left_elbow_joint_dof"
+        ],
+        "right": [
+          "right_elbow_joint_dof"
+        ]
+      },
+      "r": -0.33050561759900104,
+      "p": 4.334227271395342e-06,
+      "n_actors": 166,
+      "predicted_sign": -1,
+      "chosen": "gap",
+      "high": {
+        "label": "27 yr",
+        "actor_uid": "A335",
+        "actor_short": "A335 (F, 169 cm)",
+        "source_bvh": "soma_uniform/bvh/230418/idle_to_on_all_fours_idle_001__A335.bvh",
+        "g1_csv": "./data/feature_matrix/age_transition_elbow_peak_vel_high.csv",
+        "shape": {
+          "height_cm": 169,
+          "weight_kg": 61,
+          "gender": "female"
+        },
+        "expected_F": 597.2740173339844,
+        "per_actor_F": 597.2740173339844,
+        "n_frames": 735
+      },
+      "low": {
+        "label": "28 yr",
+        "actor_uid": "A202",
+        "actor_short": "A202 (M, 187 cm)",
+        "source_bvh": "soma_uniform/bvh/230216/on_all_fours_idle_start_001__A202.bvh",
+        "g1_csv": "./data/feature_matrix/age_transition_elbow_peak_vel_low.csv",
+        "shape": {
+          "height_cm": 187,
+          "weight_kg": 78,
+          "gender": "male"
+        },
+        "expected_F": 87.16232299804688,
+        "per_actor_F": 87.16232299804688,
+        "n_frames": 1080
+      }
+    },
+    {
+      "row_id": "age_jogging_turning_ankle_rom",
+      "attribute": "actor_age_yr",
+      "attribute_short": "age",
+      "task": "jogging, turning",
+      "feature": "ankle_rom",
+      "feature_unit": "deg",
+      "feature_recipe": {
+        "name": "ankle_rom",
+        "stat": "rom",
+        "kind": "joint_group",
+        "agg": "lr_merge",
+        "unit": "deg",
+        "left": [
+          "left_ankle_pitch_joint_dof",
+          "left_ankle_roll_joint_dof"
+        ],
+        "right": [
+          "right_ankle_pitch_joint_dof",
+          "right_ankle_roll_joint_dof"
+        ]
+      },
+      "r": -0.3248090008767171,
+      "p": 0.00023268363050926364,
+      "n_actors": 105,
+      "predicted_sign": -1,
+      "chosen": "gap",
+      "high": {
+        "label": "19 yr",
+        "actor_uid": "A018",
+        "actor_short": "A018 (F, 148 cm)",
+        "source_bvh": "soma_uniform/bvh/220705/Turn_Start_Jog_0360_001__A018.bvh",
+        "g1_csv": "./data/feature_matrix/age_jogging_turning_ankle_rom_high.csv",
+        "shape": {
+          "height_cm": 148,
+          "weight_kg": 45,
+          "gender": "female"
+        },
+        "expected_F": 81.20772933959961,
+        "per_actor_F": 81.20772933959961,
+        "n_frames": 8683
+      },
+      "low": {
+        "label": "71 yr",
+        "actor_uid": "A055",
+        "actor_short": "A055 (M, 188 cm)",
+        "source_bvh": "soma_uniform/bvh/221012/turn_jog_360_001__A055.bvh",
+        "g1_csv": "./data/feature_matrix/age_jogging_turning_ankle_rom_low.csv",
+        "shape": {
+          "height_cm": 188,
+          "weight_kg": 77,
+          "gender": "male"
+        },
+        "expected_F": 39.52326965332031,
+        "per_actor_F": 39.52326965332031,
+        "n_frames": 712
+      }
+    },
+    {
+      "row_id": "age_dancing_elbow_rom",
+      "attribute": "actor_age_yr",
+      "attribute_short": "age",
+      "task": "dancing",
+      "feature": "elbow_rom",
+      "feature_unit": "deg",
+      "feature_recipe": {
+        "name": "elbow_rom",
+        "stat": "rom",
+        "kind": "joint_group",
+        "agg": "lr_merge",
+        "unit": "deg",
+        "left": [
+          "left_elbow_joint_dof"
+        ],
+        "right": [
+          "right_elbow_joint_dof"
+        ]
+      },
+      "r": -0.28262584661611323,
+      "p": 6.8006208278553575e-09,
+      "n_actors": 381,
+      "predicted_sign": -1,
+      "chosen": "gap",
+      "high": {
+        "label": "24 yr",
+        "actor_uid": "A317",
+        "actor_short": "A317 (F, 168 cm)",
+        "source_bvh": "soma_uniform/bvh/230413/dancing_routine_V001_003__A317.bvh",
+        "g1_csv": "./data/feature_matrix/age_dancing_elbow_rom_high.csv",
+        "shape": {
+          "height_cm": 168,
+          "weight_kg": 59,
+          "gender": "female"
+        },
+        "expected_F": 141.67572021484375,
+        "per_actor_F": 141.67572021484375,
+        "n_frames": 1695
+      },
+      "low": {
+        "label": "71 yr",
+        "actor_uid": "A055",
+        "actor_short": "A055 (M, 188 cm)",
+        "source_bvh": "soma_uniform/bvh/221012/dancing_routine_1_004__A055.bvh",
+        "g1_csv": "./data/feature_matrix/age_dancing_elbow_rom_low.csv",
+        "shape": {
+          "height_cm": 188,
+          "weight_kg": 77,
+          "gender": "male"
+        },
+        "expected_F": 8.908191680908203,
+        "per_actor_F": 8.908191680908203,
+        "n_frames": 1716
+      }
+    },
+    {
+      "row_id": "age_walking_turning_wrist_rom",
+      "attribute": "actor_age_yr",
+      "attribute_short": "age",
+      "task": "walking, turning",
+      "feature": "wrist_rom",
+      "feature_unit": "deg",
+      "feature_recipe": {
+        "name": "wrist_rom",
+        "stat": "rom",
+        "kind": "joint_group",
+        "agg": "lr_merge",
+        "unit": "deg",
+        "left": [
+          "left_wrist_roll_joint_dof",
+          "left_wrist_pitch_joint_dof",
+          "left_wrist_yaw_joint_dof"
+        ],
+        "right": [
+          "right_wrist_roll_joint_dof",
+          "right_wrist_pitch_joint_dof",
+          "right_wrist_yaw_joint_dof"
+        ]
+      },
+      "r": -0.2504499625467761,
+      "p": 0.004053865656661476,
+      "n_actors": 107,
+      "predicted_sign": -1,
+      "chosen": "gap",
+      "high": {
+        "label": "28 yr",
+        "actor_uid": "A462",
+        "actor_short": "A462 (M, 180 cm)",
+        "source_bvh": "soma_uniform/bvh/231005/painful_stand_on_turn_walk_ff_270_start_R_002__A462.bvh",
+        "g1_csv": "./data/feature_matrix/age_walking_turning_wrist_rom_high.csv",
+        "shape": {
+          "height_cm": 180,
+          "weight_kg": 80,
+          "gender": "male"
+        },
+        "expected_F": 143.56239700317383,
+        "per_actor_F": 143.56239700317383,
+        "n_frames": 2040
+      },
+      "low": {
+        "label": "31 yr",
+        "actor_uid": "A463",
+        "actor_short": "A463 (M, 182 cm)",
+        "source_bvh": "soma_uniform/bvh/231005/painful_stand_on_turn_walk_ff_270_start_R_002__A463.bvh",
+        "g1_csv": "./data/feature_matrix/age_walking_turning_wrist_rom_low.csv",
+        "shape": {
+          "height_cm": 182,
+          "weight_kg": 78,
+          "gender": "male"
+        },
+        "expected_F": 63.95419883728027,
+        "per_actor_F": 63.95419883728027,
+        "n_frames": 1823
+      }
+    },
+    {
+      "row_id": "age_climbing_box_shoulder_rom",
+      "attribute": "actor_age_yr",
+      "attribute_short": "age",
+      "task": "climbing box",
+      "feature": "shoulder_rom",
+      "feature_unit": "deg",
+      "feature_recipe": {
+        "name": "shoulder_rom",
+        "stat": "rom",
+        "kind": "joint_group",
+        "agg": "lr_merge",
+        "unit": "deg",
+        "left": [
+          "left_shoulder_pitch_joint_dof",
+          "left_shoulder_roll_joint_dof",
+          "left_shoulder_yaw_joint_dof"
+        ],
+        "right": [
+          "right_shoulder_pitch_joint_dof",
+          "right_shoulder_roll_joint_dof",
+          "right_shoulder_yaw_joint_dof"
+        ]
+      },
+      "r": 0.24076618885844567,
+      "p": 4.474047869326137e-06,
+      "n_actors": 326,
+      "predicted_sign": 1,
+      "chosen": "gap",
+      "high": {
+        "label": "51 yr",
+        "actor_uid": "A067",
+        "actor_short": "A067 (M, 190 cm)",
+        "source_bvh": "soma_uniform/bvh/221117/come_up_50cm_box_R_002__A067.bvh",
+        "g1_csv": "./data/feature_matrix/age_climbing_box_shoulder_rom_high.csv",
+        "shape": {
+          "height_cm": 190,
+          "weight_kg": 80,
+          "gender": "male"
+        },
+        "expected_F": 201.4449920654297,
+        "per_actor_F": 201.4449920654297,
+        "n_frames": 1488
+      },
+      "low": {
+        "label": "26 yr",
+        "actor_uid": "A052",
+        "actor_short": "A052 (M, 169 cm)",
+        "source_bvh": "soma_uniform/bvh/221011/come_up_50cm_box_R_002__A052.bvh",
+        "g1_csv": "./data/feature_matrix/age_climbing_box_shoulder_rom_low.csv",
+        "shape": {
+          "height_cm": 169,
+          "weight_kg": 65,
+          "gender": "male"
+        },
+        "expected_F": 3.174612283706665,
+        "per_actor_F": 3.174612283706665,
+        "n_frames": 475
+      }
+    },
+    {
+      "row_id": "age_jumping_turning_wrist_mean_vel",
+      "attribute": "actor_age_yr",
+      "attribute_short": "age",
+      "task": "jumping, turning",
+      "feature": "wrist_mean_vel",
+      "feature_unit": "deg/s",
+      "feature_recipe": {
+        "name": "wrist_mean_vel",
+        "stat": "mean_vel",
+        "kind": "joint_group",
+        "agg": "lr_merge",
+        "unit": "deg/s",
+        "left": [
+          "left_wrist_roll_joint_dof",
+          "left_wrist_pitch_joint_dof",
+          "left_wrist_yaw_joint_dof"
+        ],
+        "right": [
+          "right_wrist_roll_joint_dof",
+          "right_wrist_pitch_joint_dof",
+          "right_wrist_yaw_joint_dof"
+        ]
+      },
+      "r": -0.23822854434913576,
+      "p": 0.012612413898585303,
+      "n_actors": 84,
+      "predicted_sign": -1,
+      "chosen": "gap",
+      "high": {
+        "label": "36 yr",
+        "actor_uid": "A032",
+        "actor_short": "A032 (M, 166 cm)",
+        "source_bvh": "soma_uniform/bvh/220720/turn_jump_135_001__A032.bvh",
+        "g1_csv": "./data/feature_matrix/age_jumping_turning_wrist_mean_vel_high.csv",
+        "shape": {
+          "height_cm": 166,
+          "weight_kg": 60,
+          "gender": "male"
+        },
+        "expected_F": 99.69976425170898,
+        "per_actor_F": 99.69976425170898,
+        "n_frames": 449
+      },
+      "low": {
+        "label": "46 yr",
+        "actor_uid": "A026",
+        "actor_short": "A026 (F, 145 cm)",
+        "source_bvh": "soma_uniform/bvh/220714/turn_jump_0135_001__A026.bvh",
+        "g1_csv": "./data/feature_matrix/age_jumping_turning_wrist_mean_vel_low.csv",
+        "shape": {
+          "height_cm": 145,
+          "weight_kg": 64,
+          "gender": "female"
+        },
+        "expected_F": 11.254961490631104,
+        "per_actor_F": 11.254961490631104,
+        "n_frames": 1285
+      }
+    },
+    {
+      "row_id": "age_gesture_elbow_mean_vel",
+      "attribute": "actor_age_yr",
+      "attribute_short": "age",
+      "task": "gesture",
+      "feature": "elbow_mean_vel",
+      "feature_unit": "deg/s",
+      "feature_recipe": {
+        "name": "elbow_mean_vel",
+        "stat": "mean_vel",
+        "kind": "joint_group",
+        "agg": "lr_merge",
+        "unit": "deg/s",
+        "left": [
+          "left_elbow_joint_dof"
+        ],
+        "right": [
+          "right_elbow_joint_dof"
+        ]
+      },
+      "r": -0.2176701699925716,
+      "p": 0.004237712938779647,
+      "n_actors": 158,
+      "predicted_sign": -1,
+      "chosen": "gap",
+      "high": {
+        "label": "24 yr",
+        "actor_uid": "A238",
+        "actor_short": "A238 (M, 183 cm)",
+        "source_bvh": "soma_uniform/bvh/230302/lamenting_003__A238.bvh",
+        "g1_csv": "./data/feature_matrix/age_gesture_elbow_mean_vel_high.csv",
+        "shape": {
+          "height_cm": 183,
+          "weight_kg": 83,
+          "gender": "male"
+        },
+        "expected_F": 195.80004119873047,
+        "per_actor_F": 195.80004119873047,
+        "n_frames": 709
+      },
+      "low": {
+        "label": "25 yr",
+        "actor_uid": "A414",
+        "actor_short": "A414 (M, 184 cm)",
+        "source_bvh": "soma_uniform/bvh/230530/lamenting_002__A414.bvh",
+        "g1_csv": "./data/feature_matrix/age_gesture_elbow_mean_vel_low.csv",
+        "shape": {
+          "height_cm": 184,
+          "weight_kg": 81,
+          "gender": "male"
+        },
+        "expected_F": 27.866713523864746,
+        "per_actor_F": 27.866713523864746,
+        "n_frames": 1178
+      }
+    },
+    {
+      "row_id": "age_standing_idle_wrist_peak_vel",
+      "attribute": "actor_age_yr",
+      "attribute_short": "age",
+      "task": "standing idle",
+      "feature": "wrist_peak_vel",
+      "feature_unit": "deg/s",
+      "feature_recipe": {
+        "name": "wrist_peak_vel",
+        "stat": "peak_vel",
+        "kind": "joint_group",
+        "agg": "lr_merge",
+        "unit": "deg/s",
+        "left": [
+          "left_wrist_roll_joint_dof",
+          "left_wrist_pitch_joint_dof",
+          "left_wrist_yaw_joint_dof"
+        ],
+        "right": [
+          "right_wrist_roll_joint_dof",
+          "right_wrist_pitch_joint_dof",
+          "right_wrist_yaw_joint_dof"
+        ]
+      },
+      "r": 0.21501052823995945,
+      "p": 0.0022904045335202126,
+      "n_actors": 157,
+      "predicted_sign": 1,
+      "chosen": "gap",
+      "high": {
+        "label": "26 yr",
+        "actor_uid": "A120",
+        "actor_short": "A120 (M, 183 cm)",
+        "source_bvh": "soma_uniform/bvh/230118/neutral_idle_loop_002__A120.bvh",
+        "g1_csv": "./data/feature_matrix/age_standing_idle_wrist_peak_vel_high.csv",
+        "shape": {
+          "height_cm": 183,
+          "weight_kg": 84,
+          "gender": "male"
+        },
+        "expected_F": 3038.2840270996094,
+        "per_actor_F": 3038.2840270996094,
+        "n_frames": 1515
+      },
+      "low": {
+        "label": "24 yr",
+        "actor_uid": "A087",
+        "actor_short": "A087 (F, 166 cm)",
+        "source_bvh": "soma_uniform/bvh/221206/neutral_idle_loop_001__A087.bvh",
+        "g1_csv": "./data/feature_matrix/age_standing_idle_wrist_peak_vel_low.csv",
+        "shape": {
+          "height_cm": 166,
+          "weight_kg": 72,
+          "gender": "female"
+        },
+        "expected_F": 10.4087553024292,
+        "per_actor_F": 10.4087553024292,
+        "n_frames": 1456
+      }
+    },
+    {
+      "row_id": "weight_gesture_dancing_waist_rom",
+      "attribute": "actor_weight_kg",
+      "attribute_short": "weight",
+      "task": "gesture, dancing",
+      "feature": "waist_rom",
+      "feature_unit": "deg",
+      "feature_recipe": {
+        "name": "waist_rom",
+        "stat": "rom",
+        "kind": "joint_group",
+        "agg": "multi_axis",
+        "unit": "deg",
+        "joints": [
+          "waist_yaw_joint_dof",
+          "waist_roll_joint_dof",
+          "waist_pitch_joint_dof"
+        ]
+      },
+      "r": -0.40796984539594155,
+      "p": 0.0026802813924275267,
+      "n_actors": 51,
+      "predicted_sign": -1,
+      "chosen": "gap",
+      "high": {
+        "label": "61 kg",
+        "actor_uid": "A140",
+        "actor_short": "A140 (F, 171 cm)",
+        "source_bvh": "soma_uniform/bvh/230124/lasso_dance_R_006__A140.bvh",
+        "g1_csv": "./data/feature_matrix/weight_gesture_dancing_waist_rom_high.csv",
+        "shape": {
+          "height_cm": 171,
+          "weight_kg": 61,
+          "gender": "female"
+        },
+        "expected_F": 71.77677154541016,
+        "per_actor_F": 71.77677154541016,
+        "n_frames": 675
+      },
+      "low": {
+        "label": "126 kg",
+        "actor_uid": "A275",
+        "actor_short": "A275 (M, 183 cm)",
+        "source_bvh": "soma_uniform/bvh/230315/lasso_dance_R_003__A275.bvh",
+        "g1_csv": "./data/feature_matrix/weight_gesture_dancing_waist_rom_low.csv",
+        "shape": {
+          "height_cm": 183,
+          "weight_kg": 126,
+          "gender": "male"
+        },
+        "expected_F": 22.1954288482666,
+        "per_actor_F": 22.1954288482666,
+        "n_frames": 660
+      }
+    },
+    {
+      "row_id": "weight_climbing_box_hip_rom",
+      "attribute": "actor_weight_kg",
+      "attribute_short": "weight",
+      "task": "climbing box",
+      "feature": "hip_rom",
+      "feature_unit": "deg",
+      "feature_recipe": {
+        "name": "hip_rom",
+        "stat": "rom",
+        "kind": "joint_group",
+        "agg": "lr_merge",
+        "unit": "deg",
+        "left": [
+          "left_hip_pitch_joint_dof",
+          "left_hip_roll_joint_dof",
+          "left_hip_yaw_joint_dof"
+        ],
+        "right": [
+          "right_hip_pitch_joint_dof",
+          "right_hip_roll_joint_dof",
+          "right_hip_yaw_joint_dof"
+        ]
+      },
+      "r": -0.3862130813944471,
+      "p": 4.4905938513107426e-14,
+      "n_actors": 326,
+      "predicted_sign": -1,
+      "chosen": "extreme",
+      "high": {
+        "label": "52 kg",
+        "actor_uid": "A310",
+        "actor_short": "A310 (F, 163 cm)",
+        "source_bvh": "soma_uniform/bvh/230411/come_up_50cm_box_R_001__A310.bvh",
+        "g1_csv": "./data/feature_matrix/weight_climbing_box_hip_rom_high.csv",
+        "shape": {
+          "height_cm": 163,
+          "weight_kg": 52,
+          "gender": "female"
+        },
+        "expected_F": 94.94569396972656,
+        "per_actor_F": 94.94569396972656,
+        "n_frames": 593
+      },
+      "low": {
+        "label": "89 kg",
+        "actor_uid": "A100",
+        "actor_short": "A100 (M, 188 cm)",
+        "source_bvh": "soma_uniform/bvh/230103/come_up_50cm_box_R_002__A100.bvh",
+        "g1_csv": "./data/feature_matrix/weight_climbing_box_hip_rom_low.csv",
+        "shape": {
+          "height_cm": 188,
+          "weight_kg": 89,
+          "gender": "male"
+        },
+        "expected_F": 77.70965194702148,
+        "per_actor_F": 77.70965194702148,
+        "n_frames": 383
+      }
+    },
+    {
+      "row_id": "weight_jogging_shoulder_rom",
+      "attribute": "actor_weight_kg",
+      "attribute_short": "weight",
+      "task": "jogging",
+      "feature": "shoulder_rom",
+      "feature_unit": "deg",
+      "feature_recipe": {
+        "name": "shoulder_rom",
+        "stat": "rom",
+        "kind": "joint_group",
+        "agg": "lr_merge",
+        "unit": "deg",
+        "left": [
+          "left_shoulder_pitch_joint_dof",
+          "left_shoulder_roll_joint_dof",
+          "left_shoulder_yaw_joint_dof"
+        ],
+        "right": [
+          "right_shoulder_pitch_joint_dof",
+          "right_shoulder_roll_joint_dof",
+          "right_shoulder_yaw_joint_dof"
+        ]
+      },
+      "r": -0.38017458182410147,
+      "p": 3.102591261514278e-16,
+      "n_actors": 416,
+      "predicted_sign": -1,
+      "chosen": "gap",
+      "high": {
+        "label": "68 kg",
+        "actor_uid": "A019",
+        "actor_short": "A019 (M, 165 cm)",
+        "source_bvh": "soma_uniform/bvh/220705/Loop_Forward_Jog_001__A019.bvh",
+        "g1_csv": "./data/feature_matrix/weight_jogging_shoulder_rom_high.csv",
+        "shape": {
+          "height_cm": 165,
+          "weight_kg": 68,
+          "gender": "male"
+        },
+        "expected_F": 201.10626220703125,
+        "per_actor_F": 201.10626220703125,
+        "n_frames": 13947
+      },
+      "low": {
+        "label": "74 kg",
+        "actor_uid": "A445",
+        "actor_short": "A445 (M, 184 cm)",
+        "source_bvh": "soma_uniform/bvh/230905/jog_ff_loop_180_R_002__A445.bvh",
+        "g1_csv": "./data/feature_matrix/weight_jogging_shoulder_rom_low.csv",
+        "shape": {
+          "height_cm": 184,
+          "weight_kg": 74,
+          "gender": "male"
+        },
+        "expected_F": 31.29446315765381,
+        "per_actor_F": 31.29446315765381,
+        "n_frames": 283
+      }
+    },
+    {
+      "row_id": "weight_kneeling_shoulder_peak_vel",
+      "attribute": "actor_weight_kg",
+      "attribute_short": "weight",
+      "task": "kneeling",
+      "feature": "shoulder_peak_vel",
+      "feature_unit": "deg/s",
+      "feature_recipe": {
+        "name": "shoulder_peak_vel",
+        "stat": "peak_vel",
+        "kind": "joint_group",
+        "agg": "lr_merge",
+        "unit": "deg/s",
+        "left": [
+          "left_shoulder_pitch_joint_dof",
+          "left_shoulder_roll_joint_dof",
+          "left_shoulder_yaw_joint_dof"
+        ],
+        "right": [
+          "right_shoulder_pitch_joint_dof",
+          "right_shoulder_roll_joint_dof",
+          "right_shoulder_yaw_joint_dof"
+        ]
+      },
+      "r": 0.37615531017471526,
+      "p": 0.0008116478994458294,
+      "n_actors": 73,
+      "predicted_sign": 1,
+      "chosen": "gap",
+      "high": {
+        "label": "145 kg",
+        "actor_uid": "A035",
+        "actor_short": "A035 (M, 198 cm)",
+        "source_bvh": "soma_uniform/bvh/220721/kneeling_stop_001__A035.bvh",
+        "g1_csv": "./data/feature_matrix/weight_kneeling_shoulder_peak_vel_high.csv",
+        "shape": {
+          "height_cm": 198,
+          "weight_kg": 145,
+          "gender": "male"
+        },
+        "expected_F": 787.8469848632812,
+        "per_actor_F": 787.8469848632812,
+        "n_frames": 743
+      },
+      "low": {
+        "label": "59 kg",
+        "actor_uid": "A033",
+        "actor_short": "A033 (M, 160 cm)",
+        "source_bvh": "soma_uniform/bvh/220721/kneeling_stop_003__A033.bvh",
+        "g1_csv": "./data/feature_matrix/weight_kneeling_shoulder_peak_vel_low.csv",
+        "shape": {
+          "height_cm": 160,
+          "weight_kg": 59,
+          "gender": "male"
+        },
+        "expected_F": 63.65235900878906,
+        "per_actor_F": 63.65235900878906,
+        "n_frames": 350
+      }
+    },
+    {
+      "row_id": "weight_jogging_turning_ankle_rom",
+      "attribute": "actor_weight_kg",
+      "attribute_short": "weight",
+      "task": "jogging, turning",
+      "feature": "ankle_rom",
+      "feature_unit": "deg",
+      "feature_recipe": {
+        "name": "ankle_rom",
+        "stat": "rom",
+        "kind": "joint_group",
+        "agg": "lr_merge",
+        "unit": "deg",
+        "left": [
+          "left_ankle_pitch_joint_dof",
+          "left_ankle_roll_joint_dof"
+        ],
+        "right": [
+          "right_ankle_pitch_joint_dof",
+          "right_ankle_roll_joint_dof"
+        ]
+      },
+      "r": -0.36526356807974225,
+      "p": 3.0289760380184335e-05,
+      "n_actors": 105,
+      "predicted_sign": -1,
+      "chosen": "gap",
+      "high": {
+        "label": "45 kg",
+        "actor_uid": "A018",
+        "actor_short": "A018 (F, 148 cm)",
+        "source_bvh": "soma_uniform/bvh/220705/Turn_Start_Jog_0360_001__A018.bvh",
+        "g1_csv": "./data/feature_matrix/weight_jogging_turning_ankle_rom_high.csv",
+        "shape": {
+          "height_cm": 148,
+          "weight_kg": 45,
+          "gender": "female"
+        },
+        "expected_F": 81.20772933959961,
+        "per_actor_F": 81.20772933959961,
+        "n_frames": 8683
+      },
+      "low": {
+        "label": "77 kg",
+        "actor_uid": "A055",
+        "actor_short": "A055 (M, 188 cm)",
+        "source_bvh": "soma_uniform/bvh/221012/turn_jog_360_001__A055.bvh",
+        "g1_csv": "./data/feature_matrix/weight_jogging_turning_ankle_rom_low.csv",
+        "shape": {
+          "height_cm": 188,
+          "weight_kg": 77,
+          "gender": "male"
+        },
+        "expected_F": 39.52326965332031,
+        "per_actor_F": 39.52326965332031,
+        "n_frames": 712
+      }
+    },
+    {
+      "row_id": "weight_dancing_elbow_rom",
+      "attribute": "actor_weight_kg",
+      "attribute_short": "weight",
+      "task": "dancing",
+      "feature": "elbow_rom",
+      "feature_unit": "deg",
+      "feature_recipe": {
+        "name": "elbow_rom",
+        "stat": "rom",
+        "kind": "joint_group",
+        "agg": "lr_merge",
+        "unit": "deg",
+        "left": [
+          "left_elbow_joint_dof"
+        ],
+        "right": [
+          "right_elbow_joint_dof"
+        ]
+      },
+      "r": -0.27378605670291983,
+      "p": 2.057215871147443e-08,
+      "n_actors": 381,
+      "predicted_sign": -1,
+      "chosen": "gap",
+      "high": {
+        "label": "59 kg",
+        "actor_uid": "A317",
+        "actor_short": "A317 (F, 168 cm)",
+        "source_bvh": "soma_uniform/bvh/230413/dancing_routine_V001_003__A317.bvh",
+        "g1_csv": "./data/feature_matrix/weight_dancing_elbow_rom_high.csv",
+        "shape": {
+          "height_cm": 168,
+          "weight_kg": 59,
+          "gender": "female"
+        },
+        "expected_F": 141.67572021484375,
+        "per_actor_F": 141.67572021484375,
+        "n_frames": 1695
+      },
+      "low": {
+        "label": "77 kg",
+        "actor_uid": "A055",
+        "actor_short": "A055 (M, 188 cm)",
+        "source_bvh": "soma_uniform/bvh/221012/dancing_routine_1_004__A055.bvh",
+        "g1_csv": "./data/feature_matrix/weight_dancing_elbow_rom_low.csv",
+        "shape": {
+          "height_cm": 188,
+          "weight_kg": 77,
+          "gender": "male"
+        },
+        "expected_F": 8.908191680908203,
+        "per_actor_F": 8.908191680908203,
+        "n_frames": 1716
+      }
+    },
+    {
+      "row_id": "weight_jumping_turning_root_translate_peak_vel",
+      "attribute": "actor_weight_kg",
+      "attribute_short": "weight",
+      "task": "jumping, turning",
+      "feature": "root_translate_peak_vel",
+      "feature_unit": "cm/s",
+      "feature_recipe": {
+        "name": "root_translate_peak_vel",
+        "stat": "peak_vel",
+        "kind": "root_translate",
+        "agg": "multi_axis",
+        "unit": "cm/s",
+        "joints": [
+          "root_translateX",
+          "root_translateY",
+          "root_translateZ"
+        ]
+      },
+      "r": -0.26962273567500483,
+      "p": 0.004579756937986608,
+      "n_actors": 84,
+      "predicted_sign": -1,
+      "chosen": "gap",
+      "high": {
+        "label": "41 kg",
+        "actor_uid": "A029",
+        "actor_short": "A029 (F, 155 cm)",
+        "source_bvh": "soma_uniform/bvh/220720/turn_jump_045_003__A029.bvh",
+        "g1_csv": "./data/feature_matrix/weight_jumping_turning_root_translate_peak_vel_high.csv",
+        "shape": {
+          "height_cm": 155,
+          "weight_kg": 41,
+          "gender": "female"
+        },
+        "expected_F": 224.25164794921875,
+        "per_actor_F": 224.25164794921875,
+        "n_frames": 485
+      },
+      "low": {
+        "label": "65 kg",
+        "actor_uid": "A041",
+        "actor_short": "A041 (F, 157 cm)",
+        "source_bvh": "soma_uniform/bvh/220728/turn_jump_045_001__A041.bvh",
+        "g1_csv": "./data/feature_matrix/weight_jumping_turning_root_translate_peak_vel_low.csv",
+        "shape": {
+          "height_cm": 157,
+          "weight_kg": 65,
+          "gender": "female"
+        },
+        "expected_F": 76.94231414794922,
+        "per_actor_F": 76.94231414794922,
+        "n_frames": 692
+      }
+    },
+    {
+      "row_id": "weight_walking_turning_root_rotate_mean_vel",
+      "attribute": "actor_weight_kg",
+      "attribute_short": "weight",
+      "task": "walking, turning",
+      "feature": "root_rotate_mean_vel",
+      "feature_unit": "deg/s",
+      "feature_recipe": {
+        "name": "root_rotate_mean_vel",
+        "stat": "mean_vel",
+        "kind": "root_rotate",
+        "agg": "multi_axis",
+        "unit": "deg/s",
+        "joints": [
+          "root_rotateX",
+          "root_rotateY",
+          "root_rotateZ"
+        ]
+      },
+      "r": -0.20351193422854386,
+      "p": 0.020214567404907315,
+      "n_actors": 107,
+      "predicted_sign": -1,
+      "chosen": "gap",
+      "high": {
+        "label": "47 kg",
+        "actor_uid": "A061",
+        "actor_short": "A061 (M, 157 cm)",
+        "source_bvh": "soma_uniform/bvh/221115/turn_walk_270_006__A061.bvh",
+        "g1_csv": "./data/feature_matrix/weight_walking_turning_root_rotate_mean_vel_high.csv",
+        "shape": {
+          "height_cm": 157,
+          "weight_kg": 47,
+          "gender": "male"
+        },
+        "expected_F": 603.85107421875,
+        "per_actor_F": 603.85107421875,
+        "n_frames": 626
+      },
+      "low": {
+        "label": "77 kg",
+        "actor_uid": "A055",
+        "actor_short": "A055 (M, 188 cm)",
+        "source_bvh": "soma_uniform/bvh/221012/turn_walk_270_002__A055.bvh",
+        "g1_csv": "./data/feature_matrix/weight_walking_turning_root_rotate_mean_vel_low.csv",
+        "shape": {
+          "height_cm": 188,
+          "weight_kg": 77,
+          "gender": "male"
+        },
+        "expected_F": 28.02690315246582,
+        "per_actor_F": 28.02690315246582,
+        "n_frames": 932
+      }
+    },
+    {
+      "row_id": "weight_standing_wrist_mean_vel",
+      "attribute": "actor_weight_kg",
+      "attribute_short": "weight",
+      "task": "standing",
+      "feature": "wrist_mean_vel",
+      "feature_unit": "deg/s",
+      "feature_recipe": {
+        "name": "wrist_mean_vel",
+        "stat": "mean_vel",
+        "kind": "joint_group",
+        "agg": "lr_merge",
+        "unit": "deg/s",
+        "left": [
+          "left_wrist_roll_joint_dof",
+          "left_wrist_pitch_joint_dof",
+          "left_wrist_yaw_joint_dof"
+        ],
+        "right": [
+          "right_wrist_roll_joint_dof",
+          "right_wrist_pitch_joint_dof",
+          "right_wrist_yaw_joint_dof"
+        ]
+      },
+      "r": -0.1846662718675674,
+      "p": 0.0005355116260289461,
+      "n_actors": 58,
+      "predicted_sign": -1,
+      "chosen": "extreme",
+      "high": {
+        "label": "62 kg",
+        "actor_uid": "A492",
+        "actor_short": "A492 (F, 170 cm)",
+        "source_bvh": "soma_uniform/bvh/231024/rage_001__A492.bvh",
+        "g1_csv": "./data/feature_matrix/weight_standing_wrist_mean_vel_high.csv",
+        "shape": {
+          "height_cm": 170,
+          "weight_kg": 62,
+          "gender": "female"
+        },
+        "expected_F": 364.46409606933594,
+        "per_actor_F": 364.46409606933594,
+        "n_frames": 1008
+      },
+      "low": {
+        "label": "83 kg",
+        "actor_uid": "A494",
+        "actor_short": "A494 (M, 180 cm)",
+        "source_bvh": "soma_uniform/bvh/231024/rage_001__A494.bvh",
+        "g1_csv": "./data/feature_matrix/weight_standing_wrist_mean_vel_low.csv",
+        "shape": {
+          "height_cm": 180,
+          "weight_kg": 83,
+          "gender": "male"
+        },
+        "expected_F": 130.5099105834961,
+        "per_actor_F": 130.5099105834961,
+        "n_frames": 1008
+      }
+    },
+    {
+      "row_id": "weight_jumping_ankle_peak_vel",
+      "attribute": "actor_weight_kg",
+      "attribute_short": "weight",
+      "task": "jumping",
+      "feature": "ankle_peak_vel",
+      "feature_unit": "deg/s",
+      "feature_recipe": {
+        "name": "ankle_peak_vel",
+        "stat": "peak_vel",
+        "kind": "joint_group",
+        "agg": "lr_merge",
+        "unit": "deg/s",
+        "left": [
+          "left_ankle_pitch_joint_dof",
+          "left_ankle_roll_joint_dof"
+        ],
+        "right": [
+          "right_ankle_pitch_joint_dof",
+          "right_ankle_roll_joint_dof"
+        ]
+      },
+      "r": -0.17779227015318871,
+      "p": 0.00025895925469061567,
+      "n_actors": 417,
+      "predicted_sign": -1,
+      "chosen": "gap",
+      "high": {
+        "label": "72 kg",
+        "actor_uid": "A374",
+        "actor_short": "A374 (M, 172 cm)",
+        "source_bvh": "soma_uniform/bvh/230517/reach_jump_R_003__A374.bvh",
+        "g1_csv": "./data/feature_matrix/weight_jumping_ankle_peak_vel_high.csv",
+        "shape": {
+          "height_cm": 172,
+          "weight_kg": 72,
+          "gender": "male"
+        },
+        "expected_F": 1496.449951171875,
+        "per_actor_F": 1496.449951171875,
+        "n_frames": 385
+      },
+      "low": {
+        "label": "87 kg",
+        "actor_uid": "A079",
+        "actor_short": "A079 (M, 185 cm)",
+        "source_bvh": "soma_uniform/bvh/221125/reach_jump_R_003__A079.bvh",
+        "g1_csv": "./data/feature_matrix/weight_jumping_ankle_peak_vel_low.csv",
+        "shape": {
+          "height_cm": 185,
+          "weight_kg": 87,
+          "gender": "male"
+        },
+        "expected_F": 213.00057983398438,
+        "per_actor_F": 213.00057983398438,
+        "n_frames": 583
+      }
+    },
+    {
+      "row_id": "height_climbing_box_root_translate_rom",
+      "attribute": "actor_height_cm",
+      "attribute_short": "height",
+      "task": "climbing box",
+      "feature": "root_translate_rom",
+      "feature_unit": "cm",
+      "feature_recipe": {
+        "name": "root_translate_rom",
+        "stat": "rom",
+        "kind": "root_translate",
+        "agg": "multi_axis",
+        "unit": "cm",
+        "joints": [
+          "root_translateX",
+          "root_translateY",
+          "root_translateZ"
+        ]
+      },
+      "r": -0.46119933669781304,
+      "p": 4.24350127089762e-20,
+      "n_actors": 326,
+      "predicted_sign": -1,
+      "chosen": "gap",
+      "high": {
+        "label": "153 cm",
+        "actor_uid": "A065",
+        "actor_short": "A065 (F, 153 cm)",
+        "source_bvh": "soma_uniform/bvh/221117/come_down_50cm_box_R_004__A065.bvh",
+        "g1_csv": "./data/feature_matrix/height_climbing_box_root_translate_rom_high.csv",
+        "shape": {
+          "height_cm": 153,
+          "weight_kg": 61,
+          "gender": "female"
+        },
+        "expected_F": 102.37126159667969,
+        "per_actor_F": 102.37126159667969,
+        "n_frames": 452
+      },
+      "low": {
+        "label": "181 cm",
+        "actor_uid": "A119",
+        "actor_short": "A119 (M, 181 cm)",
+        "source_bvh": "soma_uniform/bvh/230112/come_down_50cm_box_R_003__A119.bvh",
+        "g1_csv": "./data/feature_matrix/height_climbing_box_root_translate_rom_low.csv",
+        "shape": {
+          "height_cm": 181,
+          "weight_kg": 73,
+          "gender": "male"
+        },
+        "expected_F": 50.452335357666016,
+        "per_actor_F": 50.452335357666016,
+        "n_frames": 301
+      }
+    },
+    {
+      "row_id": "height_jogging_turning_root_translate_peak_vel",
+      "attribute": "actor_height_cm",
+      "attribute_short": "height",
+      "task": "jogging, turning",
+      "feature": "root_translate_peak_vel",
+      "feature_unit": "cm/s",
+      "feature_recipe": {
+        "name": "root_translate_peak_vel",
+        "stat": "peak_vel",
+        "kind": "root_translate",
+        "agg": "multi_axis",
+        "unit": "cm/s",
+        "joints": [
+          "root_translateX",
+          "root_translateY",
+          "root_translateZ"
+        ]
+      },
+      "r": -0.34276960198985046,
+      "p": 9.739137088474456e-05,
+      "n_actors": 105,
+      "predicted_sign": -1,
+      "chosen": "gap",
+      "high": {
+        "label": "157 cm",
+        "actor_uid": "A061",
+        "actor_short": "A061 (M, 157 cm)",
+        "source_bvh": "soma_uniform/bvh/221115/turn_jog_270_006__A061.bvh",
+        "g1_csv": "./data/feature_matrix/height_jogging_turning_root_translate_peak_vel_high.csv",
+        "shape": {
+          "height_cm": 157,
+          "weight_kg": 47,
+          "gender": "male"
+        },
+        "expected_F": 342.8782653808594,
+        "per_actor_F": 342.8782653808594,
+        "n_frames": 452
+      },
+      "low": {
+        "label": "173 cm",
+        "actor_uid": "A268",
+        "actor_short": "A268 (M, 173 cm)",
+        "source_bvh": "soma_uniform/bvh/230313/turn_jog_270_R_002__A268.bvh",
+        "g1_csv": "./data/feature_matrix/height_jogging_turning_root_translate_peak_vel_low.csv",
+        "shape": {
+          "height_cm": 173,
+          "weight_kg": 93,
+          "gender": "male"
+        },
+        "expected_F": 148.6989288330078,
+        "per_actor_F": 148.6989288330078,
+        "n_frames": 579
+      }
+    },
+    {
+      "row_id": "height_jogging_ankle_rom",
+      "attribute": "actor_height_cm",
+      "attribute_short": "height",
+      "task": "jogging",
+      "feature": "ankle_rom",
+      "feature_unit": "deg",
+      "feature_recipe": {
+        "name": "ankle_rom",
+        "stat": "rom",
+        "kind": "joint_group",
+        "agg": "lr_merge",
+        "unit": "deg",
+        "left": [
+          "left_ankle_pitch_joint_dof",
+          "left_ankle_roll_joint_dof"
+        ],
+        "right": [
+          "right_ankle_pitch_joint_dof",
+          "right_ankle_roll_joint_dof"
+        ]
+      },
+      "r": -0.31042208289428097,
+      "p": 4.65414514674219e-11,
+      "n_actors": 416,
+      "predicted_sign": -1,
+      "chosen": "gap",
+      "high": {
+        "label": "166 cm",
+        "actor_uid": "A048",
+        "actor_short": "A048 (M, 166 cm)",
+        "source_bvh": "soma_uniform/bvh/221010/jog_arc_cw_start_002__A048.bvh",
+        "g1_csv": "./data/feature_matrix/height_jogging_ankle_rom_high.csv",
+        "shape": {
+          "height_cm": 166,
+          "weight_kg": 63,
+          "gender": "male"
+        },
+        "expected_F": 70.70635604858398,
+        "per_actor_F": 70.70635604858398,
+        "n_frames": 838
+      },
+      "low": {
+        "label": "168 cm",
+        "actor_uid": "A094",
+        "actor_short": "A094 (F, 168 cm)",
+        "source_bvh": "soma_uniform/bvh/230102/jog_arc_cw_loop_004__A094.bvh",
+        "g1_csv": "./data/feature_matrix/height_jogging_ankle_rom_low.csv",
+        "shape": {
+          "height_cm": 168,
+          "weight_kg": 57,
+          "gender": "female"
+        },
+        "expected_F": 0.9152171015739441,
+        "per_actor_F": 0.9152171015739441,
+        "n_frames": 526
+      }
+    },
+    {
+      "row_id": "height_kneeling_elbow_rom",
+      "attribute": "actor_height_cm",
+      "attribute_short": "height",
+      "task": "kneeling",
+      "feature": "elbow_rom",
+      "feature_unit": "deg",
+      "feature_recipe": {
+        "name": "elbow_rom",
+        "stat": "rom",
+        "kind": "joint_group",
+        "agg": "lr_merge",
+        "unit": "deg",
+        "left": [
+          "left_elbow_joint_dof"
+        ],
+        "right": [
+          "right_elbow_joint_dof"
+        ]
+      },
+      "r": 0.295785211216647,
+      "p": 0.009481529361677555,
+      "n_actors": 73,
+      "predicted_sign": 1,
+      "chosen": "gap",
+      "high": {
+        "label": "166 cm",
+        "actor_uid": "A032",
+        "actor_short": "A032 (M, 166 cm)",
+        "source_bvh": "soma_uniform/bvh/220720/kneeling_start_004__A032.bvh",
+        "g1_csv": "./data/feature_matrix/height_kneeling_elbow_rom_high.csv",
+        "shape": {
+          "height_cm": 166,
+          "weight_kg": 60,
+          "gender": "male"
+        },
+        "expected_F": 111.43338012695312,
+        "per_actor_F": 111.43338012695312,
+        "n_frames": 957
+      },
+      "low": {
+        "label": "155 cm",
+        "actor_uid": "A029",
+        "actor_short": "A029 (F, 155 cm)",
+        "source_bvh": "soma_uniform/bvh/220720/kneeling_start_002__A029.bvh",
+        "g1_csv": "./data/feature_matrix/height_kneeling_elbow_rom_low.csv",
+        "shape": {
+          "height_cm": 155,
+          "weight_kg": 41,
+          "gender": "female"
+        },
+        "expected_F": 9.4681396484375,
+        "per_actor_F": 9.4681396484375,
+        "n_frames": 668
+      }
+    },
+    {
+      "row_id": "height_gesture_dancing_hip_mean_vel",
+      "attribute": "actor_height_cm",
+      "attribute_short": "height",
+      "task": "gesture, dancing",
+      "feature": "hip_mean_vel",
+      "feature_unit": "deg/s",
+      "feature_recipe": {
+        "name": "hip_mean_vel",
+        "stat": "mean_vel",
+        "kind": "joint_group",
+        "agg": "lr_merge",
+        "unit": "deg/s",
+        "left": [
+          "left_hip_pitch_joint_dof",
+          "left_hip_roll_joint_dof",
+          "left_hip_yaw_joint_dof"
+        ],
+        "right": [
+          "right_hip_pitch_joint_dof",
+          "right_hip_roll_joint_dof",
+          "right_hip_yaw_joint_dof"
+        ]
+      },
+      "r": 0.26079222420693854,
+      "p": 0.06185389260749849,
+      "n_actors": 51,
+      "predicted_sign": 1,
+      "chosen": "gap",
+      "high": {
+        "label": "182 cm",
+        "actor_uid": "A236",
+        "actor_short": "A236 (M, 182 cm)",
+        "source_bvh": "soma_uniform/bvh/230302/lasso_dance_R_002__A236.bvh",
+        "g1_csv": "./data/feature_matrix/height_gesture_dancing_hip_mean_vel_high.csv",
+        "shape": {
+          "height_cm": 182,
+          "weight_kg": 74,
+          "gender": "male"
+        },
+        "expected_F": 220.57275390625,
+        "per_actor_F": 220.57275390625,
+        "n_frames": 558
+      },
+      "low": {
+        "label": "168 cm",
+        "actor_uid": "A261",
+        "actor_short": "A261 (F, 168 cm)",
+        "source_bvh": "soma_uniform/bvh/230309/lasso_dance_R_002__A261.bvh",
+        "g1_csv": "./data/feature_matrix/height_gesture_dancing_hip_mean_vel_low.csv",
+        "shape": {
+          "height_cm": 168,
+          "weight_kg": 77,
+          "gender": "female"
+        },
+        "expected_F": 82.7298469543457,
+        "per_actor_F": 82.7298469543457,
+        "n_frames": 977
+      }
+    },
+    {
+      "row_id": "height_jumping_turning_ankle_peak_vel",
+      "attribute": "actor_height_cm",
+      "attribute_short": "height",
+      "task": "jumping, turning",
+      "feature": "ankle_peak_vel",
+      "feature_unit": "deg/s",
+      "feature_recipe": {
+        "name": "ankle_peak_vel",
+        "stat": "peak_vel",
+        "kind": "joint_group",
+        "agg": "lr_merge",
+        "unit": "deg/s",
+        "left": [
+          "left_ankle_pitch_joint_dof",
+          "left_ankle_roll_joint_dof"
+        ],
+        "right": [
+          "right_ankle_pitch_joint_dof",
+          "right_ankle_roll_joint_dof"
+        ]
+      },
+      "r": -0.24501991323351582,
+      "p": 0.010232870740845584,
+      "n_actors": 84,
+      "predicted_sign": -1,
+      "chosen": "gap",
+      "high": {
+        "label": "148 cm",
+        "actor_uid": "A018",
+        "actor_short": "A018 (F, 148 cm)",
+        "source_bvh": "soma_uniform/bvh/220705/Jump_Left_002__A018.bvh",
+        "g1_csv": "./data/feature_matrix/height_jumping_turning_ankle_peak_vel_high.csv",
+        "shape": {
+          "height_cm": 148,
+          "weight_kg": 45,
+          "gender": "female"
+        },
+        "expected_F": 1487.5177001953125,
+        "per_actor_F": 1487.5177001953125,
+        "n_frames": 4352
+      },
+      "low": {
+        "label": "176 cm",
+        "actor_uid": "A028",
+        "actor_short": "A028 (F, 176 cm)",
+        "source_bvh": "soma_uniform/bvh/220714/jump_left_004__A028.bvh",
+        "g1_csv": "./data/feature_matrix/height_jumping_turning_ankle_peak_vel_low.csv",
+        "shape": {
+          "height_cm": 176,
+          "weight_kg": 76,
+          "gender": "female"
+        },
+        "expected_F": 313.2677764892578,
+        "per_actor_F": 313.2677764892578,
+        "n_frames": 588
+      }
+    },
+    {
+      "row_id": "height_walking_root_translate_mean_vel",
+      "attribute": "actor_height_cm",
+      "attribute_short": "height",
+      "task": "walking",
+      "feature": "root_translate_mean_vel",
+      "feature_unit": "cm/s",
+      "feature_recipe": {
+        "name": "root_translate_mean_vel",
+        "stat": "mean_vel",
+        "kind": "root_translate",
+        "agg": "multi_axis",
+        "unit": "cm/s",
+        "joints": [
+          "root_translateX",
+          "root_translateY",
+          "root_translateZ"
+        ]
+      },
+      "r": -0.22765596399457944,
+      "p": 0.00012862316819642274,
+      "n_actors": 260,
+      "predicted_sign": -1,
+      "chosen": "gap",
+      "high": {
+        "label": "155 cm",
+        "actor_uid": "A064",
+        "actor_short": "A064 (F, 155 cm)",
+        "source_bvh": "soma_uniform/bvh/221116/walk_ff_loop_180_R_005__A064.bvh",
+        "g1_csv": "./data/feature_matrix/height_walking_root_translate_mean_vel_high.csv",
+        "shape": {
+          "height_cm": 155,
+          "weight_kg": 43,
+          "gender": "female"
+        },
+        "expected_F": 124.1992416381836,
+        "per_actor_F": 124.1992416381836,
+        "n_frames": 458
+      },
+      "low": {
+        "label": "197 cm",
+        "actor_uid": "A020",
+        "actor_short": "A020 (M, 197 cm)",
+        "source_bvh": "soma_uniform/bvh/220705/Loop_Forward_Walk_001__A020.bvh",
+        "g1_csv": "./data/feature_matrix/height_walking_root_translate_mean_vel_low.csv",
+        "shape": {
+          "height_cm": 197,
+          "weight_kg": 105,
+          "gender": "male"
+        },
+        "expected_F": 14.904823303222656,
+        "per_actor_F": 14.904823303222656,
+        "n_frames": 1013
+      }
+    },
+    {
+      "row_id": "height_turning_waist_rom",
+      "attribute": "actor_height_cm",
+      "attribute_short": "height",
+      "task": "turning",
+      "feature": "waist_rom",
+      "feature_unit": "deg",
+      "feature_recipe": {
+        "name": "waist_rom",
+        "stat": "rom",
+        "kind": "joint_group",
+        "agg": "multi_axis",
+        "unit": "deg",
+        "joints": [
+          "waist_yaw_joint_dof",
+          "waist_roll_joint_dof",
+          "waist_pitch_joint_dof"
+        ]
+      },
+      "r": 0.22065301344642962,
+      "p": 0.0017853293752794555,
+      "n_actors": 166,
+      "predicted_sign": 1,
+      "chosen": "gap",
+      "high": {
+        "label": "177 cm",
+        "actor_uid": "A145",
+        "actor_short": "A145 (F, 177 cm)",
+        "source_bvh": "soma_uniform/bvh/230125/turn_crouch_360_002__A145.bvh",
+        "g1_csv": "./data/feature_matrix/height_turning_waist_rom_high.csv",
+        "shape": {
+          "height_cm": 177,
+          "weight_kg": 68,
+          "gender": "female"
+        },
+        "expected_F": 55.359012603759766,
+        "per_actor_F": 55.359012603759766,
+        "n_frames": 521
+      },
+      "low": {
+        "label": "171 cm",
+        "actor_uid": "A198",
+        "actor_short": "A198 (M, 171 cm)",
+        "source_bvh": "soma_uniform/bvh/230215/turn_crouch_360_R_001__A198.bvh",
+        "g1_csv": "./data/feature_matrix/height_turning_waist_rom_low.csv",
+        "shape": {
+          "height_cm": 171,
+          "weight_kg": 68,
+          "gender": "male"
+        },
+        "expected_F": 12.388544082641602,
+        "per_actor_F": 12.388544082641602,
+        "n_frames": 494
+      }
+    },
+    {
+      "row_id": "height_dancing_elbow_peak_vel",
+      "attribute": "actor_height_cm",
+      "attribute_short": "height",
+      "task": "dancing",
+      "feature": "elbow_peak_vel",
+      "feature_unit": "deg/s",
+      "feature_recipe": {
+        "name": "elbow_peak_vel",
+        "stat": "peak_vel",
+        "kind": "joint_group",
+        "agg": "lr_merge",
+        "unit": "deg/s",
+        "left": [
+          "left_elbow_joint_dof"
+        ],
+        "right": [
+          "right_elbow_joint_dof"
+        ]
+      },
+      "r": -0.18997152885212387,
+      "p": 0.0001175669871002199,
+      "n_actors": 381,
+      "predicted_sign": -1,
+      "chosen": "gap",
+      "high": {
+        "label": "168 cm",
+        "actor_uid": "A317",
+        "actor_short": "A317 (F, 168 cm)",
+        "source_bvh": "soma_uniform/bvh/230413/dance_hiphop_point_head_R_003__A317.bvh",
+        "g1_csv": "./data/feature_matrix/height_dancing_elbow_peak_vel_high.csv",
+        "shape": {
+          "height_cm": 168,
+          "weight_kg": 59,
+          "gender": "female"
+        },
+        "expected_F": 4929.330780029297,
+        "per_actor_F": 4929.330780029297,
+        "n_frames": 934
+      },
+      "low": {
+        "label": "175 cm",
+        "actor_uid": "A319",
+        "actor_short": "A319 (M, 175 cm)",
+        "source_bvh": "soma_uniform/bvh/230413/dance_hiphop_point_head_R_003__A319.bvh",
+        "g1_csv": "./data/feature_matrix/height_dancing_elbow_peak_vel_low.csv",
+        "shape": {
+          "height_cm": 175,
+          "weight_kg": 68,
+          "gender": "male"
+        },
+        "expected_F": 797.8582458496094,
+        "per_actor_F": 797.8582458496094,
+        "n_frames": 405
+      }
+    },
+    {
+      "row_id": "height_sitting_hip_peak_vel",
+      "attribute": "actor_height_cm",
+      "attribute_short": "height",
+      "task": "sitting",
+      "feature": "hip_peak_vel",
+      "feature_unit": "deg/s",
+      "feature_recipe": {
+        "name": "hip_peak_vel",
+        "stat": "peak_vel",
+        "kind": "joint_group",
+        "agg": "lr_merge",
+        "unit": "deg/s",
+        "left": [
+          "left_hip_pitch_joint_dof",
+          "left_hip_roll_joint_dof",
+          "left_hip_yaw_joint_dof"
+        ],
+        "right": [
+          "right_hip_pitch_joint_dof",
+          "right_hip_roll_joint_dof",
+          "right_hip_yaw_joint_dof"
+        ]
+      },
+      "r": -0.1797136997663796,
+      "p": 0.047622086388830975,
+      "n_actors": 110,
+      "predicted_sign": -1,
+      "chosen": "gap",
+      "high": {
+        "label": "171 cm",
+        "actor_uid": "A099",
+        "actor_short": "A099 (M, 171 cm)",
+        "source_bvh": "soma_uniform/bvh/230103/sit_on_heels_stop_003__A099.bvh",
+        "g1_csv": "./data/feature_matrix/height_sitting_hip_peak_vel_high.csv",
+        "shape": {
+          "height_cm": 171,
+          "weight_kg": 61,
+          "gender": "male"
+        },
+        "expected_F": 20658.3115234375,
+        "per_actor_F": 20658.3115234375,
+        "n_frames": 511
+      },
+      "low": {
+        "label": "183 cm",
+        "actor_uid": "A034",
+        "actor_short": "A034 (F, 183 cm)",
+        "source_bvh": "soma_uniform/bvh/220721/sit_on_heels_stop_003__A034.bvh",
+        "g1_csv": "./data/feature_matrix/height_sitting_hip_peak_vel_low.csv",
+        "shape": {
+          "height_cm": 183,
+          "weight_kg": 96,
+          "gender": "female"
+        },
+        "expected_F": 188.18756103515625,
+        "per_actor_F": 188.18756103515625,
+        "n_frames": 505
+      }
+    },
+    {
+      "row_id": "gender_climbing_box_knee_rom",
+      "attribute": "gender_numeric",
+      "attribute_short": "gender",
+      "task": "climbing box",
+      "feature": "knee_rom",
+      "feature_unit": "deg",
+      "feature_recipe": {
+        "name": "knee_rom",
+        "stat": "rom",
+        "kind": "joint_group",
+        "agg": "lr_merge",
+        "unit": "deg",
+        "left": [
+          "left_knee_joint_dof"
+        ],
+        "right": [
+          "right_knee_joint_dof"
+        ]
+      },
+      "r": -0.46374729671808895,
+      "p": 2.4865135054685423e-20,
+      "n_actors": 326,
+      "predicted_sign": -1,
+      "chosen": "gap",
+      "high": {
+        "label": "female",
+        "actor_uid": "A065",
+        "actor_short": "A065 (F, 153 cm)",
+        "source_bvh": "soma_uniform/bvh/221117/come_up_50cm_box_R_002__A065.bvh",
+        "g1_csv": "./data/feature_matrix/gender_climbing_box_knee_rom_high.csv",
+        "shape": {
+          "height_cm": 153,
+          "weight_kg": 61,
+          "gender": "female"
+        },
+        "expected_F": 133.43729400634766,
+        "per_actor_F": 133.43729400634766,
+        "n_frames": 1270
+      },
+      "low": {
+        "label": "male",
+        "actor_uid": "A052",
+        "actor_short": "A052 (M, 169 cm)",
+        "source_bvh": "soma_uniform/bvh/221011/come_up_50cm_box_R_002__A052.bvh",
+        "g1_csv": "./data/feature_matrix/gender_climbing_box_knee_rom_low.csv",
+        "shape": {
+          "height_cm": 169,
+          "weight_kg": 65,
+          "gender": "male"
+        },
+        "expected_F": 1.536886215209961,
+        "per_actor_F": 1.536886215209961,
+        "n_frames": 475
+      }
+    },
+    {
+      "row_id": "gender_jogging_shoulder_mean_vel",
+      "attribute": "gender_numeric",
+      "attribute_short": "gender",
+      "task": "jogging",
+      "feature": "shoulder_mean_vel",
+      "feature_unit": "deg/s",
+      "feature_recipe": {
+        "name": "shoulder_mean_vel",
+        "stat": "mean_vel",
+        "kind": "joint_group",
+        "agg": "lr_merge",
+        "unit": "deg/s",
+        "left": [
+          "left_shoulder_pitch_joint_dof",
+          "left_shoulder_roll_joint_dof",
+          "left_shoulder_yaw_joint_dof"
+        ],
+        "right": [
+          "right_shoulder_pitch_joint_dof",
+          "right_shoulder_roll_joint_dof",
+          "right_shoulder_yaw_joint_dof"
+        ]
+      },
+      "r": -0.43481517980411544,
+      "p": 2.927729552034451e-21,
+      "n_actors": 416,
+      "predicted_sign": -1,
+      "chosen": "gap",
+      "high": {
+        "label": "female",
+        "actor_uid": "A359",
+        "actor_short": "A359 (F, 176 cm)",
+        "source_bvh": "soma_uniform/bvh/230509/exercise_v002_R_002__A359.bvh",
+        "g1_csv": "./data/feature_matrix/gender_jogging_shoulder_mean_vel_high.csv",
+        "shape": {
+          "height_cm": 176,
+          "weight_kg": 59,
+          "gender": "female"
+        },
+        "expected_F": 363.3308410644531,
+        "per_actor_F": 363.3308410644531,
+        "n_frames": 1087
+      },
+      "low": {
+        "label": "male",
+        "actor_uid": "A044",
+        "actor_short": "A044 (M, 167 cm)",
+        "source_bvh": "soma_uniform/bvh/220728/exercise_2_001__A044.bvh",
+        "g1_csv": "./data/feature_matrix/gender_jogging_shoulder_mean_vel_low.csv",
+        "shape": {
+          "height_cm": 167,
+          "weight_kg": 75,
+          "gender": "male"
+        },
+        "expected_F": 65.50174713134766,
+        "per_actor_F": 65.50174713134766,
+        "n_frames": 809
+      }
+    },
+    {
+      "row_id": "gender_dancing_elbow_rom",
+      "attribute": "gender_numeric",
+      "attribute_short": "gender",
+      "task": "dancing",
+      "feature": "elbow_rom",
+      "feature_unit": "deg",
+      "feature_recipe": {
+        "name": "elbow_rom",
+        "stat": "rom",
+        "kind": "joint_group",
+        "agg": "lr_merge",
+        "unit": "deg",
+        "left": [
+          "left_elbow_joint_dof"
+        ],
+        "right": [
+          "right_elbow_joint_dof"
+        ]
+      },
+      "r": -0.3798242315305626,
+      "p": 2.2138986227487647e-15,
+      "n_actors": 381,
+      "predicted_sign": -1,
+      "chosen": "gap",
+      "high": {
+        "label": "female",
+        "actor_uid": "A317",
+        "actor_short": "A317 (F, 168 cm)",
+        "source_bvh": "soma_uniform/bvh/230413/dancing_routine_V001_003__A317.bvh",
+        "g1_csv": "./data/feature_matrix/gender_dancing_elbow_rom_high.csv",
+        "shape": {
+          "height_cm": 168,
+          "weight_kg": 59,
+          "gender": "female"
+        },
+        "expected_F": 141.67572021484375,
+        "per_actor_F": 141.67572021484375,
+        "n_frames": 1695
+      },
+      "low": {
+        "label": "male",
+        "actor_uid": "A055",
+        "actor_short": "A055 (M, 188 cm)",
+        "source_bvh": "soma_uniform/bvh/221012/dancing_routine_1_004__A055.bvh",
+        "g1_csv": "./data/feature_matrix/gender_dancing_elbow_rom_low.csv",
+        "shape": {
+          "height_cm": 188,
+          "weight_kg": 77,
+          "gender": "male"
+        },
+        "expected_F": 8.908191680908203,
+        "per_actor_F": 8.908191680908203,
+        "n_frames": 1716
+      }
+    },
+    {
+      "row_id": "gender_jogging_turning_ankle_rom",
+      "attribute": "gender_numeric",
+      "attribute_short": "gender",
+      "task": "jogging, turning",
+      "feature": "ankle_rom",
+      "feature_unit": "deg",
+      "feature_recipe": {
+        "name": "ankle_rom",
+        "stat": "rom",
+        "kind": "joint_group",
+        "agg": "lr_merge",
+        "unit": "deg",
+        "left": [
+          "left_ankle_pitch_joint_dof",
+          "left_ankle_roll_joint_dof"
+        ],
+        "right": [
+          "right_ankle_pitch_joint_dof",
+          "right_ankle_roll_joint_dof"
+        ]
+      },
+      "r": -0.3554724597052833,
+      "p": 5.0906521492815406e-05,
+      "n_actors": 105,
+      "predicted_sign": -1,
+      "chosen": "gap",
+      "high": {
+        "label": "female",
+        "actor_uid": "A018",
+        "actor_short": "A018 (F, 148 cm)",
+        "source_bvh": "soma_uniform/bvh/220705/Turn_Start_Jog_0360_001__A018.bvh",
+        "g1_csv": "./data/feature_matrix/gender_jogging_turning_ankle_rom_high.csv",
+        "shape": {
+          "height_cm": 148,
+          "weight_kg": 45,
+          "gender": "female"
+        },
+        "expected_F": 81.20772933959961,
+        "per_actor_F": 81.20772933959961,
+        "n_frames": 8683
+      },
+      "low": {
+        "label": "male",
+        "actor_uid": "A055",
+        "actor_short": "A055 (M, 188 cm)",
+        "source_bvh": "soma_uniform/bvh/221012/turn_jog_360_001__A055.bvh",
+        "g1_csv": "./data/feature_matrix/gender_jogging_turning_ankle_rom_low.csv",
+        "shape": {
+          "height_cm": 188,
+          "weight_kg": 77,
+          "gender": "male"
+        },
+        "expected_F": 39.52326965332031,
+        "per_actor_F": 39.52326965332031,
+        "n_frames": 712
+      }
+    },
+    {
+      "row_id": "gender_kneeling_waist_mean_vel",
+      "attribute": "gender_numeric",
+      "attribute_short": "gender",
+      "task": "kneeling",
+      "feature": "waist_mean_vel",
+      "feature_unit": "deg/s",
+      "feature_recipe": {
+        "name": "waist_mean_vel",
+        "stat": "mean_vel",
+        "kind": "joint_group",
+        "agg": "multi_axis",
+        "unit": "deg/s",
+        "joints": [
+          "waist_yaw_joint_dof",
+          "waist_roll_joint_dof",
+          "waist_pitch_joint_dof"
+        ]
+      },
+      "r": 0.3061768341075431,
+      "p": 0.0071477879683592375,
+      "n_actors": 73,
+      "predicted_sign": 1,
+      "chosen": "gap",
+      "high": {
+        "label": "male",
+        "actor_uid": "A120",
+        "actor_short": "A120 (M, 183 cm)",
+        "source_bvh": "soma_uniform/bvh/230118/kneeling_start_003__A120.bvh",
+        "g1_csv": "./data/feature_matrix/gender_kneeling_waist_mean_vel_high.csv",
+        "shape": {
+          "height_cm": 183,
+          "weight_kg": 84,
+          "gender": "male"
+        },
+        "expected_F": 39.43244171142578,
+        "per_actor_F": 39.43244171142578,
+        "n_frames": 380
+      },
+      "low": {
+        "label": "female",
+        "actor_uid": "A036",
+        "actor_short": "A036 (F, 150 cm)",
+        "source_bvh": "soma_uniform/bvh/220721/kneeling_start_002__A036.bvh",
+        "g1_csv": "./data/feature_matrix/gender_kneeling_waist_mean_vel_low.csv",
+        "shape": {
+          "height_cm": 150,
+          "weight_kg": 50,
+          "gender": "female"
+        },
+        "expected_F": 7.490514755249023,
+        "per_actor_F": 7.490514755249023,
+        "n_frames": 1200
+      }
+    },
+    {
+      "row_id": "gender_jumping_elbow_mean_vel",
+      "attribute": "gender_numeric",
+      "attribute_short": "gender",
+      "task": "jumping",
+      "feature": "elbow_mean_vel",
+      "feature_unit": "deg/s",
+      "feature_recipe": {
+        "name": "elbow_mean_vel",
+        "stat": "mean_vel",
+        "kind": "joint_group",
+        "agg": "lr_merge",
+        "unit": "deg/s",
+        "left": [
+          "left_elbow_joint_dof"
+        ],
+        "right": [
+          "right_elbow_joint_dof"
+        ]
+      },
+      "r": 0.22868211735103278,
+      "p": 2.3106708057944056e-06,
+      "n_actors": 417,
+      "predicted_sign": 1,
+      "chosen": "gap",
+      "high": {
+        "label": "male",
+        "actor_uid": "A117",
+        "actor_short": "A117 (M, 187 cm)",
+        "source_bvh": "soma_uniform/bvh/230112/exercise_1_001__A117.bvh",
+        "g1_csv": "./data/feature_matrix/gender_jumping_elbow_mean_vel_high.csv",
+        "shape": {
+          "height_cm": 187,
+          "weight_kg": 87,
+          "gender": "male"
+        },
+        "expected_F": 211.2289276123047,
+        "per_actor_F": 211.2289276123047,
+        "n_frames": 495
+      },
+      "low": {
+        "label": "female",
+        "actor_uid": "A042",
+        "actor_short": "A042 (F, 178 cm)",
+        "source_bvh": "soma_uniform/bvh/220728/exercise_1_003__A042.bvh",
+        "g1_csv": "./data/feature_matrix/gender_jumping_elbow_mean_vel_low.csv",
+        "shape": {
+          "height_cm": 178,
+          "weight_kg": 86,
+          "gender": "female"
+        },
+        "expected_F": 20.035282135009766,
+        "per_actor_F": 20.035282135009766,
+        "n_frames": 785
+      }
+    },
+    {
+      "row_id": "gender_gesture_dancing_waist_rom",
+      "attribute": "gender_numeric",
+      "attribute_short": "gender",
+      "task": "gesture, dancing",
+      "feature": "waist_rom",
+      "feature_unit": "deg",
+      "feature_recipe": {
+        "name": "waist_rom",
+        "stat": "rom",
+        "kind": "joint_group",
+        "agg": "multi_axis",
+        "unit": "deg",
+        "joints": [
+          "waist_yaw_joint_dof",
+          "waist_roll_joint_dof",
+          "waist_pitch_joint_dof"
+        ]
+      },
+      "r": -0.22646470631508006,
+      "p": 0.10643763108412854,
+      "n_actors": 51,
+      "predicted_sign": -1,
+      "chosen": "gap",
+      "high": {
+        "label": "female",
+        "actor_uid": "A140",
+        "actor_short": "A140 (F, 171 cm)",
+        "source_bvh": "soma_uniform/bvh/230124/lasso_dance_R_006__A140.bvh",
+        "g1_csv": "./data/feature_matrix/gender_gesture_dancing_waist_rom_high.csv",
+        "shape": {
+          "height_cm": 171,
+          "weight_kg": 61,
+          "gender": "female"
+        },
+        "expected_F": 71.77677154541016,
+        "per_actor_F": 71.77677154541016,
+        "n_frames": 675
+      },
+      "low": {
+        "label": "male",
+        "actor_uid": "A275",
+        "actor_short": "A275 (M, 183 cm)",
+        "source_bvh": "soma_uniform/bvh/230315/lasso_dance_R_003__A275.bvh",
+        "g1_csv": "./data/feature_matrix/gender_gesture_dancing_waist_rom_low.csv",
+        "shape": {
+          "height_cm": 183,
+          "weight_kg": 126,
+          "gender": "male"
+        },
+        "expected_F": 22.1954288482666,
+        "per_actor_F": 22.1954288482666,
+        "n_frames": 660
+      }
+    },
+    {
+      "row_id": "gender_standing_shoulder_rom",
+      "attribute": "gender_numeric",
+      "attribute_short": "gender",
+      "task": "standing",
+      "feature": "shoulder_rom",
+      "feature_unit": "deg",
+      "feature_recipe": {
+        "name": "shoulder_rom",
+        "stat": "rom",
+        "kind": "joint_group",
+        "agg": "lr_merge",
+        "unit": "deg",
+        "left": [
+          "left_shoulder_pitch_joint_dof",
+          "left_shoulder_roll_joint_dof",
+          "left_shoulder_yaw_joint_dof"
+        ],
+        "right": [
+          "right_shoulder_pitch_joint_dof",
+          "right_shoulder_roll_joint_dof",
+          "right_shoulder_yaw_joint_dof"
+        ]
+      },
+      "r": -0.1784650471905635,
+      "p": 0.0008254115709435458,
+      "n_actors": 58,
+      "predicted_sign": -1,
+      "chosen": "gap",
+      "high": {
+        "label": "female",
+        "actor_uid": "A461",
+        "actor_short": "A461 (F, 171 cm)",
+        "source_bvh": "soma_uniform/bvh/231005/looking_for_something_around_ground_R_001__A461.bvh",
+        "g1_csv": "./data/feature_matrix/gender_standing_shoulder_rom_high.csv",
+        "shape": {
+          "height_cm": 171,
+          "weight_kg": 63,
+          "gender": "female"
+        },
+        "expected_F": 194.33806610107422,
+        "per_actor_F": 194.33806610107422,
+        "n_frames": 3111
+      },
+      "low": {
+        "label": "male",
+        "actor_uid": "A463",
+        "actor_short": "A463 (M, 182 cm)",
+        "source_bvh": "soma_uniform/bvh/231005/looking_for_something_around_ground_R_001__A463.bvh",
+        "g1_csv": "./data/feature_matrix/gender_standing_shoulder_rom_low.csv",
+        "shape": {
+          "height_cm": 182,
+          "weight_kg": 78,
+          "gender": "male"
+        },
+        "expected_F": 69.8303337097168,
+        "per_actor_F": 69.8303337097168,
+        "n_frames": 2297
+      }
+    },
+    {
+      "row_id": "gender_jumping_turning_waist_peak_vel",
+      "attribute": "gender_numeric",
+      "attribute_short": "gender",
+      "task": "jumping, turning",
+      "feature": "waist_peak_vel",
+      "feature_unit": "deg/s",
+      "feature_recipe": {
+        "name": "waist_peak_vel",
+        "stat": "peak_vel",
+        "kind": "joint_group",
+        "agg": "multi_axis",
+        "unit": "deg/s",
+        "joints": [
+          "waist_yaw_joint_dof",
+          "waist_roll_joint_dof",
+          "waist_pitch_joint_dof"
+        ]
+      },
+      "r": 0.15702708790383973,
+      "p": 0.1029656086950953,
+      "n_actors": 84,
+      "predicted_sign": 1,
+      "chosen": "gap",
+      "high": {
+        "label": "male",
+        "actor_uid": "A043",
+        "actor_short": "A043 (M, 190 cm)",
+        "source_bvh": "soma_uniform/bvh/220728/turn_jump_090_003__A043.bvh",
+        "g1_csv": "./data/feature_matrix/gender_jumping_turning_waist_peak_vel_high.csv",
+        "shape": {
+          "height_cm": 190,
+          "weight_kg": 88,
+          "gender": "male"
+        },
+        "expected_F": 334.981201171875,
+        "per_actor_F": 334.981201171875,
+        "n_frames": 291
+      },
+      "low": {
+        "label": "female",
+        "actor_uid": "A041",
+        "actor_short": "A041 (F, 157 cm)",
+        "source_bvh": "soma_uniform/bvh/220728/turn_jump_090_002__A041.bvh",
+        "g1_csv": "./data/feature_matrix/gender_jumping_turning_waist_peak_vel_low.csv",
+        "shape": {
+          "height_cm": 157,
+          "weight_kg": 65,
+          "gender": "female"
+        },
+        "expected_F": 95.76322937011719,
+        "per_actor_F": 95.76322937011719,
+        "n_frames": 588
+      }
+    },
+    {
+      "row_id": "gender_walking_root_translate_peak_vel",
+      "attribute": "gender_numeric",
+      "attribute_short": "gender",
+      "task": "walking",
+      "feature": "root_translate_peak_vel",
+      "feature_unit": "cm/s",
+      "feature_recipe": {
+        "name": "root_translate_peak_vel",
+        "stat": "peak_vel",
+        "kind": "root_translate",
+        "agg": "multi_axis",
+        "unit": "cm/s",
+        "joints": [
+          "root_translateX",
+          "root_translateY",
+          "root_translateZ"
+        ]
+      },
+      "r": -0.14684637150531568,
+      "p": 0.014258426672940526,
+      "n_actors": 260,
+      "predicted_sign": -1,
+      "chosen": "gap",
+      "high": {
+        "label": "female",
+        "actor_uid": "A071",
+        "actor_short": "A071 (F, 159 cm)",
+        "source_bvh": "soma_uniform/bvh/221118/walk_hands_on_back_stop_003__A071.bvh",
+        "g1_csv": "./data/feature_matrix/gender_walking_root_translate_peak_vel_high.csv",
+        "shape": {
+          "height_cm": 159,
+          "weight_kg": 84,
+          "gender": "female"
+        },
+        "expected_F": 272.1685791015625,
+        "per_actor_F": 272.1685791015625,
+        "n_frames": 733
+      },
+      "low": {
+        "label": "male",
+        "actor_uid": "A217",
+        "actor_short": "A217 (M, 177 cm)",
+        "source_bvh": "soma_uniform/bvh/230223/walk_hands_on_back_180_stop_R_002__A217.bvh",
+        "g1_csv": "./data/feature_matrix/gender_walking_root_translate_peak_vel_low.csv",
+        "shape": {
+          "height_cm": 177,
+          "weight_kg": 82,
+          "gender": "male"
+        },
+        "expected_F": 62.17839813232422,
+        "per_actor_F": 62.17839813232422,
+        "n_frames": 832
+      }
+    }
+  ],
+  "groups": {
+    "age": [
+      "age_jogging_waist_rom",
+      "age_turning_waist_mean_vel",
+      "age_transition_elbow_peak_vel",
+      "age_jogging_turning_ankle_rom",
+      "age_dancing_elbow_rom",
+      "age_walking_turning_wrist_rom",
+      "age_climbing_box_shoulder_rom",
+      "age_jumping_turning_wrist_mean_vel",
+      "age_gesture_elbow_mean_vel",
+      "age_standing_idle_wrist_peak_vel"
+    ],
+    "weight": [
+      "weight_gesture_dancing_waist_rom",
+      "weight_climbing_box_hip_rom",
+      "weight_jogging_shoulder_rom",
+      "weight_kneeling_shoulder_peak_vel",
+      "weight_jogging_turning_ankle_rom",
+      "weight_dancing_elbow_rom",
+      "weight_jumping_turning_root_translate_peak_vel",
+      "weight_walking_turning_root_rotate_mean_vel",
+      "weight_standing_wrist_mean_vel",
+      "weight_jumping_ankle_peak_vel"
+    ],
+    "height": [
+      "height_climbing_box_root_translate_rom",
+      "height_jogging_turning_root_translate_peak_vel",
+      "height_jogging_ankle_rom",
+      "height_kneeling_elbow_rom",
+      "height_gesture_dancing_hip_mean_vel",
+      "height_jumping_turning_ankle_peak_vel",
+      "height_walking_root_translate_mean_vel",
+      "height_turning_waist_rom",
+      "height_dancing_elbow_peak_vel",
+      "height_sitting_hip_peak_vel"
+    ],
+    "gender": [
+      "gender_climbing_box_knee_rom",
+      "gender_jogging_shoulder_mean_vel",
+      "gender_dancing_elbow_rom",
+      "gender_jogging_turning_ankle_rom",
+      "gender_kneeling_waist_mean_vel",
+      "gender_jumping_elbow_mean_vel",
+      "gender_gesture_dancing_waist_rom",
+      "gender_standing_shoulder_rom",
+      "gender_jumping_turning_waist_peak_vel",
+      "gender_walking_root_translate_peak_vel"
+    ]
+  }
+}

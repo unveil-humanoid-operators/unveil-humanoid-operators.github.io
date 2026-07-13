@@ -1,0 +1,27 @@
+Plan (feature_matrix_v1): 2 SMPL fits across 1 rows (max_input_frames=600, max_frames=100, device=cuda)
+Output: C:\Users\sihat\Downloads\invert\feature-analysis-animation\data\smpl_feature_matrix
+
+
+  [weight_climbing_box_knee_rom]  climbing box · knee_rom  (r=-0.400)
+    [1/2 · weight_climbing_box_knee_rom · high] gender=female 61kg @ 153cm
+      truncate 1270 -> 600 (5.0s)
+  Running FK...
+  Loading SMPL  : basicModel_f_lbs_10_207_0_v1.0.0.pkl
+  Loading VPoser: C:\Users\sihat\Downloads\BVH2SMPL\vposer_v1_0
+Found Trained Model: C:\Users\sihat\Downloads\BVH2SMPL\vposer_v1_0\snapshots\TR00_E096.pt
+  Fitting SMPL+VPoser (600 frames, batch=64, 120 steps, z_prior=0.0010)...
+    64 / 600 frames done
+      fit done in 51.8s -> 100 frames @ 20.0 fps
+      -> weight_climbing_box_knee_rom_high.bin  (100 frames @ 20.0 fps, 8.3 MB)
+      -> faces.bin  (13776 faces)
+    [2/2 · weight_climbing_box_knee_rom · low] gender=male 65kg @ 169cm
+  Running FK...
+  Loading SMPL  : basicmodel_m_lbs_10_207_0_v1.0.0.pkl
+  Loading VPoser: C:\Users\sihat\Downloads\BVH2SMPL\vposer_v1_0
+Found Trained Model: C:\Users\sihat\Downloads\BVH2SMPL\vposer_v1_0\snapshots\TR00_E096.pt
+  Fitting SMPL+VPoser (475 frames, batch=64, 120 steps, z_prior=0.0010)...
+    64 / 475 frames done
+      fit done in 40.1s -> 100 frames @ 25.3 fps
+      -> weight_climbing_box_knee_rom_low.bin  (100 frames @ 25.3 fps, 8.3 MB)
+
+Done — wrote outputs under C:\Users\sihat\Downloads\invert\feature-analysis-animation\data\smpl_feature_matrix.

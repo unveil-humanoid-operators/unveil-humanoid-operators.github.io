@@ -1,0 +1,124 @@
+{
+  "version": 1,
+  "rows": [
+    {
+      "attribute": "actor_age_yr",
+      "attribute_short": "age",
+      "attribute_label": "Age",
+      "attribute_unit": "yr",
+      "panels": [
+        {
+          "panel_id": "age_p1",
+          "task": "jogging",
+          "feature": "waist_rom",
+          "r": -0.39,
+          "n_actors": 416,
+          "high_actor": "A019",
+          "low_actor":  "A044",
+          "content_name": "jog_ff_loop_180_R"
+        },
+        {
+          "panel_id": "age_p2",
+          "task": "transition",
+          "feature": "elbow_peak_vel",
+          "r": -0.33,
+          "n_actors": 166,
+          "high_actor": "A549",
+          "low_actor":  "A463",
+          "content_name": "idle_to_smoking_idle_R"
+        }
+      ]
+    },
+    {
+      "attribute": "actor_weight_kg",
+      "attribute_short": "weight",
+      "attribute_label": "Weight",
+      "attribute_unit": "kg",
+      "panels": [
+        {
+          "panel_id": "weight_p1",
+          "task": "climbing box",
+          "feature": "hip_rom",
+          "r": -0.39,
+          "n_actors": 326,
+          "high_actor": "A310",
+          "low_actor":  "A100",
+          "content_name": "come_up_50cm_box_R",
+          "camera_zoom": 1.5,
+          "camera_target_y": 1.0,
+          "g1_camera_zoom": 1.1,
+          "g1_camera_target_y": 0.95
+        },
+        {
+          "panel_id": "weight_p2",
+          "task": "gesture, dancing",
+          "feature": "waist_rom",
+          "r": -0.41,
+          "n_actors": 51,
+          "high_actor": "A140",
+          "low_actor":  "A275",
+          "content_name": "lasso_dance_R",
+          "truncate_tail_seconds": 2.0
+        }
+      ]
+    },
+    {
+      "attribute": "actor_height_cm",
+      "attribute_short": "height",
+      "attribute_label": "Height",
+      "attribute_unit": "cm",
+      "panels": [
+        {
+          "panel_id": "height_p1",
+          "task": "climbing box",
+          "feature": "root_translate_rom",
+          "r": -0.46,
+          "n_actors": 326,
+          "high_actor": "A065",
+          "low_actor":  "A119",
+          "content_name": "come_down_50cm_box_R",
+          "camera_zoom": 1.5,
+          "camera_target_y": 1.0,
+          "g1_camera_zoom": 1.1,
+          "g1_camera_target_y": 0.95
+        },
+        {
+          "panel_id": "height_p2",
+          "task": "jogging, turning",
+          "feature": "root_translate_peak_vel",
+          "r": -0.34,
+          "n_actors": 105,
+          "high_actor": "A061",
+          "low_actor":  "A268",
+          "content_name": "turn_jog_270_R"
+        }
+      ]
+    },
+    {
+      "attribute": "gender_numeric",
+      "attribute_short": "gender",
+      "attribute_label": "Gender",
+      "attribute_unit": "",
+      "panels": [
+        {
+          "panel_id": "gender_p1",
+          "task": "jogging",
+          "feature": "shoulder_mean_vel",
+          "r": -0.43,
+          "n_actors": 416,
+          "high_actor": "A359",
+          "low_actor":  "A044"
+        },
+        {
+          "panel_id": "gender_p2",
+          "task": "dancing",
+          "feature": "elbow_rom",
+          "r": -0.38,
+          "n_actors": 381,
+          "high_actor": "A317",
+          "low_actor":  "A055"
+        }
+      ]
+    }
+  ]
+}

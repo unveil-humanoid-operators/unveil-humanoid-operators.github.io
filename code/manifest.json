@@ -1,0 +1,510 @@
+{
+  "root": "Submission",
+  "default_file": "README.md",
+  "tree": [
+    {
+      "type": "dir",
+      "name": "Ablation",
+      "path": "Ablation",
+      "children": [
+        {
+          "type": "file",
+          "name": "__init__.py",
+          "path": "Ablation/__init__.py",
+          "size": 20,
+          "lang": "python"
+        },
+        {
+          "type": "file",
+          "name": "ablation_runner.py",
+          "path": "Ablation/ablation_runner.py",
+          "size": 39041,
+          "lang": "python"
+        },
+        {
+          "type": "file",
+          "name": "configs.py",
+          "path": "Ablation/configs.py",
+          "size": 4043,
+          "lang": "python"
+        },
+        {
+          "type": "file",
+          "name": "configs_gcn.py",
+          "path": "Ablation/configs_gcn.py",
+          "size": 2806,
+          "lang": "python"
+        },
+        {
+          "type": "file",
+          "name": "gcn_ablation_runner.py",
+          "path": "Ablation/gcn_ablation_runner.py",
+          "size": 30817,
+          "lang": "python"
+        }
+      ]
+    },
+    {
+      "type": "dir",
+      "name": "Action_Recognition",
+      "path": "Action_Recognition",
+      "children": [
+        {
+          "type": "file",
+          "name": "eval_action_classifier.py",
+          "path": "Action_Recognition/eval_action_classifier.py",
+          "size": 24633,
+          "lang": "python"
+        },
+        {
+          "type": "file",
+          "name": "g1_to_action_pkl.py",
+          "path": "Action_Recognition/g1_to_action_pkl.py",
+          "size": 19159,
+          "lang": "python"
+        },
+        {
+          "type": "file",
+          "name": "README.md",
+          "path": "Action_Recognition/README.md",
+          "size": 3628,
+          "lang": "markdown"
+        }
+      ]
+    },
+    {
+      "type": "dir",
+      "name": "Data_split",
+      "path": "Data_split",
+      "children": [
+        {
+          "type": "file",
+          "name": "create_splits.py",
+          "path": "Data_split/create_splits.py",
+          "size": 10757,
+          "lang": "python"
+        }
+      ]
+    },
+    {
+      "type": "dir",
+      "name": "Emergent_Behavior_Analysis",
+      "path": "Emergent_Behavior_Analysis",
+      "children": [
+        {
+          "type": "file",
+          "name": "compute_insights.py",
+          "path": "Emergent_Behavior_Analysis/compute_insights.py",
+          "size": 54196,
+          "lang": "python"
+        },
+        {
+          "type": "file",
+          "name": "simple_interpretability.py",
+          "path": "Emergent_Behavior_Analysis/simple_interpretability.py",
+          "size": 30854,
+          "lang": "python"
+        }
+      ]
+    },
+    {
+      "type": "dir",
+      "name": "Motion_cache_builder",
+      "path": "Motion_cache_builder",
+      "children": [
+        {
+          "type": "file",
+          "name": "build_g1_motion_cache.py",
+          "path": "Motion_cache_builder/build_g1_motion_cache.py",
+          "size": 6149,
+          "lang": "python"
+        }
+      ]
+    },
+    {
+      "type": "dir",
+      "name": "Operator Anonymization",
+      "path": "Operator Anonymization",
+      "children": [
+        {
+          "type": "dir",
+          "name": "models",
+          "path": "Operator Anonymization/models",
+          "children": [
+            {
+              "type": "file",
+              "name": "__init__.py",
+              "path": "Operator Anonymization/models/__init__.py",
+              "size": 245,
+              "lang": "python"
+            },
+            {
+              "type": "file",
+              "name": "classifiers.py",
+              "path": "Operator Anonymization/models/classifiers.py",
+              "size": 8798,
+              "lang": "python"
+            },
+            {
+              "type": "file",
+              "name": "pmr.py",
+              "path": "Operator Anonymization/models/pmr.py",
+              "size": 11267,
+              "lang": "python"
+            }
+          ]
+        },
+        {
+          "type": "file",
+          "name": "apply_g1_pmr.py",
+          "path": "Operator Anonymization/apply_g1_pmr.py",
+          "size": 14878,
+          "lang": "python"
+        },
+        {
+          "type": "file",
+          "name": "dataset_g1_paired.py",
+          "path": "Operator Anonymization/dataset_g1_paired.py",
+          "size": 15015,
+          "lang": "python"
+        },
+        {
+          "type": "file",
+          "name": "non_adaptive_eval.py",
+          "path": "Operator Anonymization/non_adaptive_eval.py",
+          "size": 23654,
+          "lang": "python"
+        },
+        {
+          "type": "file",
+          "name": "train_g1_pmr.py",
+          "path": "Operator Anonymization/train_g1_pmr.py",
+          "size": 31547,
+          "lang": "python"
+        }
+      ]
+    },
+    {
+      "type": "dir",
+      "name": "src",
+      "path": "src",
+      "children": [
+        {
+          "type": "dir",
+          "name": "DS-GCN",
+          "path": "src/DS-GCN",
+          "children": [
+            {
+              "type": "dir",
+              "name": "pyskl",
+              "path": "src/DS-GCN/pyskl",
+              "children": [
+                {
+                  "type": "dir",
+                  "name": "models",
+                  "path": "src/DS-GCN/pyskl/models",
+                  "children": [
+                    {
+                      "type": "dir",
+                      "name": "gcns",
+                      "path": "src/DS-GCN/pyskl/models/gcns",
+                      "children": [
+                        {
+                          "type": "dir",
+                          "name": "utils",
+                          "path": "src/DS-GCN/pyskl/models/gcns/utils",
+                          "children": [
+                            {
+                              "type": "file",
+                              "name": "gcn.py",
+                              "path": "src/DS-GCN/pyskl/models/gcns/utils/gcn.py",
+                              "size": 102873,
+                              "lang": "python"
+                            },
+                            {
+                              "type": "file",
+                              "name": "init_func.py",
+                              "path": "src/DS-GCN/pyskl/models/gcns/utils/init_func.py",
+                              "size": 714,
+                              "lang": "python"
+                            },
+                            {
+                              "type": "file",
+                              "name": "msg3d_utils.py",
+                              "path": "src/DS-GCN/pyskl/models/gcns/utils/msg3d_utils.py",
+                              "size": 10925,
+                              "lang": "python"
+                            },
+                            {
+                              "type": "file",
+                              "name": "tcn.py",
+                              "path": "src/DS-GCN/pyskl/models/gcns/utils/tcn.py",
+                              "size": 23387,
+                              "lang": "python"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "file",
+                          "name": "dgstgcn.py",
+                          "path": "src/DS-GCN/pyskl/models/gcns/dgstgcn.py",
+                          "size": 6737,
+                          "lang": "python"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "dir",
+                  "name": "utils",
+                  "path": "src/DS-GCN/pyskl/utils",
+                  "children": [
+                    {
+                      "type": "file",
+                      "name": "graph.py",
+                      "path": "src/DS-GCN/pyskl/utils/graph.py",
+                      "size": 12238,
+                      "lang": "python"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "dir",
+          "name": "ProtoGCN",
+          "path": "src/ProtoGCN",
+          "children": [
+            {
+              "type": "dir",
+              "name": "protogcn",
+              "path": "src/ProtoGCN/protogcn",
+              "children": [
+                {
+                  "type": "dir",
+                  "name": "models",
+                  "path": "src/ProtoGCN/protogcn/models",
+                  "children": [
+                    {
+                      "type": "dir",
+                      "name": "gcns",
+                      "path": "src/ProtoGCN/protogcn/models/gcns",
+                      "children": [
+                        {
+                          "type": "dir",
+                          "name": "utils",
+                          "path": "src/ProtoGCN/protogcn/models/gcns/utils",
+                          "children": [
+                            {
+                              "type": "file",
+                              "name": "__init__.py",
+                              "path": "src/ProtoGCN/protogcn/models/gcns/utils/__init__.py",
+                              "size": 87,
+                              "lang": "python"
+                            },
+                            {
+                              "type": "file",
+                              "name": "gcn.py",
+                              "path": "src/ProtoGCN/protogcn/models/gcns/utils/gcn.py",
+                              "size": 4523,
+                              "lang": "python"
+                            },
+                            {
+                              "type": "file",
+                              "name": "init_func.py",
+                              "path": "src/ProtoGCN/protogcn/models/gcns/utils/init_func.py",
+                              "size": 516,
+                              "lang": "python"
+                            },
+                            {
+                              "type": "file",
+                              "name": "tcn.py",
+                              "path": "src/ProtoGCN/protogcn/models/gcns/utils/tcn.py",
+                              "size": 4391,
+                              "lang": "python"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "file",
+                          "name": "__init__.py",
+                          "path": "src/ProtoGCN/protogcn/models/gcns/__init__.py",
+                          "size": 45,
+                          "lang": "python"
+                        },
+                        {
+                          "type": "file",
+                          "name": "protogcn.py",
+                          "path": "src/ProtoGCN/protogcn/models/gcns/protogcn.py",
+                          "size": 7247,
+                          "lang": "python"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "file",
+                      "name": "__init__.py",
+                      "path": "src/ProtoGCN/protogcn/models/__init__.py",
+                      "size": 0,
+                      "lang": "python"
+                    },
+                    {
+                      "type": "file",
+                      "name": "builder.py",
+                      "path": "src/ProtoGCN/protogcn/models/builder.py",
+                      "size": 232,
+                      "lang": "python"
+                    }
+                  ]
+                },
+                {
+                  "type": "dir",
+                  "name": "utils",
+                  "path": "src/ProtoGCN/protogcn/utils",
+                  "children": [
+                    {
+                      "type": "file",
+                      "name": "__init__.py",
+                      "path": "src/ProtoGCN/protogcn/utils/__init__.py",
+                      "size": 230,
+                      "lang": "python"
+                    },
+                    {
+                      "type": "file",
+                      "name": "graph.py",
+                      "path": "src/ProtoGCN/protogcn/utils/graph.py",
+                      "size": 7401,
+                      "lang": "python"
+                    }
+                  ]
+                },
+                {
+                  "type": "file",
+                  "name": "__init__.py",
+                  "path": "src/ProtoGCN/protogcn/__init__.py",
+                  "size": 149,
+                  "lang": "python"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "dir",
+          "name": "pyskl",
+          "path": "src/pyskl",
+          "children": [
+            {
+              "type": "dir",
+              "name": "models",
+              "path": "src/pyskl/models",
+              "children": [
+                {
+                  "type": "dir",
+                  "name": "gcns",
+                  "path": "src/pyskl/models/gcns",
+                  "children": [
+                    {
+                      "type": "dir",
+                      "name": "utils",
+                      "path": "src/pyskl/models/gcns/utils",
+                      "children": [
+                        {
+                          "type": "file",
+                          "name": "__init__.py",
+                          "path": "src/pyskl/models/gcns/utils/__init__.py",
+                          "size": 2358,
+                          "lang": "python"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "file",
+                      "name": "__init__.py",
+                      "path": "src/pyskl/models/gcns/__init__.py",
+                      "size": 1347,
+                      "lang": "python"
+                    }
+                  ]
+                },
+                {
+                  "type": "file",
+                  "name": "__init__.py",
+                  "path": "src/pyskl/models/__init__.py",
+                  "size": 154,
+                  "lang": "python"
+                },
+                {
+                  "type": "file",
+                  "name": "builder.py",
+                  "path": "src/pyskl/models/builder.py",
+                  "size": 515,
+                  "lang": "python"
+                }
+              ]
+            },
+            {
+              "type": "dir",
+              "name": "utils",
+              "path": "src/pyskl/utils",
+              "children": [
+                {
+                  "type": "file",
+                  "name": "__init__.py",
+                  "path": "src/pyskl/utils/__init__.py",
+                  "size": 1630,
+                  "lang": "python"
+                }
+              ]
+            },
+            {
+              "type": "file",
+              "name": "__init__.py",
+              "path": "src/pyskl/__init__.py",
+              "size": 614,
+              "lang": "python"
+            }
+          ]
+        },
+        {
+          "type": "file",
+          "name": "linkage_eval.py",
+          "path": "src/linkage_eval.py",
+          "size": 9420,
+          "lang": "python"
+        },
+        {
+          "type": "file",
+          "name": "unveil.py",
+          "path": "src/unveil.py",
+          "size": 93701,
+          "lang": "python"
+        }
+      ]
+    },
+    {
+      "type": "file",
+      "name": "project_paths.py",
+      "path": "project_paths.py",
+      "size": 1108,
+      "lang": "python"
+    },
+    {
+      "type": "file",
+      "name": "README.md",
+      "path": "README.md",
+      "size": 9094,
+      "lang": "markdown"
+    },
+    {
+      "type": "file",
+      "name": "requirements.txt",
+      "path": "requirements.txt",
+      "size": 365,
+      "lang": "plaintext"
+    }
+  ]
+}

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>UNVEIL twin views — jumping × turning</title>
+<style>
+* { margin:0; padding:0; box-sizing: border-box; }
+html, body {
+  background: #0d1017;
+  color: #e8ecf4;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  font-size: 14px;
+  line-height: 1.55;
+}
+.wrap { max-width: 1800px; margin: 0 auto; padding: 24px 22px 40px 22px; }
+
+header { margin-bottom: 18px; }
+.eyebrow {
+  font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em;
+  color: #88c0ff; margin-bottom: 4px;
+}
+h1 { font-size: 24px; font-weight: 700; letter-spacing: -0.01em; margin-bottom: 8px; }
+h1 em { font-style: normal; color: #ffba6e; }
+.sub { color: #98a0ad; font-size: 13px; max-width: 1000px; }
+
+.card {
+  background: #141823;
+  border: 1px solid #1c2230;
+  border-radius: 12px;
+  padding: 18px;
+  margin-top: 18px;
+}
+
+#viewer-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  width: 100%;
+}
+.panel { display: flex; flex-direction: column; }
+.panel-title {
+  font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em;
+  color: #88909d; margin-bottom: 6px; padding-left: 4px;
+}
+.panel-title strong { color: #ffba6e; font-weight: 600; }
+.viewer-frame {
+  width: 100%; height: 720px;
+  border: 0; border-radius: 10px;
+  background: #f5f7fa;
+  display: block;
+}
+
+.footnote { color: #6e7382; font-size: 11px; margin-top: 12px; }
+.footnote strong { color: #c8cfdb; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">UNVEIL · interactive figure</div>
+  <h1>Same robot. Same motion. Different operator — and the motion <em>still</em> remembers them.</h1>
+  <div class="sub">Two pairs of side-by-side viewers show the same retargeted clip driving identical Unitree G1 robots while a SMPL body above each robot renders the operator's true shape. Retargeting strips body shape from the robot, yet the robot's motion still encodes the operator: a heavier operator's root translation runs slower (jumping, left), and an older operator's waist range-of-motion is narrower (turning, right).</div>
+</header>
+
+<section class="card">
+  <div id="viewer-pair">
+    <div class="panel">
+      <div class="panel-title">jumping &nbsp;·&nbsp; <strong>weight × root velocity</strong></div>
+      <iframe id="frame-jumping" class="viewer-frame" loading="lazy"></iframe>
+    </div>
+    <div class="panel">
+      <div class="panel-title">turning &nbsp;·&nbsp; <strong>age × waist ROM</strong></div>
+      <iframe id="frame-turning" class="viewer-frame" loading="lazy"></iframe>
+    </div>
+  </div>
+  <div class="footnote">
+    Each panel shows the <strong>same retargeted G1 trajectory</strong> driving both robots; the visible difference is synthesized to illustrate the population-level partial-correlation finding (heavy robot's root excursions × 0.80 for jumping; older operator's waist joints × 0.55 for turning).
+  </div>
+</section>
+
+</div>
+<script>
+  // Cache-bust the iframe HTML on every parent load so JS/CSS edits to the
+  // embedded viewers always land in the browser even when http.server doesn't
+  // send no-cache headers.
+  const cb = '?embed=1&t=' + Date.now();
+  document.getElementById('frame-jumping').src = './twin_view.html' + cb;
+  document.getElementById('frame-turning').src = './twin_view_turning.html' + cb;
+</script>
+</body>
+</html>

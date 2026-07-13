@@ -1,0 +1,972 @@
+{
+  "action": {
+    "category": "action",
+    "kind": "fine",
+    "n": 186,
+    "pearson": -0.04261616871885819,
+    "partial": 0.05044744063091798,
+    "p_partial": 0.49764734411162626,
+    "sign_partial": 1,
+    "content_type": "action"
+  },
+  "action_gesture": {
+    "category": "action_gesture",
+    "kind": "fine",
+    "n": 5,
+    "pearson": null,
+    "partial": null,
+    "p_partial": null,
+    "sign_partial": 0,
+    "content_type": "action, gesture"
+  },
+  "bowing_down_getting_up_gesture": {
+    "category": "bowing_down_getting_up_gesture",
+    "kind": "fine",
+    "n": 8,
+    "pearson": -0.5751072716958315,
+    "partial": 0.15629335474982525,
+    "p_partial": 0.8018142928993035,
+    "sign_partial": 1,
+    "content_type": "bowing down, getting up, gesture"
+  },
+  "burning": {
+    "category": "burning",
+    "kind": "fine",
+    "n": 7,
+    "pearson": 0.5248040666254238,
+    "partial": -0.716239644630871,
+    "p_partial": 0.2837603553691288,
+    "sign_partial": -1,
+    "content_type": "burning"
+  },
+  "climbing_box": {
+    "category": "climbing_box",
+    "kind": "fine",
+    "n": 355,
+    "pearson": -0.02891787911982283,
+    "partial": 0.08482423129847194,
+    "p_partial": 0.11214004424405655,
+    "sign_partial": 1,
+    "content_type": "climbing box"
+  },
+  "communication": {
+    "category": "communication",
+    "kind": "fine",
+    "n": 10,
+    "pearson": 0.2094494070108133,
+    "partial": 0.07799069255506764,
+    "p_partial": 0.8680011885704293,
+    "sign_partial": 1,
+    "content_type": "communication"
+  },
+  "crawling": {
+    "category": "crawling",
+    "kind": "fine",
+    "n": 24,
+    "pearson": 0.3239488730901986,
+    "partial": 0.18602573293193042,
+    "p_partial": 0.4194584641076671,
+    "sign_partial": 1,
+    "content_type": "crawling"
+  },
+  "crouching": {
+    "category": "crouching",
+    "kind": "fine",
+    "n": 10,
+    "pearson": 0.10029448188504536,
+    "partial": -0.0012789684730838329,
+    "p_partial": 0.9978287574606175,
+    "sign_partial": -1,
+    "content_type": "crouching"
+  },
+  "crouching_action": {
+    "category": "crouching_action",
+    "kind": "fine",
+    "n": 16,
+    "pearson": 0.03559098865812514,
+    "partial": -0.1666477292539776,
+    "p_partial": 0.5863424639430452,
+    "sign_partial": -1,
+    "content_type": "crouching, action"
+  },
+  "crouching_gesture": {
+    "category": "crouching_gesture",
+    "kind": "fine",
+    "n": 5,
+    "pearson": null,
+    "partial": null,
+    "p_partial": null,
+    "sign_partial": 0,
+    "content_type": "crouching, gesture"
+  },
+  "crouching_idle": {
+    "category": "crouching_idle",
+    "kind": "fine",
+    "n": 18,
+    "pearson": -0.053461839703232844,
+    "partial": 0.016176927399645352,
+    "p_partial": 0.9543694400589029,
+    "sign_partial": 1,
+    "content_type": "crouching idle"
+  },
+  "crouching_walking_action": {
+    "category": "crouching_walking_action",
+    "kind": "fine",
+    "n": 10,
+    "pearson": -0.24708311012851697,
+    "partial": -0.7743640548118533,
+    "p_partial": 0.04095937366663227,
+    "sign_partial": -1,
+    "content_type": "crouching, walking, action"
+  },
+  "dancing": {
+    "category": "dancing",
+    "kind": "fine",
+    "n": 406,
+    "pearson": -0.1455235133522266,
+    "partial": -0.002261442624315761,
+    "p_partial": 0.9639023121136772,
+    "sign_partial": -1,
+    "content_type": "dancing"
+  },
+  "dancing_kicking": {
+    "category": "dancing_kicking",
+    "kind": "fine",
+    "n": 14,
+    "pearson": 0.2748431873288421,
+    "partial": -0.31631140478028313,
+    "p_partial": 0.34330173764161676,
+    "sign_partial": -1,
+    "content_type": "dancing, kicking"
+  },
+  "dancing_pointing": {
+    "category": "dancing_pointing",
+    "kind": "fine",
+    "n": 10,
+    "pearson": 0.21071622034106904,
+    "partial": 0.24017008828541378,
+    "p_partial": 0.6039312825104468,
+    "sign_partial": 1,
+    "content_type": "dancing, pointing"
+  },
+  "dancing_rolling": {
+    "category": "dancing_rolling",
+    "kind": "fine",
+    "n": 10,
+    "pearson": 0.04413173543171022,
+    "partial": -0.42590792913987163,
+    "p_partial": 0.3407103065047423,
+    "sign_partial": -1,
+    "content_type": "dancing, rolling"
+  },
+  "dancing_sitting": {
+    "category": "dancing_sitting",
+    "kind": "fine",
+    "n": 5,
+    "pearson": null,
+    "partial": null,
+    "p_partial": null,
+    "sign_partial": 0,
+    "content_type": "dancing, sitting"
+  },
+  "evading": {
+    "category": "evading",
+    "kind": "fine",
+    "n": 5,
+    "pearson": null,
+    "partial": null,
+    "p_partial": null,
+    "sign_partial": 0,
+    "content_type": "evading"
+  },
+  "exercising": {
+    "category": "exercising",
+    "kind": "fine",
+    "n": 88,
+    "pearson": -0.08313046936972845,
+    "partial": -0.16710827641613782,
+    "p_partial": 0.12635840566915002,
+    "sign_partial": -1,
+    "content_type": "exercising"
+  },
+  "exercising_jumping": {
+    "category": "exercising_jumping",
+    "kind": "jumping",
+    "n": 36,
+    "pearson": -0.14540210762853895,
+    "partial": -0.18821058723340797,
+    "p_partial": 0.29421995950552127,
+    "sign_partial": -1,
+    "content_type": "exercising, jumping"
+  },
+  "falling_gesture": {
+    "category": "falling_gesture",
+    "kind": "fine",
+    "n": 5,
+    "pearson": null,
+    "partial": null,
+    "p_partial": null,
+    "sign_partial": 0,
+    "content_type": "falling, gesture"
+  },
+  "flipping": {
+    "category": "flipping",
+    "kind": "fine",
+    "n": 17,
+    "pearson": 0.3285818979664107,
+    "partial": 0.058334689368132665,
+    "p_partial": 0.8429781422642941,
+    "sign_partial": 1,
+    "content_type": "flipping"
+  },
+  "gesture": {
+    "category": "gesture",
+    "kind": "fine",
+    "n": 171,
+    "pearson": -0.05190630743747127,
+    "partial": -0.007806988786237569,
+    "p_partial": 0.9199980511226489,
+    "sign_partial": -1,
+    "content_type": "gesture"
+  },
+  "gesture_dancing": {
+    "category": "gesture_dancing",
+    "kind": "fine",
+    "n": 52,
+    "pearson": 0.034236915381461244,
+    "partial": 0.11308745003579682,
+    "p_partial": 0.439130007440909,
+    "sign_partial": 1,
+    "content_type": "gesture, dancing"
+  },
+  "gesture_running": {
+    "category": "gesture_running",
+    "kind": "fine",
+    "n": 10,
+    "pearson": -0.3163819876203825,
+    "partial": -0.07914371423496815,
+    "p_partial": 0.8660618547516452,
+    "sign_partial": -1,
+    "content_type": "gesture, running"
+  },
+  "interacting": {
+    "category": "interacting",
+    "kind": "fine",
+    "n": 9,
+    "pearson": 0.31675696028923594,
+    "partial": 0.4611568840042839,
+    "p_partial": 0.357300793233323,
+    "sign_partial": 1,
+    "content_type": "interacting"
+  },
+  "jogging": {
+    "category": "jogging",
+    "kind": "fine",
+    "n": 424,
+    "pearson": -0.14301077350658728,
+    "partial": 0.01227877355981875,
+    "p_partial": 0.8016596566432597,
+    "sign_partial": 1,
+    "content_type": "jogging"
+  },
+  "jogging_action": {
+    "category": "jogging_action",
+    "kind": "fine",
+    "n": 10,
+    "pearson": -0.357144396200254,
+    "partial": -0.822475254550569,
+    "p_partial": 0.02312050477345129,
+    "sign_partial": -1,
+    "content_type": "jogging, action"
+  },
+  "jogging_evading": {
+    "category": "jogging_evading",
+    "kind": "fine",
+    "n": 5,
+    "pearson": null,
+    "partial": null,
+    "p_partial": null,
+    "sign_partial": 0,
+    "content_type": "jogging, evading"
+  },
+  "jogging_turning": {
+    "category": "jogging_turning",
+    "kind": "fine",
+    "n": 109,
+    "pearson": -0.17500286013387614,
+    "partial": 0.09763453748692714,
+    "p_partial": 0.31940971969924714,
+    "sign_partial": 1,
+    "content_type": "jogging, turning"
+  },
+  "jumping": {
+    "category": "jumping",
+    "kind": "jumping",
+    "n": 417,
+    "pearson": -0.06938305591384569,
+    "partial": -0.15219959107119863,
+    "p_partial": 0.0018992435745217584,
+    "sign_partial": -1,
+    "content_type": "jumping"
+  },
+  "jumping_dancing": {
+    "category": "jumping_dancing",
+    "kind": "jumping",
+    "n": 20,
+    "pearson": 0.34125002083999995,
+    "partial": 0.18260697603646492,
+    "p_partial": 0.4829958055481489,
+    "sign_partial": 1,
+    "content_type": "jumping, dancing"
+  },
+  "jumping_gesture": {
+    "category": "jumping_gesture",
+    "kind": "jumping",
+    "n": 5,
+    "pearson": null,
+    "partial": null,
+    "p_partial": null,
+    "sign_partial": 0,
+    "content_type": "jumping, gesture"
+  },
+  "jumping_rolling": {
+    "category": "jumping_rolling",
+    "kind": "jumping",
+    "n": 8,
+    "pearson": 0.38212185191812015,
+    "partial": 0.32522394800594434,
+    "p_partial": 0.5933321610962483,
+    "sign_partial": 1,
+    "content_type": "jumping, rolling"
+  },
+  "jumping_turning": {
+    "category": "jumping_turning",
+    "kind": "jumping",
+    "n": 84,
+    "pearson": -0.13051069636196222,
+    "partial": -0.04875464179462607,
+    "p_partial": 0.6655750477729092,
+    "sign_partial": -1,
+    "content_type": "jumping, turning"
+  },
+  "kicking_walking": {
+    "category": "kicking_walking",
+    "kind": "fine",
+    "n": 11,
+    "pearson": 0.024091244174687717,
+    "partial": 0.2318665293334233,
+    "p_partial": 0.5805809764451628,
+    "sign_partial": 1,
+    "content_type": "kicking, walking"
+  },
+  "kneeling": {
+    "category": "kneeling",
+    "kind": "fine",
+    "n": 74,
+    "pearson": -0.13125407187576654,
+    "partial": -0.1582343181014309,
+    "p_partial": 0.1875168962765963,
+    "sign_partial": -1,
+    "content_type": "kneeling"
+  },
+  "kneeling_down_gesture": {
+    "category": "kneeling_down_gesture",
+    "kind": "fine",
+    "n": 5,
+    "pearson": null,
+    "partial": null,
+    "p_partial": null,
+    "sign_partial": 0,
+    "content_type": "kneeling down, gesture"
+  },
+  "looking": {
+    "category": "looking",
+    "kind": "fine",
+    "n": 14,
+    "pearson": 0.19684282124387636,
+    "partial": -0.32445684100553085,
+    "p_partial": 0.3303208102427444,
+    "sign_partial": -1,
+    "content_type": "looking"
+  },
+  "lying_down": {
+    "category": "lying_down",
+    "kind": "fine",
+    "n": 9,
+    "pearson": 0.551280683772484,
+    "partial": -0.18242864708180095,
+    "p_partial": 0.7293926613361461,
+    "sign_partial": -1,
+    "content_type": "lying down"
+  },
+  "lying_down_down_getting_up_gesture": {
+    "category": "lying_down_down_getting_up_gesture",
+    "kind": "fine",
+    "n": 5,
+    "pearson": null,
+    "partial": null,
+    "p_partial": null,
+    "sign_partial": 0,
+    "content_type": "lying down down, getting up, gesture"
+  },
+  "object_manipulation": {
+    "category": "object_manipulation",
+    "kind": "fine",
+    "n": 28,
+    "pearson": 0.07735951807321075,
+    "partial": -0.09416462695007771,
+    "p_partial": 0.6543582785601973,
+    "sign_partial": -1,
+    "content_type": "object manipulation"
+  },
+  "on_hands_and_knees": {
+    "category": "on_hands_and_knees",
+    "kind": "fine",
+    "n": 23,
+    "pearson": 0.00630934463159554,
+    "partial": 0.2534772286265103,
+    "p_partial": 0.2808873752344321,
+    "sign_partial": 1,
+    "content_type": "on hands and knees"
+  },
+  "on_hands_and_knees_turning": {
+    "category": "on_hands_and_knees_turning",
+    "kind": "fine",
+    "n": 23,
+    "pearson": 0.19926158632729168,
+    "partial": 0.07606672983362806,
+    "p_partial": 0.7499245751426347,
+    "sign_partial": 1,
+    "content_type": "on hands and knees, turning"
+  },
+  "playing_instrument": {
+    "category": "playing_instrument",
+    "kind": "fine",
+    "n": 23,
+    "pearson": 0.059024732452353096,
+    "partial": 0.11947633021011081,
+    "p_partial": 0.6158689652248674,
+    "sign_partial": 1,
+    "content_type": "playing instrument"
+  },
+  "pointing": {
+    "category": "pointing",
+    "kind": "fine",
+    "n": 18,
+    "pearson": -0.1475534821953045,
+    "partial": -0.2000100622752197,
+    "p_partial": 0.4747912788806046,
+    "sign_partial": -1,
+    "content_type": "pointing"
+  },
+  "pressing": {
+    "category": "pressing",
+    "kind": "fine",
+    "n": 8,
+    "pearson": 0.33566539121397887,
+    "partial": -0.527133051105308,
+    "p_partial": 0.36136095931038525,
+    "sign_partial": -1,
+    "content_type": "pressing"
+  },
+  "pulling": {
+    "category": "pulling",
+    "kind": "fine",
+    "n": 8,
+    "pearson": 0.48776147142061826,
+    "partial": -0.5490669351058599,
+    "p_partial": 0.3378226816924692,
+    "sign_partial": -1,
+    "content_type": "pulling"
+  },
+  "rolling": {
+    "category": "rolling",
+    "kind": "fine",
+    "n": 8,
+    "pearson": 0.23505160713711304,
+    "partial": 0.5651655691711761,
+    "p_partial": 0.32080130526919626,
+    "sign_partial": 1,
+    "content_type": "rolling"
+  },
+  "running": {
+    "category": "running",
+    "kind": "fine",
+    "n": 20,
+    "pearson": -0.2599072301519543,
+    "partial": -0.07252304312541792,
+    "p_partial": 0.782081319606476,
+    "sign_partial": -1,
+    "content_type": "running"
+  },
+  "running_dancing": {
+    "category": "running_dancing",
+    "kind": "fine",
+    "n": 10,
+    "pearson": -0.31403729699588057,
+    "partial": 0.16495885561934506,
+    "p_partial": 0.7237517285549582,
+    "sign_partial": 1,
+    "content_type": "running, dancing"
+  },
+  "running_turning": {
+    "category": "running_turning",
+    "kind": "fine",
+    "n": 15,
+    "pearson": -0.01696782019284086,
+    "partial": 0.0481652238878433,
+    "p_partial": 0.8818342698670911,
+    "sign_partial": 1,
+    "content_type": "running, turning"
+  },
+  "sitting": {
+    "category": "sitting",
+    "kind": "fine",
+    "n": 122,
+    "pearson": 0.014786305358525327,
+    "partial": 0.07761553148941285,
+    "p_partial": 0.40146083157558055,
+    "sign_partial": 1,
+    "content_type": "sitting"
+  },
+  "sitting_down_getting_up_gesture": {
+    "category": "sitting_down_getting_up_gesture",
+    "kind": "fine",
+    "n": 5,
+    "pearson": null,
+    "partial": null,
+    "p_partial": null,
+    "sign_partial": 0,
+    "content_type": "sitting down, getting up, gesture"
+  },
+  "sitting_gesture": {
+    "category": "sitting_gesture",
+    "kind": "fine",
+    "n": 5,
+    "pearson": null,
+    "partial": null,
+    "p_partial": null,
+    "sign_partial": 0,
+    "content_type": "sitting, gesture"
+  },
+  "sitting_idle": {
+    "category": "sitting_idle",
+    "kind": "fine",
+    "n": 8,
+    "pearson": 0.2100794334752842,
+    "partial": 0.3022216933892385,
+    "p_partial": 0.6211402021793955,
+    "sign_partial": 1,
+    "content_type": "sitting idle"
+  },
+  "sitting_smoking": {
+    "category": "sitting_smoking",
+    "kind": "fine",
+    "n": 5,
+    "pearson": null,
+    "partial": null,
+    "p_partial": null,
+    "sign_partial": 0,
+    "content_type": "sitting, smoking"
+  },
+  "sitting_talking": {
+    "category": "sitting_talking",
+    "kind": "fine",
+    "n": 5,
+    "pearson": null,
+    "partial": null,
+    "p_partial": null,
+    "sign_partial": 0,
+    "content_type": "sitting, talking"
+  },
+  "smoking": {
+    "category": "smoking",
+    "kind": "fine",
+    "n": 5,
+    "pearson": null,
+    "partial": null,
+    "p_partial": null,
+    "sign_partial": 0,
+    "content_type": "smoking"
+  },
+  "spinning_gesture": {
+    "category": "spinning_gesture",
+    "kind": "fine",
+    "n": 5,
+    "pearson": null,
+    "partial": null,
+    "p_partial": null,
+    "sign_partial": 0,
+    "content_type": "spinning, gesture"
+  },
+  "standing": {
+    "category": "standing",
+    "kind": "fine",
+    "n": 20,
+    "pearson": -0.0031719728740567453,
+    "partial": 0.05241358981176006,
+    "p_partial": 0.8416508648645273,
+    "sign_partial": 1,
+    "content_type": "standing"
+  },
+  "standing_idle": {
+    "category": "standing_idle",
+    "kind": "fine",
+    "n": 157,
+    "pearson": 0.029392899626729866,
+    "partial": 0.07881877356100411,
+    "p_partial": 0.33122030760129895,
+    "sign_partial": 1,
+    "content_type": "standing idle"
+  },
+  "standing_jogging": {
+    "category": "standing_jogging",
+    "kind": "fine",
+    "n": 8,
+    "pearson": 0.3411485925663088,
+    "partial": -0.45100236749324657,
+    "p_partial": 0.4458747115952624,
+    "sign_partial": -1,
+    "content_type": "standing, jogging"
+  },
+  "standing_jumping": {
+    "category": "standing_jumping",
+    "kind": "jumping",
+    "n": 7,
+    "pearson": 0.009338480639420766,
+    "partial": -0.4839947091734762,
+    "p_partial": 0.5160052908265238,
+    "sign_partial": -1,
+    "content_type": "standing, jumping"
+  },
+  "standing_knife_action": {
+    "category": "standing_knife_action",
+    "kind": "fine",
+    "n": 9,
+    "pearson": -0.20991960406909013,
+    "partial": 0.02038492543029858,
+    "p_partial": 0.9694268472833545,
+    "sign_partial": 1,
+    "content_type": "standing, knife action"
+  },
+  "standing_leaning": {
+    "category": "standing_leaning",
+    "kind": "fine",
+    "n": 6,
+    "pearson": null,
+    "partial": null,
+    "p_partial": null,
+    "sign_partial": 0,
+    "content_type": "standing, leaning"
+  },
+  "standing_lying_down": {
+    "category": "standing_lying_down",
+    "kind": "fine",
+    "n": 12,
+    "pearson": 0.10354890071094959,
+    "partial": -0.0518362993592337,
+    "p_partial": 0.8946361285289401,
+    "sign_partial": -1,
+    "content_type": "standing, lying down"
+  },
+  "standing_lying_down_transition": {
+    "category": "standing_lying_down_transition",
+    "kind": "fine",
+    "n": 8,
+    "pearson": -0.6451241015416227,
+    "partial": -0.5568641070636432,
+    "p_partial": 0.32955095140151025,
+    "sign_partial": -1,
+    "content_type": "standing, lying down, transition"
+  },
+  "standing_sitting": {
+    "category": "standing_sitting",
+    "kind": "fine",
+    "n": 12,
+    "pearson": -0.10712007439879652,
+    "partial": -0.6578655610235875,
+    "p_partial": 0.05410143753277907,
+    "sign_partial": -1,
+    "content_type": "standing, sitting"
+  },
+  "standing_walking": {
+    "category": "standing_walking",
+    "kind": "fine",
+    "n": 6,
+    "pearson": null,
+    "partial": null,
+    "p_partial": null,
+    "sign_partial": 0,
+    "content_type": "standing, walking"
+  },
+  "switching": {
+    "category": "switching",
+    "kind": "fine",
+    "n": 8,
+    "pearson": 0.3315423014171663,
+    "partial": -0.3938475881029604,
+    "p_partial": 0.5118215443579177,
+    "sign_partial": -1,
+    "content_type": "switching"
+  },
+  "throwing": {
+    "category": "throwing",
+    "kind": "fine",
+    "n": 18,
+    "pearson": -0.008122233954272372,
+    "partial": -0.024920406554022716,
+    "p_partial": 0.9297528206675243,
+    "sign_partial": -1,
+    "content_type": "throwing"
+  },
+  "toxic_gas_action": {
+    "category": "toxic_gas_action",
+    "kind": "fine",
+    "n": 6,
+    "pearson": null,
+    "partial": null,
+    "p_partial": null,
+    "sign_partial": 0,
+    "content_type": "toxic gas action"
+  },
+  "transition": {
+    "category": "transition",
+    "kind": "fine",
+    "n": 166,
+    "pearson": -0.05517595873776322,
+    "partial": 0.008791468966754088,
+    "p_partial": 0.9113147745842658,
+    "sign_partial": 1,
+    "content_type": "transition"
+  },
+  "turning": {
+    "category": "turning",
+    "kind": "fine",
+    "n": 167,
+    "pearson": -0.03661521904052968,
+    "partial": 0.005361559604753928,
+    "p_partial": 0.9456767572555798,
+    "sign_partial": 1,
+    "content_type": "turning"
+  },
+  "turning_crawling": {
+    "category": "turning_crawling",
+    "kind": "fine",
+    "n": 15,
+    "pearson": 0.26209292914943233,
+    "partial": 0.041833795643542414,
+    "p_partial": 0.8972894920983019,
+    "sign_partial": 1,
+    "content_type": "turning, crawling"
+  },
+  "turning_dancing": {
+    "category": "turning_dancing",
+    "kind": "fine",
+    "n": 20,
+    "pearson": -0.01926999955122622,
+    "partial": 0.1665045053553864,
+    "p_partial": 0.5230135981573398,
+    "sign_partial": 1,
+    "content_type": "turning, dancing"
+  },
+  "walking": {
+    "category": "walking",
+    "kind": "fine",
+    "n": 266,
+    "pearson": -0.11228322932731143,
+    "partial": 0.018818723807035483,
+    "p_partial": 0.7613095083457488,
+    "sign_partial": 1,
+    "content_type": "walking"
+  },
+  "walking_action": {
+    "category": "walking_action",
+    "kind": "fine",
+    "n": 10,
+    "pearson": -0.2809070073902483,
+    "partial": -0.8328287519978593,
+    "p_partial": 0.020013032522494534,
+    "sign_partial": -1,
+    "content_type": "walking, action"
+  },
+  "walking_crouching_poitning_turning": {
+    "category": "walking_crouching_poitning_turning",
+    "kind": "fine",
+    "n": 16,
+    "pearson": 0.13997024656971127,
+    "partial": -0.0689892040011571,
+    "p_partial": 0.822799651988301,
+    "sign_partial": -1,
+    "content_type": "walking, crouching, poitning, turning"
+  },
+  "walking_crouching_transition": {
+    "category": "walking_crouching_transition",
+    "kind": "fine",
+    "n": 11,
+    "pearson": -0.15796191643622098,
+    "partial": -0.12039032643275463,
+    "p_partial": 0.7764398002505226,
+    "sign_partial": -1,
+    "content_type": "walking, crouching, transition"
+  },
+  "walking_dancing": {
+    "category": "walking_dancing",
+    "kind": "fine",
+    "n": 20,
+    "pearson": -0.09440610188714472,
+    "partial": -0.07247851301612818,
+    "p_partial": 0.7822120959372048,
+    "sign_partial": -1,
+    "content_type": "walking, dancing"
+  },
+  "walking_evading": {
+    "category": "walking_evading",
+    "kind": "fine",
+    "n": 5,
+    "pearson": null,
+    "partial": null,
+    "p_partial": null,
+    "sign_partial": 0,
+    "content_type": "walking, evading"
+  },
+  "walking_gesture": {
+    "category": "walking_gesture",
+    "kind": "fine",
+    "n": 10,
+    "pearson": -0.009973600680964013,
+    "partial": 0.1456037159897093,
+    "p_partial": 0.7554273118061297,
+    "sign_partial": 1,
+    "content_type": "walking, gesture"
+  },
+  "walking_sitting": {
+    "category": "walking_sitting",
+    "kind": "fine",
+    "n": 8,
+    "pearson": 0.6936888259356518,
+    "partial": 0.04961713495861078,
+    "p_partial": 0.9368514323840567,
+    "sign_partial": 1,
+    "content_type": "walking, sitting"
+  },
+  "walking_smoking": {
+    "category": "walking_smoking",
+    "kind": "fine",
+    "n": 5,
+    "pearson": null,
+    "partial": null,
+    "p_partial": null,
+    "sign_partial": 0,
+    "content_type": "walking, smoking"
+  },
+  "walking_talking": {
+    "category": "walking_talking",
+    "kind": "fine",
+    "n": 5,
+    "pearson": null,
+    "partial": null,
+    "p_partial": null,
+    "sign_partial": 0,
+    "content_type": "walking, talking"
+  },
+  "walking_turning": {
+    "category": "walking_turning",
+    "kind": "fine",
+    "n": 111,
+    "pearson": -0.10029585824774202,
+    "partial": 0.025408970655510142,
+    "p_partial": 0.7940714637808819,
+    "sign_partial": 1,
+    "content_type": "walking, turning"
+  },
+  "waving": {
+    "category": "waving",
+    "kind": "fine",
+    "n": 10,
+    "pearson": -0.38618966248477304,
+    "partial": -0.43053044285995323,
+    "p_partial": 0.33491918569647194,
+    "sign_partial": -1,
+    "content_type": "waving"
+  },
+  "coarse:communication": {
+    "category": "communication",
+    "kind": "coarse",
+    "n": 209,
+    "pearson": -0.06784455337323794,
+    "partial": 0.006373893909044091,
+    "p_partial": 0.9275507220628079,
+    "sign_partial": 1,
+    "content_type": null
+  },
+  "coarse:dances": {
+    "category": "dances",
+    "kind": "coarse",
+    "n": 82,
+    "pearson": 0.00885269604685898,
+    "partial": 0.08390106945651328,
+    "p_partial": 0.4622540536924675,
+    "sign_partial": 1,
+    "content_type": null
+  },
+  "coarse:everyday": {
+    "category": "everyday",
+    "kind": "coarse",
+    "n": 131,
+    "pearson": -0.04794392436221119,
+    "partial": -0.04480791538885809,
+    "p_partial": 0.6155106301676705,
+    "sign_partial": -1,
+    "content_type": null
+  },
+  "coarse:gaming": {
+    "category": "gaming",
+    "kind": "coarse",
+    "n": 188,
+    "pearson": -0.025634812281862762,
+    "partial": -0.029732831111903592,
+    "p_partial": 0.6878621057100847,
+    "sign_partial": -1,
+    "content_type": null
+  },
+  "coarse:interactions": {
+    "category": "interactions",
+    "kind": "coarse",
+    "n": 148,
+    "pearson": 0.1539903892183439,
+    "partial": 0.0946337947491399,
+    "p_partial": 0.2575411230556228,
+    "sign_partial": 1,
+    "content_type": null
+  },
+  "coarse:locomotion": {
+    "category": "locomotion",
+    "kind": "coarse",
+    "n": 488,
+    "pearson": -0.037935738796108114,
+    "partial": 0.047272440410972796,
+    "p_partial": 0.2988223752558423,
+    "sign_partial": 1,
+    "content_type": null
+  },
+  "coarse:other": {
+    "category": "other",
+    "kind": "coarse",
+    "n": 128,
+    "pearson": -0.0930937991365565,
+    "partial": 0.027988064241966808,
+    "p_partial": 0.756687858762461,
+    "sign_partial": 1,
+    "content_type": null
+  },
+  "coarse:sport": {
+    "category": "sport",
+    "kind": "coarse",
+    "n": 109,
+    "pearson": -0.1138481059217045,
+    "partial": -0.05855873063602672,
+    "p_partial": 0.5509998676971475,
+    "sign_partial": -1,
+    "content_type": null
+  }
+}

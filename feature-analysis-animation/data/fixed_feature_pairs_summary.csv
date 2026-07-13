@@ -1,0 +1,75 @@
+row_id,attribute,task,feature,r,side,actor_uid,attr_value,per_actor_F,per_clip_F,n_frames,g1_csv
+age_gesture_dancing_waist_rom,age,"gesture, dancing",waist_rom,-0.5040822811701215,high,A238,24.0,32.487961292266846,46.11551284790039,752,g1/csv/230302/lasso_dance_R_001__A238.csv
+age_gesture_dancing_waist_rom,age,"gesture, dancing",waist_rom,-0.5040822811701215,low,A261,70.0,18.4055658976237,21.35992431640625,909,g1/csv/230309/lasso_dance_R_001__A261.csv
+age_jogging_turning_waist_rom,age,"jogging, turning",waist_rom,-0.4187447456765784,high,A061,21.0,49.0047181447347,48.87850570678711,776,g1/csv/221115/turn_jog_360_002__A061.csv
+age_jogging_turning_waist_rom,age,"jogging, turning",waist_rom,-0.4187447456765784,low,A039,64.0,34.34384301992563,34.337554931640625,588,g1/csv/220727/turn_start_jog_045_003__A039.csv
+age_jogging_waist_rom,age,jogging,waist_rom,-0.3886330524365247,high,A313,22.0,38.88371753692627,38.53464889526367,303,g1/csv/230412/jog_ff_loop_180_R_001__A313.csv
+age_jogging_waist_rom,age,jogging,waist_rom,-0.3886330524365247,low,A026,46.0,27.48049701111657,27.867557525634766,389,g1/csv/220714/jog_sideway_135_stop_002__A026.csv
+age_turning_waist_rom,age,turning,waist_rom,-0.36039382419209626,high,A060,21.0,15.020953859601702,15.058145523071289,635,g1/csv/221115/idle_turn_270_003__A060.csv
+age_turning_waist_rom,age,turning,waist_rom,-0.36039382419209626,low,A069,63.0,11.271834593552809,11.634016036987305,426,g1/csv/221118/idle_turn_270_010__A069.csv
+age_transition_waist_rom,age,transition,waist_rom,-0.35156158779956725,high,A070,18.0,13.774484197298683,12.401055335998535,461,g1/csv/221118/idle_right_to_idle_003__A070.csv
+age_transition_waist_rom,age,transition,waist_rom,-0.35156158779956725,low,A037,69.0,9.295268456141152,9.219268798828125,900,g1/csv/220727/change_idle_to_idle_left_003__A037.csv
+age_dancing_waist_rom,age,dancing,waist_rom,-0.3392176563628351,high,A081,24.0,37.29676866531372,35.88175964355469,1834,g1/csv/221129/dancing_routine_1_003__A081.csv
+age_dancing_waist_rom,age,dancing,waist_rom,-0.3392176563628351,low,A068,65.0,29.37815014521281,29.09296989440918,1490,g1/csv/221117/dancing_routine_1_007__A068.csv
+age_walking_waist_rom,age,walking,waist_rom,-0.28248352140367405,high,A029,22.0,33.9515682220459,34.001136779785156,527,g1/csv/220720/walk_sideway_135_stop_003__A029.csv
+age_walking_waist_rom,age,walking,waist_rom,-0.28248352140367405,low,A067,51.0,21.72258194223527,21.969600677490234,414,g1/csv/221117/walk_ff_loop_180_R_004__A067.csv
+age_jumping_turning_waist_rom,age,"jumping, turning",waist_rom,-0.27769576010989994,high,A025,19.0,31.13139334846945,31.611984252929688,350,g1/csv/220714/turn_jump_0000_001__A025.csv
+age_jumping_turning_waist_rom,age,"jumping, turning",waist_rom,-0.27769576010989994,low,A068,65.0,23.154682159423828,23.944488525390625,410,g1/csv/221117/turn_jump_360_001__A068.csv
+age_gesture_waist_rom,age,gesture,waist_rom,-0.23344901692776165,high,A101,24.0,16.898779105579152,16.819839477539062,325,g1/csv/230103/show_bicep_R_001__A101.csv
+age_gesture_waist_rom,age,gesture,waist_rom,-0.23344901692776165,low,A039,64.0,15.95492785683898,15.396315574645996,925,g1/csv/220727/salute_002__A039.csv
+age_jumping_waist_rom,age,jumping,waist_rom,-0.2238764946977481,high,A045,22.0,34.731521701812746,36.110233306884766,1587,g1/csv/221010/exercise_1_002__A045.csv
+age_jumping_waist_rom,age,jumping,waist_rom,-0.2238764946977481,low,A026,46.0,25.53127689361572,25.669879913330078,226,g1/csv/220714/jump_forward_004__A026.csv
+weight_jumping_turning_ankle_peak_vel,weight,"jumping, turning",ankle_peak_vel,-0.28378208425831203,high,A064,43.0,629.9059155782064,600.6041107177734,220,g1/csv/221116/turn_jump_270_001__A064.csv
+weight_jumping_turning_ankle_peak_vel,weight,"jumping, turning",ankle_peak_vel,-0.28378208425831203,low,A267,126.0,398.3174896240234,381.53590393066406,265,g1/csv/230313/turn_jump_360_R_001__A267.csv
+weight_jogging_turning_ankle_peak_vel,weight,"jogging, turning",ankle_peak_vel,-0.23633977500611414,high,A053,38.0,898.3022130330404,910.5643615722656,712,g1/csv/221012/turn_jog_270_002__A053.csv
+weight_jogging_turning_ankle_peak_vel,weight,"jogging, turning",ankle_peak_vel,-0.23633977500611414,low,A034,96.0,579.0108578999838,575.7557983398438,381,g1/csv/220721/turn_start_jog_135_002__A034.csv
+weight_climbing_box_ankle_peak_vel,weight,climbing box,ankle_peak_vel,-0.19634484275621245,high,A469,55.0,554.9755439758301,714.2298736572266,400,g1/csv/231009/come_down_50cm_box_R_002__A469.csv
+weight_climbing_box_ankle_peak_vel,weight,climbing box,ankle_peak_vel,-0.19634484275621245,low,A072,97.0,529.553780110677,513.6616668701172,341,g1/csv/221118/come_up_50cm_box_R_001__A072.csv
+weight_jumping_ankle_peak_vel,weight,jumping,ankle_peak_vel,-0.17522490012375827,high,A058,47.0,662.8494771321615,671.1278076171875,832,g1/csv/221115/exercise_1_001__A058.csv
+weight_jumping_ankle_peak_vel,weight,jumping,ankle_peak_vel,-0.17522490012375827,low,A259,120.0,559.2296976361956,562.0804748535156,615,g1/csv/230309/jump_ff_270_003__A259.csv
+weight_walking_turning_ankle_peak_vel,weight,"walking, turning",ankle_peak_vel,-0.1470015348543236,high,A029,41.0,473.9427534697349,481.75587463378906,893,g1/csv/220720/walk_backward_start_001__A029.csv
+weight_walking_turning_ankle_peak_vel,weight,"walking, turning",ankle_peak_vel,-0.1470015348543236,low,A266,120.0,390.2013816833496,389.7991638183594,650,g1/csv/230313/turn_walk_270_R_002__A266.csv
+weight_jogging_ankle_peak_vel,weight,jogging,ankle_peak_vel,-0.13970241574595144,high,A018,45.0,1120.3355068630642,1066.8083190917969,6387,g1/csv/220705/Stop_forward_Jog_005__A018.csv
+weight_jogging_ankle_peak_vel,weight,jogging,ankle_peak_vel,-0.13970241574595144,low,A457,63.0,352.7558848063151,361.7879638671875,450,g1/csv/231004/jog_ff_stop_180_R_001__A457.csv
+weight_walking_ankle_peak_vel,weight,walking,ankle_peak_vel,-0.12860498476860338,high,A005,50.0,485.1328592300415,468.9132537841797,1360,g1/csv/210707/walk_fast_forward_grab_normal_002__A005.csv
+weight_walking_ankle_peak_vel,weight,walking,ankle_peak_vel,-0.12860498476860338,low,A072,97.0,407.95067516802135,409.88238525390625,501,g1/csv/221118/walk_ff_start_180_R_001__A072.csv
+weight_kneeling_ankle_peak_vel,weight,kneeling,ankle_peak_vel,-0.11565439011128889,high,A048,63.0,810.7323289235433,1156.2101745605469,581,g1/csv/221010/kneeling_stop_003__A048.csv
+weight_kneeling_ankle_peak_vel,weight,kneeling,ankle_peak_vel,-0.11565439011128889,low,A430,64.0,95.9054238796234,101.88753128051758,988,g1/csv/230713/knightly_bow_R_002__A430.csv
+height_climbing_box_root_translate_rom,height,climbing box,root_translate_rom,-0.4675767694549801,high,A469,166.0,76.17131233215332,72.12881469726562,341,g1/csv/231009/come_up_50cm_box_R_001__A469.csv
+height_climbing_box_root_translate_rom,height,climbing box,root_translate_rom,-0.4675767694549801,low,A184,187.0,65.87069829305013,67.5742416381836,403,g1/csv/230213/come_up_50cm_box_R_003__A184.csv
+height_jogging_turning_root_translate_rom,height,"jogging, turning",root_translate_rom,-0.3254502755067905,high,A021,155.0,592.1476860046387,582.7128295898438,573,g1/csv/220713/turn_start_jog_0090_003__A021.csv
+height_jogging_turning_root_translate_rom,height,"jogging, turning",root_translate_rom,-0.3254502755067905,low,A063,191.0,458.37262471516925,480.8227844238281,383,g1/csv/221116/turn_jog_360_003__A063.csv
+height_walking_turning_root_translate_rom,height,"walking, turning",root_translate_rom,-0.3000413609434222,high,A036,150.0,387.6589533487956,396.0374450683594,547,g1/csv/220721/turn_start_walk_135_001__A036.csv
+height_walking_turning_root_translate_rom,height,"walking, turning",root_translate_rom,-0.3000413609434222,low,A060,192.0,299.08765496148004,296.5909118652344,589,g1/csv/221115/turn_walk_270_006__A060.csv
+height_walking_root_translate_rom,height,walking,root_translate_rom,-0.28214584211278,high,A058,157.0,399.6200399247427,399.214111328125,664,g1/csv/221115/walk_ff_start_225_001__A058.csv
+height_walking_root_translate_rom,height,walking,root_translate_rom,-0.28214584211278,low,A055,188.0,328.45140838623047,334.56005859375,498,g1/csv/221012/walk_hands_on_back_loop_003__A055.csv
+height_jogging_root_translate_rom,height,jogging,root_translate_rom,-0.28104744303453466,high,A021,155.0,469.26678278190747,468.7100524902344,798,g1/csv/220713/jog_sideway_090_start_001__A021.csv
+height_jogging_root_translate_rom,height,jogging,root_translate_rom,-0.28104744303453466,low,A152,188.0,396.2701144748264,396.5460205078125,289,g1/csv/230126/jog_ff_loop_180_R_002__A152.csv
+height_sitting_root_translate_rom,height,sitting,root_translate_rom,-0.16254522492685813,high,A029,155.0,61.51167788847472,62.48999786376953,765,g1/csv/220720/sit_on_heels_start_003__A029.csv
+height_sitting_root_translate_rom,height,sitting,root_translate_rom,-0.16254522492685813,low,A031,192.0,53.717182907774,60.25067901611328,608,g1/csv/220720/sit_on_heels_start_001__A031.csv
+height_dancing_root_translate_rom,height,dancing,root_translate_rom,-0.14616749179993954,high,A325,163.0,227.0247570292155,192.47320556640625,751,g1/csv/230414/dance_vouge_shake_it_babe_180_R_002__A325.csv
+height_dancing_root_translate_rom,height,dancing,root_translate_rom,-0.14616749179993954,low,A067,190.0,15.59261549843682,13.927353858947754,1949,g1/csv/221117/dancing_routine_2_003__A067.csv
+height_turning_root_translate_rom,height,turning,root_translate_rom,0.14167270838925938,high,A123,188.0,147.22311226526895,43.95730209350586,925,g1/csv/230118/neutral_idle_turn_360_004__A123.csv
+height_turning_root_translate_rom,height,turning,root_translate_rom,0.14167270838925938,low,A484,167.0,7.218010164797306,7.390113353729248,994,g1/csv/231019/mid_big_valve_ccw_002__A484.csv
+height_exercising_root_translate_rom,height,exercising,root_translate_rom,0.13920802537845287,high,A035,198.0,1.8343530694643655,2.0472190380096436,1165,g1/csv/220721/idle_loop_003__A035.csv
+height_exercising_root_translate_rom,height,exercising,root_translate_rom,0.13920802537845287,low,A065,153.0,1.396516548262702,1.474947452545166,1145,g1/csv/221117/idle_loop_002__A065.csv
+height_gesture_dancing_root_translate_rom,height,"gesture, dancing",root_translate_rom,0.13289327388567143,high,A348,193.0,408.4471969604492,405.89544677734375,513,g1/csv/230424/krakowiak_R_005__A348.csv
+height_gesture_dancing_root_translate_rom,height,"gesture, dancing",root_translate_rom,0.13289327388567143,low,A351,173.0,5.897973378499349,6.2684712409973145,584,g1/csv/230425/kozak_dance_003__A351.csv
+gender_jogging_turning_ankle_rom,gender,"jogging, turning",ankle_rom,-0.3926848772996618,high,A024,0.0,68.37057145436604,68.43933868408203,508,g1/csv/220713/turn_start_jog_0135_002__A024.csv
+gender_jogging_turning_ankle_rom,gender,"jogging, turning",ankle_rom,-0.3926848772996618,low,A412,1.0,53.33889643351237,52.25654220581055,508,g1/csv/230530/jog_avoid_bump_spin_270_R_002__A412.csv
+gender_walking_turning_ankle_rom,gender,"walking, turning",ankle_rom,-0.377583529307795,high,A046,0.0,41.29401016235352,40.933847427368164,695,g1/csv/221010/turn_walk_360_004__A046.csv
+gender_walking_turning_ankle_rom,gender,"walking, turning",ankle_rom,-0.377583529307795,low,A463,1.0,36.9421537399292,35.933860778808594,791,g1/csv/231005/baby_full_diaper_turn_walk_ff_360_start_R_001__A463.csv
+gender_jogging_ankle_rom,gender,jogging,ankle_rom,-0.35084902357338843,high,A481,0.0,54.879474851820206,55.29492378234863,608,g1/csv/231018/jog_ff_stop_180_R_001__A481.csv
+gender_jogging_ankle_rom,gender,jogging,ankle_rom,-0.35084902357338843,low,A069,1.0,50.62590026855469,50.43733596801758,308,g1/csv/221118/jog_ff_loop_225_003__A069.csv
+gender_jumping_turning_ankle_rom,gender,"jumping, turning",ankle_rom,-0.3276407534235852,high,A021,0.0,58.20508359909058,58.18534278869629,748,g1/csv/220713/jump_left_002__A021.csv
+gender_jumping_turning_ankle_rom,gender,"jumping, turning",ankle_rom,-0.3276407534235852,low,A217,1.0,38.11043119430542,38.521127700805664,260,g1/csv/230223/turn_jump_270_R_002__A217.csv
+gender_climbing_box_ankle_rom,gender,climbing box,ankle_rom,-0.20747019044425147,high,A065,0.0,68.9934754371643,67.98175621032715,1270,g1/csv/221117/come_up_50cm_box_R_002__A065.csv
+gender_climbing_box_ankle_rom,gender,climbing box,ankle_rom,-0.20747019044425147,low,A052,1.0,41.40226326783498,49.906328201293945,316,g1/csv/221011/come_up_50cm_box_R_001__A052.csv
+gender_jumping_ankle_rom,gender,jumping,ankle_rom,-0.20720194545040993,high,A037,0.0,60.03653340461926,60.73643493652344,608,g1/csv/220727/jump_backward_003__A037.csv
+gender_jumping_ankle_rom,gender,jumping,ankle_rom,-0.20720194545040993,low,A420,1.0,54.47642364501953,49.436710357666016,377,g1/csv/230710/jump_ff_270_R_001__A420.csv
+gender_walking_ankle_rom,gender,walking,ankle_rom,-0.1911623909565325,high,A448,0.0,47.99399169286093,48.24797248840332,513,g1/csv/230906/walk_ff_loop_360_R_fast_001__A448.csv
+gender_walking_ankle_rom,gender,walking,ankle_rom,-0.1911623909565325,low,A544,1.0,41.95382881164551,41.76600646972656,3433,g1/csv/240529/proud_walk_ff_270_R_001__A544.csv
+gender_dancing_ankle_rom,gender,dancing,ankle_rom,-0.11703056126238882,high,A024,0.0,43.87340426445007,44.505489349365234,3816,g1/csv/220713/dancing_routine_1_003__A024.csv
+gender_dancing_ankle_rom,gender,dancing,ankle_rom,-0.11703056126238882,low,A394,1.0,37.040631198883055,35.96048164367676,1621,g1/csv/230523/dancing_routine_V001_003__A394.csv
+gender_kneeling_ankle_rom,gender,kneeling,ankle_rom,-0.11697872830962229,high,A021,0.0,35.52794437408447,46.17337417602539,572,g1/csv/220713/kneeling_start_001__A021.csv
+gender_kneeling_ankle_rom,gender,kneeling,ankle_rom,-0.11697872830962229,low,A429,1.0,29.039592504501343,29.28668212890625,539,g1/csv/230713/knightly_bow_R_001__A429.csv

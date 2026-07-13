@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" id="viewport-meta" />
+  <script>
+  // Phones render the full desktop layout zoomed out (viewport width=1280)
+  // rather than a responsive single-column layout.
+  // Known limitation: the WebGL viewers' LOW_MEM mode is a mitigation, not a
+  // guarantee — if older iPhones still crash, the next step is unloading viewer
+  // iframes when they scroll off-screen.
+  (function () {
+    var narrowCSS = window.matchMedia && window.matchMedia('(max-width: 600px)').matches;
+    var s = window.screen || {};
+    var narrowScreen = Math.min(s.width || 9999, s.height || 9999) < 600;
+    if (narrowCSS || narrowScreen) {
+      document.documentElement.classList.add('is-phone');
+      document.getElementById('viewport-meta').setAttribute('content', 'width=1280');
+    }
+  })();
+  </script>
+  <title>Who Moved the Robot? Humanoid Datasets Remember Their Operators</title>
+  <meta name="description" content="UNVEIL: Who Moved the Robot? Humanoid Datasets Remember Their Operators — biometric information leaks through humanoid robot teleoperation pipelines, enabling re-identification and attribute inference from robot skeleton data." />
+
+  <link rel="icon" type="image/svg+xml" href="./assets/img/favicon.svg?v=2026-07-06a" />
+
+  <!-- Bootstrap 5 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+  <!-- Custom styles -->
+  <link rel="stylesheet" href="./assets/css/style.css?v=2026-07-08d" />
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════
+     LEFT SECTION NAV (fixed sidebar + scrollspy)
+══════════════════════════════════════════════════ -->
+<nav id="side-nav" aria-label="Section navigation">
+  <ul class="side-nav-list">
+    <li><a href="#hero">Home</a></li>
+    <li><a href="#demo">Overview</a></li>
+    <li><a href="#abstract">Abstract</a></li>
+    <li><a href="#method">Inside UNVEIL</a></li>
+    <li><a href="#interpretable">Interpretable Features</a></li>
+    <li><a href="#statistics">Feature Statistics</a></li>
+    <li><a href="#results">Results</a></li>
+    <li><a href="#bibtex">BibTeX</a></li>
+  </ul>
+</nav>
+
+<!-- ══════════════════════════════════════════════
+     HERO
+══════════════════════════════════════════════════ -->
+<section id="hero">
+  <div class="container text-center">
+    <h1 class="paper-title">
+      Who Moved the Robot?<br>
+      Humanoid Datasets Remember Their Operators
+    </h1>
+
+    <p class="authors-line">
+      <a href="https://sihatafnan.github.io" target="_blank" rel="noopener noreferrer">Sihat Afnan</a>,
+      <a href="https://unnat.github.io/" target="_blank" rel="noopener noreferrer">Unnat Jain</a><sup>*</sup>,
+      <a href="https://habiba-farrukh.github.io/" target="_blank" rel="noopener noreferrer">Habiba Farrukh</a><sup>*</sup>
+    </p>
+    <p class="equal-note"><sup>*</sup>Equal contribution</p>
+
+    <div class="d-flex flex-wrap justify-content-center mt-3">
+      <!-- Paper button: once the arXiv link is live, add href="<arxiv-url>"
+           and target/rel like the Dataset button. -->
+      <a class="btn btn-outline-primary btn-pill btn-pill-enabled btn-pill-icon" title="Paper — arXiv link coming soon">
+        <svg class="pill-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <!-- Paper / document mark -->
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+          <line x1="8" y1="13" x2="16" y2="13"/>
+          <line x1="8" y1="17" x2="16" y2="17"/>
+          <line x1="8" y1="9" x2="10" y2="9"/>
+        </svg>
+        Paper
+      </a>
+      <a href="https://github.com/unveil-humanoid-operators/UNVEIL"
+         target="_blank" rel="noopener noreferrer"
+         class="btn btn-outline-primary btn-pill btn-pill-enabled btn-pill-icon">
+        <svg class="pill-icon" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+          <!-- GitHub mark -->
+          <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+        </svg>
+        Code
+      </a>
+      <a href="https://huggingface.co/datasets/bones-studio/seed"
+         target="_blank" rel="noopener noreferrer"
+         class="btn btn-outline-primary btn-pill btn-pill-enabled btn-pill-icon">
+        <svg class="pill-icon" viewBox="0 0 95 88" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <!-- Official Hugging Face logo mark -->
+          <path fill="#FFD21E" d="M47.21 76.5a34.75 34.75 0 1 0 0-69.5 34.75 34.75 0 0 0 0 69.5Z"/>
+          <path fill="#FF9D0B" d="M81.96 41.75a34.75 34.75 0 1 0-69.5 0 34.75 34.75 0 0 0 69.5 0Zm-73.5 0a38.75 38.75 0 1 1 77.5 0 38.75 38.75 0 0 1-77.5 0Z"/>
+          <path fill="#3A3B45" d="M58.5 32.3c1.28.44 1.78 3.06 3.07 2.38a5 5 0 1 0-6.76-2.07c.61 1.15 2.55-.72 3.7-.32ZM34.95 32.3c-1.28.44-1.79 3.06-3.07 2.38a5 5 0 1 1 6.76-2.07c-.61 1.15-2.56-.72-3.7-.32Z"/>
+          <path fill="#FF323D" d="M46.96 56.29c9.83 0 13-8.76 13-13.26 0-2.34-1.57-1.6-4.09-.36-2.33 1.15-5.46 2.74-8.9 2.74-7.19 0-13-6.88-13-2.38s3.16 13.26 13 13.26Z"/>
+          <path fill="#3A3B45" fill-rule="evenodd" clip-rule="evenodd" d="M39.43 54a8.7 8.7 0 0 1 5.3-4.49c.4-.12.81.57 1.24 1.28.4.68.82 1.37 1.24 1.37.45 0 .9-.68 1.33-1.35.45-.7.89-1.38 1.32-1.25a8.61 8.61 0 0 1 5 4.17c3.73-2.94 5.1-7.74 5.1-10.7 0-2.34-1.57-1.6-4.09-.36l-.14.07c-2.31 1.15-5.39 2.67-8.77 2.67s-6.45-1.52-8.77-2.67c-2.6-1.29-4.23-2.1-4.23.29 0 3.05 1.46 8.06 5.47 10.97Z"/>
+          <path fill="#FF9D0B" d="M70.71 37a3.25 3.25 0 1 0 0-6.5 3.25 3.25 0 0 0 0 6.5ZM24.21 37a3.25 3.25 0 1 0 0-6.5 3.25 3.25 0 0 0 0 6.5ZM17.52 48c-1.62 0-3.06.66-4.07 1.87a5.97 5.97 0 0 0-1.33 3.76 7.1 7.1 0 0 0-1.94-.3c-1.55 0-2.95.59-3.94 1.66a5.8 5.8 0 0 0-.8 7 5.3 5.3 0 0 0-1.79 2.82c-.24.9-.48 2.8.8 4.74a5.22 5.22 0 0 0-.37 5.02c1.02 2.32 3.57 4.14 8.52 6.1 3.07 1.22 5.89 2 5.91 2.01a44.33 44.33 0 0 0 10.93 1.6c5.86 0 10.05-1.8 12.46-5.34 3.88-5.69 3.33-10.9-1.7-15.92-2.77-2.78-4.62-6.87-5-7.77-.78-2.66-2.84-5.62-6.25-5.62a5.7 5.7 0 0 0-4.6 2.46c-1-1.26-1.98-2.25-2.86-2.82A7.4 7.4 0 0 0 17.52 48Zm0 4c.51 0 1.14.22 1.82.65 2.14 1.36 6.25 8.43 7.76 11.18.5.92 1.37 1.31 2.14 1.31 1.55 0 2.75-1.53.15-3.48-3.92-2.93-2.55-7.72-.68-8.01.08-.02.17-.02.24-.02 1.7 0 2.45 2.93 2.45 2.93s2.2 5.52 5.98 9.3c3.77 3.77 3.97 6.8 1.22 10.83-1.88 2.75-5.47 3.58-9.16 3.58-3.81 0-7.73-.9-9.92-1.46-.11-.03-13.45-3.8-11.76-7 .28-.54.75-.76 1.34-.76 2.38 0 6.7 3.54 8.57 3.54.41 0 .7-.17.83-.6.79-2.85-12.06-4.05-10.98-8.17.2-.73.71-1.02 1.44-1.02 3.14 0 10.2 5.53 11.68 5.53.11 0 .2-.03.24-.1.74-1.2.33-2.04-4.9-5.2-5.21-3.16-8.88-5.06-6.8-7.33.24-.26.58-.38 1-.38 3.17 0 10.66 6.82 10.66 6.82s2.02 2.1 3.25 2.1c.28 0 .52-.1.68-.38.86-1.46-8.06-8.22-8.56-11.01-.34-1.9.24-2.85 1.31-2.85Z"/>
+          <path fill="#FFD21E" d="M38.6 76.69c2.75-4.04 2.55-7.07-1.22-10.84-3.78-3.77-5.98-9.3-5.98-9.3s-.82-3.2-2.69-2.9c-1.87.3-3.24 5.08.68 8.01 3.91 2.93-.78 4.92-2.29 2.17-1.5-2.75-5.62-9.82-7.76-11.18-2.13-1.35-3.63-.6-3.13 2.2.5 2.79 9.43 9.55 8.56 11-.87 1.47-3.93-1.71-3.93-1.71s-9.57-8.71-11.66-6.44c-2.08 2.27 1.59 4.17 6.8 7.33 5.23 3.16 5.64 4 4.9 5.2-.75 1.2-12.28-8.53-13.36-4.4-1.08 4.11 11.77 5.3 10.98 8.15-.8 2.85-9.06-5.38-10.74-2.18-1.7 3.21 11.65 6.98 11.76 7.01 4.3 1.12 15.25 3.49 19.08-2.12Z"/>
+          <path fill="#FF9D0B" d="M77.4 48c1.62 0 3.07.66 4.07 1.87a5.97 5.97 0 0 1 1.33 3.76 7.1 7.1 0 0 1 1.95-.3c1.55 0 2.95.59 3.94 1.66a5.8 5.8 0 0 1 .8 7 5.3 5.3 0 0 1 1.78 2.82c.24.9.48 2.8-.8 4.74a5.22 5.22 0 0 1 .37 5.02c-1.02 2.32-3.57 4.14-8.51 6.1-3.08 1.22-5.9 2-5.92 2.01a44.33 44.33 0 0 1-10.93 1.6c-5.86 0-10.05-1.8-12.46-5.34-3.88-5.69-3.33-10.9 1.7-15.92 2.78-2.78 4.63-6.87 5.01-7.77.78-2.66 2.83-5.62 6.24-5.62a5.7 5.7 0 0 1 4.6 2.46c1-1.26 1.98-2.25 2.87-2.82A7.4 7.4 0 0 1 77.4 48Zm0 4c-.51 0-1.13.22-1.82.65-2.13 1.36-6.25 8.43-7.76 11.18a2.43 2.43 0 0 1-2.14 1.31c-1.54 0-2.75-1.53-.14-3.48 3.91-2.93 2.54-7.72.67-8.01a1.54 1.54 0 0 0-.24-.02c-1.7 0-2.45 2.93-2.45 2.93s-2.2 5.52-5.97 9.3c-3.78 3.77-3.98 6.8-1.22 10.83 1.87 2.75 5.47 3.58 9.15 3.58 3.82 0 7.73-.9 9.93-1.46.1-.03 13.45-3.8 11.76-7-.29-.54-.75-.76-1.34-.76-2.38 0-6.71 3.54-8.57 3.54-.42 0-.71-.17-.83-.6-.8-2.85 12.05-4.05 10.97-8.17-.19-.73-.7-1.02-1.44-1.02-3.14 0-10.2 5.53-11.68 5.53-.1 0-.19-.03-.23-.1-.74-1.2-.34-2.04 4.88-5.2 5.23-3.16 8.9-5.06 6.8-7.33-.23-.26-.57-.38-.98-.38-3.18 0-10.67 6.82-10.67 6.82s-2.02 2.1-3.24 2.1a.74.74 0 0 1-.68-.38c-.87-1.46 8.05-8.22 8.55-11.01.34-1.9-.24-2.85-1.31-2.85Z"/>
+          <path fill="#FFD21E" d="M56.33 76.69c-2.75-4.04-2.56-7.07 1.22-10.84 3.77-3.77 5.97-9.3 5.97-9.3s.82-3.2 2.7-2.9c1.86.3 3.23 5.08-.68 8.01-3.92 2.93.78 4.92 2.28 2.17 1.51-2.75 5.63-9.82 7.76-11.18 2.13-1.35 3.64-.6 3.13 2.2-.5 2.79-9.42 9.55-8.55 11 .86 1.47 3.92-1.71 3.92-1.71s9.58-8.71 11.66-6.44c2.08 2.27-1.58 4.17-6.8 7.33-5.23 3.16-5.63 4-4.9 5.2.75 1.2 12.28-8.53 13.36-4.4 1.08 4.11-11.76 5.3-10.97 8.15.8 2.85 9.05-5.38 10.74-2.18 1.69 3.21-11.65 6.98-11.76 7.01-4.31 1.12-15.26 3.49-19.08-2.12Z"/>
+        </svg>
+        Dataset
+      </a>
+      <a href="./anonymized/"
+         class="btn btn-outline-primary btn-pill btn-pill-enabled btn-pill-icon">
+        <svg class="pill-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <!-- Humanoid robot (G1-ish) silhouette: head + torso + arms + legs -->
+          <rect x="9.25" y="2" width="5.5" height="4.5" rx="1.3"/>
+          <circle cx="11" cy="4.2" r="0.55" fill="#111"/>
+          <circle cx="13" cy="4.2" r="0.55" fill="#111"/>
+          <rect x="11.5" y="6.4" width="1" height="1.3"/>
+          <rect x="7.5" y="8" width="9" height="7.2" rx="1.2"/>
+          <rect x="4.6" y="8.6" width="2.4" height="5.6" rx="1"/>
+          <rect x="17" y="8.6" width="2.4" height="5.6" rx="1"/>
+          <rect x="8.5" y="15.6" width="2.6" height="6.4" rx="0.9"/>
+          <rect x="12.9" y="15.6" width="2.6" height="6.4" rx="0.9"/>
+        </svg>
+        Anonymized Trajectories
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     DEMO — SINGLE 3-PANEL VIDEO COMPARISON
+══════════════════════════════════════════════════ -->
+<section id="demo">
+  <!-- Intro: TL;DR + Overview teaser. Uses .container (same width as the other
+       sections) so the 'Overview' heading lines up with Abstract / How It Works. -->
+  <div class="container">
+
+    <p class="demo-tldr fade-in">
+      <span class="demo-tldr-tag">TL;DR</span>
+      We show that human-to-humanoid motion retargeting preserves operator movement dynamics despite discarding body shape, enabling recovery of gender, age, height, and identity from robot joint-angle trajectories alone. We measure and interpret this effect at scale, and ask what it implies for how the robotics community collects and shares demonstration data.
+    </p>
+
+    <!-- ══════════════════ Overview teaser — animated pipeline (replaces static figure) ══════════════════ -->
+    <h2 class="section-heading fade-in">Overview</h2>
+    <figure class="teaser-figure teaser-anim">
+      <iframe src="./teaser-animation.html?embed=1&amp;v=2026-07-05c"
+              class="teaser-anim-frame" title="UNVEIL pipeline animation"
+              loading="lazy"></iframe>
+    </figure>
+    <p class="teaser-caption caption-card fade-in">
+      <strong>Operator movement signatures survive the retargeting transform.</strong>
+      Retargeting projects diverse teleoperators onto a uniform robot skeleton (Unitree G1), stripping
+      body-shape parameters entirely. Operator-specific movement dynamics nevertheless persist in the
+      joint-angle trajectories, and our proposed <span class="unveil-kw">UNVEIL</span> recovers the
+      operator&#8217;s attributes directly from the humanoid data.
+    </p>
+
+  </div><!-- /.container (intro) -->
+
+  <!-- Demo panels: wider .demo-container so the 3 viewers get full width. -->
+  <div class="demo-container">
+
+    <!--
+      One pre-loaded demo block: a self-contained instance of the activity
+      list + 3-panel viewers (G1 robot | UNVEIL-predicted SMPL | ground-truth
+      SMPL) + sync bar. The activity list to the left switches which activity
+      is shown across all three panels. Iframes are lazy-loaded via data-src;
+      the block loads immediately because IntersectionObserver fires on visible
+      blocks at load time.
+    -->
+
+    <!-- ══════════════════════ Demo block: Hip-Hop Dance (default) ══════════════════════ -->
+    <div class="demo-block fade-in demo-block--after-teaser" data-block="0" data-default-demo="hiphop">
+
+      <div class="demo-panels">
+        <div class="demo-selector">
+          <span class="demo-selector-label" id="activity-list-label-0">Select Activity</span>
+          <div class="activity-list" data-block="0" role="listbox"
+               aria-labelledby="activity-list-label-0"></div>
+        </div>
+
+        <div class="demo-col-header demo-col-header--robot">
+          <div class="robot-traj-box">Humanoid Trajectory</div>
+        </div>
+
+        <div class="attr-comparison-wrap" style="grid-column: 3 / 5;">
+          <div class="attr-comparison">
+            <div class="comparison-headers">
+              <div></div>
+              <div class="comparison-header comparison-header-pred"><span class="unveil-kw">UNVEIL</span> Predictions</div>
+              <div></div>
+              <div class="comparison-header comparison-header-gt">Ground Truth</div>
+            </div>
+            <div class="comparison-row" data-attr="height">
+              <div class="comparison-label">Height</div>
+              <div class="comparison-pred">168 cm</div>
+              <div class="comparison-connector">
+                <svg viewBox="0 0 100 28" preserveAspectRatio="none" aria-hidden="true">
+                  <path class="connector-path" d="M 0 14 L 100 14"/>
+                </svg>
+                <div class="comparison-delta">
+                  <span class="delta-icon">&Delta;</span><span class="delta-text">&minus;4 cm</span>
+                </div>
+              </div>
+              <div class="comparison-gt">172 cm</div>
+            </div>
+            <div class="comparison-row match" data-attr="weight">
+              <div class="comparison-label">Weight</div>
+              <div class="comparison-pred">68 kg</div>
+              <div class="comparison-connector">
+                <svg viewBox="0 0 100 28" preserveAspectRatio="none" aria-hidden="true">
+                  <path class="connector-path" d="M 0 14 L 100 14"/>
+                </svg>
+                <div class="comparison-delta">
+                  <span class="delta-icon">&Delta;</span><span class="delta-text">&check;</span>
+                </div>
+              </div>
+              <div class="comparison-gt">68 kg</div>
+            </div>
+            <div class="comparison-row" data-attr="age">
+              <div class="comparison-label">Age</div>
+              <div class="comparison-pred">29 yrs</div>
+              <div class="comparison-connector">
+                <svg viewBox="0 0 100 28" preserveAspectRatio="none" aria-hidden="true">
+                  <path class="connector-path" d="M 0 14 L 100 14"/>
+                </svg>
+                <div class="comparison-delta">
+                  <span class="delta-icon">&Delta;</span><span class="delta-text">+1 yr</span>
+                </div>
+              </div>
+              <div class="comparison-gt">28 yrs</div>
+            </div>
+            <div class="comparison-row match" data-attr="gender">
+              <div class="comparison-label">Gender</div>
+              <div class="comparison-pred">Female</div>
+              <div class="comparison-connector">
+                <svg viewBox="0 0 100 28" preserveAspectRatio="none" aria-hidden="true">
+                  <path class="connector-path" d="M 0 14 L 100 14"/>
+                </svg>
+                <div class="comparison-delta">
+                  <span class="delta-icon">&Delta;</span><span class="delta-text">&check;</span>
+                </div>
+              </div>
+              <div class="comparison-gt">Female</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="demo-panel">
+          <div class="panel-video-wrap panel-iframe-wrap">
+            <iframe data-src="./g1_engine/viewer.html?embed=1&amp;demo=hiphop&amp;v=2026-07-03a"
+                    class="g1-viewer-iframe iframe-g1" title="Unitree G1 robot motion viewer" allowfullscreen></iframe>
+          </div>
+        </div>
+        <div class="demo-panel">
+          <div class="panel-video-wrap panel-iframe-wrap">
+            <iframe data-src="./smpl_engine/viewer.html?seq=predicted&amp;embed=1&amp;demo=hiphop&amp;v=2026-07-03a"
+                    class="g1-viewer-iframe iframe-predicted" title="SMPL body from UNVEIL predicted attributes" allowfullscreen></iframe>
+          </div>
+        </div>
+        <div class="demo-panel">
+          <div class="panel-video-wrap panel-iframe-wrap">
+            <iframe data-src="./smpl_engine/viewer.html?seq=groundtruth&amp;embed=1&amp;demo=hiphop&amp;v=2026-07-03a"
+                    class="g1-viewer-iframe iframe-groundtruth" title="SMPL body rendered from ground-truth attributes" allowfullscreen></iframe>
+          </div>
+        </div>
+
+        <div class="sync-bar" data-block="0">
+          <button class="sync-btn sync-play" data-block="0" title="Play / Pause">&#9654;</button>
+          <input  class="sync-progress" data-block="0" type="range" min="0" max="1" step="0.001" value="0"/>
+          <span   class="sync-time" data-block="0">0.00 / 0.00s</span>
+          <select class="sync-speed" data-block="0">
+            <option value="0.25">0.25×</option>
+            <option value="0.5" selected>0.5×</option>
+            <option value="1">1×</option>
+            <option value="2">2×</option>
+          </select>
+        </div>
+      </div><!-- /.demo-panels -->
+    </div><!-- /.demo-block 0 -->
+
+    <div class="viz-method-row fade-in">
+      <div class="viz-method-card">
+        <span class="viz-method-label">How it's rendered</span>
+        The humanoid robot plays back its retargeted joint angle trajectory; the human mesh is the original motion in BVH body model converted to SMPL body model, whose shape parameters expose height, weight, and gender. 
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     ABSTRACT (inline, below demo)
+══════════════════════════════════════════════════ -->
+<section id="abstract">
+  <div class="container">
+    <h2 class="section-heading fade-in">Abstract</h2>
+    <div class="abstract-text fade-in">
+      Human-to-humanoid motion retargeting is the central operation in teleoperation data collection: it projects operator demonstrations onto a shared robot skeleton, discarding body-shape parameters, to produce training data for whole-body controllers and foundation models. Retargeting targets joint configuration, not movement dynamics. We report a surprising property of this transform: <strong>operator movement dynamics survive retargeting</strong>. On BONES-SEED (522 operators, 142K sequences), retargeted Unitree G1 trajectories support gender classification at 96.0% and operator re-identification at 97.2% Top-1; on <em>operators never seen during training</em>, gender holds at 83.4% and age, height, and weight regress with median absolute error of 2.1 yr, 3.9 cm, and 5.3 kg. Partial correlation analysis reveals emergent, biomechanically interpretable structure: the signals are task-invariant across activity categories and hold across retargeting implementations. We introduce <span class="unveil-kw">UNVEIL</span>, a spatiotemporal graph convolutional network to measure and interpret this effect, take initial steps toward operator anonymization, and ask what this implies for data practices and the operator-invariance of learned policies.
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     METHOD
+══════════════════════════════════════════════════ -->
+<section id="method">
+  <div class="container">
+    <h2 class="section-heading fade-in">Inside <span class="unveil-kw">UNVEIL</span>: The GCN</h2>
+
+    <!-- Framework — interactive visualization (replaces the static PDF figure) -->
+    <figure class="viz-embed-wrap">
+      <iframe src="./unveil-visualization.html?embed=1&amp;v=2026-07-07c"
+              title="UNVEIL framework — interactive walkthrough"
+              loading="lazy"
+              class="viz-embed-frame"></iframe>
+    </figure>
+
+    <p class="teaser-caption caption-card fade-in" style="margin-top:1.25rem;">
+      <strong><span class="unveil-kw">UNVEIL</span> overview.</strong>
+      A retargeted humanoid trajectory is encoded into per-joint motion features, processed by two
+      hierarchical spatial graph convolutions (intra-limb, limb-torso), aggregated across time with
+      <em>N</em> spatiotemporal layers into a trajectory embedding that is decoded by task-specific
+      heads into operator attributes.
+    </p>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     INTERPRETABLE FEATURES
+══════════════════════════════════════════════════ -->
+<section id="interpretable">
+  <div class="container">
+    <h2 class="section-heading fade-in">Interpretable Features</h2>
+
+    <p class="interpretable-intro fade-in">
+      Retargeting throws away body shape, but
+      <em>features of movement dynamics</em> &mdash; how each operator's
+      joints move through time &mdash; persist in the humanoid trajectory.
+      That signal is enough to recover the operator's biometrics
+      from the robot motion alone. The two panels below illustrate the
+      effect for <strong>age</strong> and <strong>gender</strong>: each
+      panel pairs two G1 demonstrations of the same activity by operators
+      at opposite ends of the attribute, with the motion feature most
+      predictive of that attribute plotted between them.
+    </p>
+
+    <!-- Row 1: two demo-pair panels side by side, with inference captions -->
+    <div class="interp-demos-row fade-in">
+      <div class="interp-demo">
+        <div class="interp-demo-label">Age</div>
+        <div class="interp-demo-iframe">
+          <iframe src="./feature-analysis-animation/panel.html?row=age_jogging_waist_rom&amp;config=data/feature_matrix_config_extreme.json&amp;v=2026-07-07d"
+                  loading="lazy"
+                  title="Older vs younger operator — jogging waist range of motion"></iframe>
+        </div>
+        <div class="interp-demo-pred">
+          <div class="pred-lead">UNVEIL prediction:</div>
+          <div class="pred-row">
+            <span class="pred-val pred-clip-left">24 yr</span>
+            <span class="pred-val pred-clip-right">62 yr</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="interp-demo">
+        <div class="interp-demo-label">Gender</div>
+        <div class="interp-demo-iframe">
+          <iframe src="./feature-analysis-animation/panel.html?row=gender_jogging_shoulder_mean_vel&amp;config=data/feature_matrix_config_extreme.json&amp;v=2026-07-07d"
+                  loading="lazy"
+                  title="Female vs male operator — shoulder mean angular velocity while jogging"></iframe>
+        </div>
+        <div class="interp-demo-pred">
+          <div class="pred-lead">UNVEIL prediction:</div>
+          <div class="pred-row">
+            <span class="pred-val pred-clip-left">Female</span>
+            <span class="pred-val pred-clip-right">Male</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p class="interpretable-more fade-in">
+      Similarly, UNVEIL reveals operator
+      <strong>height</strong> and
+      <strong>weight</strong> from the same
+      retargeted trajectories.
+    </p>
+
+    <a class="viz-more-cta fade-in" href="./feature-analysis-animation/final-matrix.html"
+       target="_blank" rel="noopener">
+      <span class="viz-more-title">The two above are just preview, find more interactive comparisons</span>
+      <span class="viz-more-arrow" aria-hidden="true">&rarr;</span>
+    </a>
+
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     STATISTICAL FINDINGS (aggregated bar / box plots)
+══════════════════════════════════════════════════ -->
+<section id="statistics">
+  <div class="container">
+    <h2 class="section-heading fade-in">Feature Statistics</h2>
+
+    <p class="interpretable-stats-intro fade-in">
+      Unlike the single demonstration pairs above, the plots below aggregate the
+      effect <em>across the entire dataset</em>: on a single activity, a single
+      <em>feature of movement dynamics</em> is enough to separate operators
+      whose attribute values sit at the two extreme ends. The two boxplots
+      show this for age and gender &mdash; each dot is one
+      demonstration clip. Hover any dot to see the original operator beside
+      the retargeted humanoid motion.
+    </p>
+
+    <!-- Two aggregated boxplots side by side -->
+    <div class="interp-bars-row fade-in">
+      <div class="interp-bars-cell">
+        <iframe src="./correlation-bar-plot.html?only=age&amp;v=2026-07-05c"
+                loading="lazy"
+                title="Aggregated demos — age vs waist range of motion"></iframe>
+      </div>
+      <div class="interp-bars-cell">
+        <iframe src="./correlation-bar-plot.html?only=gender&amp;v=2026-07-05c"
+                loading="lazy"
+                title="Aggregated demos — gender vs ankle range of motion"></iframe>
+      </div>
+    </div>
+
+    <a class="viz-more-cta fade-in" href="./correlation-bar-plot.html"
+       target="_blank" rel="noopener">
+      <span class="viz-more-title">The two above are just preview, find more boxplot visualizations</span>
+      <span class="viz-more-arrow" aria-hidden="true">&rarr;</span>
+    </a>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     RESULTS
+══════════════════════════════════════════════════ -->
+<section id="results">
+  <div class="container">
+    <h2 class="section-heading fade-in">Quantitative Results</h2>
+
+    <!-- ── Comparison figure (typical quant result — shown first) ── -->
+    <figure class="pdf-figure-wrap fade-in">
+      <canvas data-pdf="./assets/img/improvement_combined_comparison_medae.pdf?v=2026-07-13a"
+              class="pdf-canvas" aria-label="UNVEIL vs baselines comparison figure"></canvas>
+      <p class="pdf-fallback">
+        <a href="./assets/img/improvement_combined_comparison_medae.pdf" target="_blank">View comparison figure (PDF)</a>
+      </p>
+    </figure>
+    <p class="teaser-caption mt-2 fade-in">
+      Comparison between <span class="unveil-kw">UNVEIL</span> and two well-tested action-recognition
+      architectures adapted with our framework&nbsp;&mdash;&nbsp;<a href="https://openaccess.thecvf.com/content_CVPR_2020/papers/Zhang_Semantics-Guided_Neural_Networks_for_Efficient_Skeleton-Based_Human_Action_Recognition_CVPR_2020_paper.pdf" target="_blank" rel="noopener">SGN</a>
+      and <a href="https://ojs.aaai.org/index.php/AAAI/article/view/28440" target="_blank" rel="noopener">DSGCN</a>.
+      We consistently improve over both adaptations across all tasks. Gray shows task-specific
+      chance performance for reference.
+    </p>
+
+    <!-- ── Main results table ── -->
+    <h3 class="results-subheading fade-in">Performance across tasks and evaluation settings</h3>
+    <p class="results-caption fade-in">
+      Beyond the head-to-head comparison above, the table below reports <span class="unveil-kw">UNVEIL</span>&#8217;s
+      absolute numbers for every inference task under each evaluation setting.
+      <em>Unseen operators</em> are people never in training (zero-shot biometrics);
+      <em>unseen demos of seen operators</em> are held-out activities for operators we trained on (cross-activity generalization).
+      (&uarr;&nbsp;higher is better; &darr;&nbsp;lower is better.)
+    </p>
+
+    <div class="table-responsive fade-in">
+      <table class="table results-table align-middle">
+        <thead>
+          <tr class="results-thead-tasks">
+            <th class="results-corner">
+              <span class="corner-task">Task &rarr;</span><br>
+              <span class="corner-setting">Evaluation Settings &darr;</span>
+            </th>
+            <th>Gender<br><small>Acc (%) &uarr;</small></th>
+            <th>Weight<br><small>MedAE &darr;</small></th>
+            <th>Height<br><small>MedAE &darr;</small></th>
+            <th>Age<br><small>MedAE &darr;</small></th>
+            <th>Re-ID<br><small>Top-1 / Top-5 &uarr;</small></th>
+            <th>Linkage<br><small>Acc (%) &uarr;</small></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="results-setting">Unseen operators</td>
+            <td class="highlight-cell">83.4</td>
+            <td>5.3 kg</td>
+            <td>3.9 cm</td>
+            <td>2.1 yr</td>
+            <td class="text-muted">—</td>
+            <td class="text-muted">—</td>
+          </tr>
+          <tr>
+            <td class="results-setting">Unseen demos of seen operators</td>
+            <td class="highlight-cell">96.0</td>
+            <td>1.9 kg</td>
+            <td>1.9 cm</td>
+            <td>1.6 yr</td>
+            <td class="highlight-cell">97.2 / 98.8</td>
+            <td class="highlight-cell">92.4</td>
+          </tr>
+          <tr class="results-section-header">
+            <td colspan="7"><em>Performance range across 20 activity categories</em></td>
+          </tr>
+          <tr>
+            <td class="results-setting ps-4">Most leaking activity</td>
+            <td class="highlight-cell">100.0</td>
+            <td>3.5 kg</td>
+            <td>3.2 cm</td>
+            <td>1.1 yr</td>
+            <td class="highlight-cell">100.0 / 100.0</td>
+            <td class="highlight-cell">100.0</td>
+          </tr>
+          <tr>
+            <td class="results-setting ps-4">2nd-most leaking</td>
+            <td>94.1</td>
+            <td>4.1 kg</td>
+            <td>3.5 cm</td>
+            <td>2.2 yr</td>
+            <td>98.0 / 99.0</td>
+            <td>99.0</td>
+          </tr>
+          <tr>
+            <td class="results-setting ps-4">2nd-least leaking</td>
+            <td>74.4</td>
+            <td>7.3 kg</td>
+            <td>5.5 cm</td>
+            <td>4.1 yr</td>
+            <td>70.1 / 89.5</td>
+            <td>74.9</td>
+          </tr>
+          <tr>
+            <td class="results-setting ps-4">Least leaking activity</td>
+            <td>72.9</td>
+            <td>9.3 kg</td>
+            <td>6.8 cm</td>
+            <td>2.8 yr</td>
+            <td>73.0 / 84.2</td>
+            <td>69.5</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════
+     BIBTEX
+══════════════════════════════════════════════════ -->
+<section id="bibtex">
+  <div class="container">
+    <h2 class="section-heading fade-in">BibTeX</h2>
+    <pre class="fade-in"><code>@article{afnan2026whomoved,
+    title={Who Moved the Robot? Humanoid Datasets Remember Their Operators},
+    author={Afnan, Sihat and Jain, Unnat and Farrukh, Habiba},
+    journal={arXiv preprint arXiv:xxxx.xxxxx},
+    year={2026},
+    url={https://arxiv.org/abs/xxxx.xxxxx}
+}</code></pre>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     FOOTER
+══════════════════════════════════════════════════ -->
+<footer>
+  <div class="container">
+    <p class="mb-0" style="font-size:0.8rem;">
+      Website template inspired by academic project pages.
+    </p>
+  </div>
+</footer>
+
+<!-- Bootstrap JS bundle (no Popper needed separately) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- PDF.js — renders PDF figures to canvas without browser PDF-reader UI -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<!-- Custom JS -->
+<script src="./assets/js/main.js?v=2026-07-03a"></script>
+
+</body>
+</html>

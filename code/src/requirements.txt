@@ -1,0 +1,11 @@
+torch>=2.0
+numpy
+pandas
+scikit-learn
+pyarrow
+tqdm
+# Optional — uncomment as needed:
+# mmcv        # only for the dsgcn comparison backbone and the ProtoGCN action classifier
+# triton      # only for torch.compile; the trainer falls back to eager without it
+# scipy       # only for Emergent_Behavior_Analysis/
+# matplotlib  # only for Emergent_Behavior_Analysis/

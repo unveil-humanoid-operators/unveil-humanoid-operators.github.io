@@ -1,0 +1,17 @@
+{
+  "csvFile": "../assets/demos/g1_csv/root_squat_demo.csv",
+  "maxFrames": 600,
+  "playbackSpeed": 1.0,
+  "autoPlay": true,
+  "loop": true,
+  "camera": {
+    "position": [1.40, 0.85, 0.00],
+    "target":   [0.00, 0.85, 0.00]
+  },
+  "worldYawDeg": 0,
+  "showFloor": false,
+  "backgroundColor": "#ffffff",
+  "floorColor": "#e7eef7",
+  "gridColor": "#c6cfdb",
+  "enhancedMaterials": true
+}

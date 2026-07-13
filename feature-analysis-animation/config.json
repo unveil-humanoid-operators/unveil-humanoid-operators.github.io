@@ -1,0 +1,6 @@
+{
+  "defaultCategory": "jumping",
+  "minActorsFine": 5,
+  "minActorsCoarse": 30,
+  "notes": "Defaults consumed by viewer.html. Override the active category via ?category=<key> on the URL. The widget regenerates itself entirely from ./data/*.json — edit the JSON or rerun generate_data.py to change what is shown."
+}

@@ -1,0 +1,13 @@
+panel,task,r,n_per_side,n_instances
+age|waist_rom,jogging,-0.3980572115627399,1310,20
+age|waist_mean_vel,jogging,-0.3636790408842179,1310,20
+age|ankle_rom,jogging,-0.2321685182758184,1310,20
+weight|ankle_peak_vel,jogging,-0.13411156097408616,1073,20
+weight|ankle_rom,walking,-0.16117061253782677,1231,20
+weight|root_translate_peak_vel,walking,-0.19039027119400037,1231,20
+height|root_translate_rom,jogging,-0.2834066495162638,1050,20
+height|root_translate_peak_vel,walking,-0.2823195057899791,1007,20
+height|ankle_rom,jogging,-0.31204491875398427,1050,20
+gender|ankle_rom,walking,-0.18843451147467655,4125,20
+gender|shoulder_rom,jogging,-0.48322852400863914,3355,20
+gender|shoulder_mean_vel,jogging,-0.47737936422251553,3355,20

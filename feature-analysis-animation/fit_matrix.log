@@ -1,0 +1,99 @@
+Plan (feature_matrix_v1): 24 SMPL fits across 12 rows (max_input_frames=600, max_frames=100, device=cuda)
+Output: C:\Users\sihat\Downloads\invert\feature-analysis-animation\data\smpl_feature_matrix
+
+
+  [age_gesture_dancing_waist_rom]  gesture, dancing · waist_rom  (r=-0.497)
+    [1/24 · age_gesture_dancing_waist_rom · high] gender=female 61kg @ 171cm
+      truncate 675 -> 600 (5.0s)
+  Running FK...
+  Loading SMPL  : basicModel_f_lbs_10_207_0_v1.0.0.pkl
+  Loading VPoser: C:\Users\sihat\Downloads\BVH2SMPL\vposer_v1_0
+Found Trained Model: C:\Users\sihat\Downloads\BVH2SMPL\vposer_v1_0\snapshots\TR00_E096.pt
+  Fitting SMPL+VPoser (600 frames, batch=64, 120 steps, z_prior=0.0010)...
+    64 / 600 frames done
+      fit done in 49.3s -> 100 frames @ 20.0 fps
+      -> age_gesture_dancing_waist_rom_high.bin  (100 frames @ 20.0 fps, 8.3 MB)
+      -> faces.bin  (13776 faces)
+    [2/24 · age_gesture_dancing_waist_rom · low] gender=female 61kg @ 168cm
+  Running FK...
+  Loading SMPL  : basicModel_f_lbs_10_207_0_v1.0.0.pkl
+  Loading VPoser: C:\Users\sihat\Downloads\BVH2SMPL\vposer_v1_0
+Found Trained Model: C:\Users\sihat\Downloads\BVH2SMPL\vposer_v1_0\snapshots\TR00_E096.pt
+  Fitting SMPL+VPoser (555 frames, batch=64, 120 steps, z_prior=0.0010)...
+    64 / 555 frames done
+      fit done in 47.2s -> 100 frames @ 21.6 fps
+      -> age_gesture_dancing_waist_rom_low.bin  (100 frames @ 21.6 fps, 8.3 MB)
+
+  [age_kneeling_knee_peak_vel]  kneeling · knee_peak_vel  (r=-0.380)
+    [3/24 · age_kneeling_knee_peak_vel · high] gender=female 58kg @ 162cm
+      truncate 1171 -> 600 (5.0s)
+  Running FK...
+  Loading SMPL  : basicModel_f_lbs_10_207_0_v1.0.0.pkl
+  Loading VPoser: C:\Users\sihat\Downloads\BVH2SMPL\vposer_v1_0
+Found Trained Model: C:\Users\sihat\Downloads\BVH2SMPL\vposer_v1_0\snapshots\TR00_E096.pt
+  Fitting SMPL+VPoser (600 frames, batch=64, 120 steps, z_prior=0.0010)...
+    64 / 600 frames done
+      fit done in 42.0s -> 100 frames @ 20.0 fps
+      -> age_kneeling_knee_peak_vel_high.bin  (100 frames @ 20.0 fps, 8.3 MB)
+    [4/24 · age_kneeling_knee_peak_vel · low] gender=male 95kg @ 182cm
+  Running FK...
+  Loading SMPL  : basicmodel_m_lbs_10_207_0_v1.0.0.pkl
+  Loading VPoser: C:\Users\sihat\Downloads\BVH2SMPL\vposer_v1_0
+Found Trained Model: C:\Users\sihat\Downloads\BVH2SMPL\vposer_v1_0\snapshots\TR00_E096.pt
+  Fitting SMPL+VPoser (555 frames, batch=64, 120 steps, z_prior=0.0010)...
+    64 / 555 frames done
+      fit done in 36.1s -> 100 frames @ 21.6 fps
+      -> age_kneeling_knee_peak_vel_low.bin  (100 frames @ 21.6 fps, 8.3 MB)
+
+  [age_turning_waist_mean_vel]  turning · waist_mean_vel  (r=-0.357)
+    [5/24 · age_turning_waist_mean_vel · high] gender=male 84kg @ 183cm
+  Running FK...
+  Loading SMPL  : basicmodel_m_lbs_10_207_0_v1.0.0.pkl
+  Loading VPoser: C:\Users\sihat\Downloads\BVH2SMPL\vposer_v1_0
+Found Trained Model: C:\Users\sihat\Downloads\BVH2SMPL\vposer_v1_0\snapshots\TR00_E096.pt
+  Fitting SMPL+VPoser (543 frames, batch=64, 120 steps, z_prior=0.0010)...
+    64 / 543 frames done
+      fit done in 32.5s -> 100 frames @ 22.1 fps
+      -> age_turning_waist_mean_vel_high.bin  (100 frames @ 22.1 fps, 8.3 MB)
+    [6/24 · age_turning_waist_mean_vel · low] gender=male 72kg @ 169cm
+      truncate 985 -> 600 (5.0s)
+  Running FK...
+  Loading SMPL  : basicmodel_m_lbs_10_207_0_v1.0.0.pkl
+  Loading VPoser: C:\Users\sihat\Downloads\BVH2SMPL\vposer_v1_0
+Found Trained Model: C:\Users\sihat\Downloads\BVH2SMPL\vposer_v1_0\snapshots\TR00_E096.pt
+  Fitting SMPL+VPoser (600 frames, batch=64, 120 steps, z_prior=0.0010)...
+    64 / 600 frames done
+      fit done in 36.1s -> 100 frames @ 20.0 fps
+      -> age_turning_waist_mean_vel_low.bin  (100 frames @ 20.0 fps, 8.3 MB)
+
+  [weight_gesture_dancing_waist_rom]  gesture, dancing · waist_rom  (r=-0.408)
+    [7/24 · weight_gesture_dancing_waist_rom · high] gender=female 57kg @ 168cm
+      truncate 872 -> 600 (5.0s)
+  Running FK...
+  Loading SMPL  : basicModel_f_lbs_10_207_0_v1.0.0.pkl
+  Loading VPoser: C:\Users\sihat\Downloads\BVH2SMPL\vposer_v1_0
+Found Trained Model: C:\Users\sihat\Downloads\BVH2SMPL\vposer_v1_0\snapshots\TR00_E096.pt
+  Fitting SMPL+VPoser (600 frames, batch=64, 120 steps, z_prior=0.0010)...
+    64 / 600 frames done
+      fit done in 57.3s -> 100 frames @ 20.0 fps
+      -> weight_gesture_dancing_waist_rom_high.bin  (100 frames @ 20.0 fps, 8.3 MB)
+    [8/24 · weight_gesture_dancing_waist_rom · low] gender=female 61kg @ 168cm
+  Running FK...
+  Loading SMPL  : basicModel_f_lbs_10_207_0_v1.0.0.pkl
+  Loading VPoser: C:\Users\sihat\Downloads\BVH2SMPL\vposer_v1_0
+Found Trained Model: C:\Users\sihat\Downloads\BVH2SMPL\vposer_v1_0\snapshots\TR00_E096.pt
+  Fitting SMPL+VPoser (555 frames, batch=64, 120 steps, z_prior=0.0010)...
+    64 / 555 frames done
+      fit done in 47.3s -> 100 frames @ 21.6 fps
+      -> weight_gesture_dancing_waist_rom_low.bin  (100 frames @ 21.6 fps, 8.3 MB)
+
+  [weight_climbing_box_knee_rom]  climbing box · knee_rom  (r=-0.400)
+    [9/24 · weight_climbing_box_knee_rom · high] gender=female 61kg @ 153cm
+      truncate 1270 -> 600 (5.0s)
+  Running FK...
+  Loading SMPL  : basicModel_f_lbs_10_207_0_v1.0.0.pkl
+  Loading VPoser: C:\Users\sihat\Downloads\BVH2SMPL\vposer_v1_0
+Found Trained Model: C:\Users\sihat\Downloads\BVH2SMPL\vposer_v1_0\snapshots\TR00_E096.pt
+  Fitting SMPL+VPoser (600 frames, batch=64, 120 steps, z_prior=0.0010)...
+    64 / 600 frames done
+EXIT_CODE=127
